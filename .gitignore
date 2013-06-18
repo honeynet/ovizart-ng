@@ -1,1 +1,10 @@
+*.py[cod]
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
 .idea
