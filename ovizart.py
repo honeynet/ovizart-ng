@@ -6,6 +6,7 @@ from core import *
 from datasource import *
 from reporter import *
 from tagger import *
+from analyzer import *
 
 
 class OvizArt():
