@@ -3,6 +3,19 @@ from core import MissingMethodException
 import inspect
 
 
+def checkMethod(cls, methodName):
+    """
+    @private checks given class for given method name
+    @param cls          : class to check
+    @param methodName   : methodName to control
+    @raise MissingMethodException if searched methodName does not exists in cls
+    @return
+    """
+    members = inspect.getmembers(cls)
+    if not filter(lambda x: x[0] == methodName, members):
+        raise MissingMethodException(methodName, cls)
+
+
 class Analyzer:
     """Decorator for analyzer classes"""
 
@@ -15,20 +28,13 @@ class Analyzer:
         """
         # TODO: This part needs to revise, need to specify the parameters.
         self.target = target
-        print "Analyzer -- init"
 
     def __call__(self, analyzer):
         """ This method does invoked automatically.
             Instantiate analyzer first then register it with given target value
         """
-        methodName = Analyzer.methodName
-
         # Check for the analyze method!!!
-        members = inspect.getmembers(analyzer)
-        if not filter(lambda x: x[0] == methodName, members):
-            raise MissingMethodException(methodName, analyzer)
+        checkMethod(analyzer, Analyzer.methodName)
 
         self.newAnalyzer = analyzer()
         register_analyzer(self.newAnalyzer, self.target)
-        # TODO: register this analyzer with given target
-        print "Analyzer -- call"
