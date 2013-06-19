@@ -55,6 +55,15 @@ class OvizArt():
         """
         pass
 
+    def listAvailableModules(self):
+        """
+        Prints available modules in a human readable way.
+        """
+        list_available_modules()
+
 
 if __name__ == '__main__':
-    list_available_modules()
+    config = {}
+    ovizart = OvizArt(config)
+    ovizart.listAvailableModules()
+    
