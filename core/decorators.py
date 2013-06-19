@@ -1,8 +1,12 @@
 from core import register_analyzer
+from core import MissingMethodException
+import inspect
 
 
 class Analyzer:
     """Decorator for analyzer classes"""
+
+    methodName = 'analyze'
 
     def __init__(self, target):
         """
@@ -17,6 +21,13 @@ class Analyzer:
         """ This method does invoked automatically.
             Instantiate analyzer first then register it with given target value
         """
+        methodName = Analyzer.methodName
+
+        # Check for the analyze method!!!
+        members = inspect.getmembers(analyzer)
+        if not filter(lambda x: x[0] == methodName, members):
+            raise MissingMethodException(methodName, analyzer)
+
         self.newAnalyzer = analyzer()
         register_analyzer(self.newAnalyzer, self.target)
         # TODO: register this analyzer with given target
