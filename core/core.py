@@ -115,3 +115,20 @@ def list_available_modules():
     dump("ANALYZER", availableModules[ANALYZER])
     dump("REPORTER", availableModules[REPORTER])
     print "#########################"
+
+
+## EXCEPTION DEFINITIONS ##
+class MissingMethodException(Exception):
+    """Exception for missing method definitions"""
+
+    def __init__(self, methodName, cls):
+        """
+        @param methodName   : missing method name
+        @param cls          : missing methods class
+        @return
+        """
+        self.methodName = methodName
+        self.cls = cls
+
+    def __str__(self):
+        return "\"%s\" method is missing on class definition \"%s\"" %(self.methodName, self.cls)
