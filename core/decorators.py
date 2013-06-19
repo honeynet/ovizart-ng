@@ -1,5 +1,5 @@
 from core import register_data_source, register_tagger, register_analyzer, register_reporter
-from core import MissingMethodException
+from core import MissingMethodException, MissingArgumentException
 import inspect
 
 
@@ -9,11 +9,29 @@ def checkMethod(cls, methodName):
     @param cls          : class to check
     @param methodName   : methodName to control
     @raise MissingMethodException if searched methodName does not exists in cls
+    @raise MissingArgumentException if searched method does not defined with parameter data
     @return
     """
+
+    # check method
     members = inspect.getmembers(cls)
-    if not filter(lambda x: x[0] == methodName, members):
+    methods = filter(lambda x: x[0] == methodName, members)
+    if not methods:
         raise MissingMethodException(methodName, cls)
+
+    # check methods argument
+    argName = 'data'
+    found = False
+    for m in methods:
+        m = m[1]
+        args = inspect.getargs(m.im_func.func_code).args
+        # TODO: Refactor this control later.
+        if args and len(args) == 2 and args[1] == argName:
+            found = True
+            break
+
+    if not found:
+        raise MissingArgumentException(argName, methodName, cls)
 
 
 class GenericDecorator:
@@ -66,7 +84,7 @@ class Analyzer(GenericDecorator):
     registerMethod = register_analyzer
 
 
-class ReporterSource(GenericDecorator):
+class Reporter(GenericDecorator):
     """Decorator for reporter classes"""
 
     methodName = 'report'
