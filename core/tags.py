@@ -6,6 +6,9 @@ Important Note: Try to avoid use strings directly during development
 
 class Tags:
 
+    class DataSource:
+        PCAP = "PCAP"
+
     # TODO: Not a fancy way! Need to change it
     class Protocol:
         HTTP = "HTTP"
