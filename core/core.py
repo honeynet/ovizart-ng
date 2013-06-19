@@ -40,7 +40,7 @@ def __register(dict, newElem, tags):
         add(newElem, tag)
 
 
-def register_data_source(dataSource, tags):
+def register_data_source(decorator, dataSource, tags):
     """
     @protected This method should be called by decorators, no need to call this method explicitly
     Register data source according to given tags
@@ -54,7 +54,7 @@ def register_data_source(dataSource, tags):
     availableModules[DATASOURCE].append(dataSource)
 
 
-def register_tagger(tagger, tags):
+def register_tagger(decorator, tagger, tags):
     """
     @protected This method should be called by decorators, no need to call this method explicitly
     Register tagger according to given tags
@@ -68,7 +68,7 @@ def register_tagger(tagger, tags):
     availableModules[TAGGER].append(tagger)
 
 
-def register_analyzer(analyzer, tags):
+def register_analyzer(decorator, analyzer, tags):
     """
     @protected This method should be called by decorators, no need to call this method explicitly
     Register analyzer according to given tags
@@ -82,7 +82,7 @@ def register_analyzer(analyzer, tags):
     availableModules[ANALYZER].append(analyzer)
 
 
-def register_reporter(reporter, tags):
+def register_reporter(decorator, reporter, tags):
     """
     @protected This method should be called by decorators, no need to call this method explicitly
     Register reporter according to given tags

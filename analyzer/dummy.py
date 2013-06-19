@@ -4,7 +4,8 @@ from ovizart import Tags
 # TODO: Revise this part. too long to use
 IRC = Tags.Protocol.IRC
 
-@Analyzer(target=IRC)
+# For tags one may use array as well, both of them accepted.
+@Analyzer(tags=IRC)
 class MyAwesomeIRCAnalyzer:
     """Here is the awesome description of awesome irc analyzer..."""
 
