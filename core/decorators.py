@@ -1,3 +1,6 @@
+from core import register_analyzer
+
+
 class Analyzer:
     """Decorator for analyzer classes"""
 
@@ -14,6 +17,7 @@ class Analyzer:
         """ This method does invoked automatically.
             Instantiate analyzer first then register it with given target value
         """
-        newAnalyzer = analyzer()
+        self.newAnalyzer = analyzer()
+        register_analyzer(self.newAnalyzer, self.target)
         # TODO: register this analyzer with given target
         print "Analyzer -- call"

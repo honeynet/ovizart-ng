@@ -54,3 +54,7 @@ class OvizArt():
         Returns the analyze report
         """
         pass
+
+
+if __name__ == '__main__':
+    list_available_modules()
