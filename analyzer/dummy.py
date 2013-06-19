@@ -15,6 +15,6 @@ class MyAwesomeIRCAnalyzer:
     def __repr__(self):
         return "MyAwesomeIRCAnalyzer"
 
-    def analyze(self):
+    def analyze(self, data):
         # Do some awesome stuff here
         pass
