@@ -1,4 +1,7 @@
 """ Handlers for PCAP files """
+
+__author__ = "ggercek"
+
 from ovizart import Tags
 from core import DataSource
 

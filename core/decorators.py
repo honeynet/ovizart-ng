@@ -1,3 +1,6 @@
+
+__author__ = "ggercek"
+
 from core import register_data_source, register_tagger, register_analyzer, register_reporter
 from core import MissingMethodException, MissingArgumentException
 import inspect

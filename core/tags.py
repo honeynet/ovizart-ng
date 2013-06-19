@@ -3,6 +3,8 @@ This module holds the most common tags for ease of use.
 Important Note: Try to avoid use strings directly during development
 """
 
+__author__ = "ggercek"
+
 
 class Tags:
 

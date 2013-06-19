@@ -1,3 +1,6 @@
+
+__author__ = "ggercek"
+
 from ovizutil import set, get
 
 

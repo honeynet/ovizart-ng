@@ -1,3 +1,6 @@
+
+__author__ = "ggercek"
+
 analyzers = {}
 taggers = {}
 reporters = {}

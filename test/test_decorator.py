@@ -1,3 +1,6 @@
+
+__author__ = "ggercek"
+
 from unittest import TestCase
 
 from core import MissingMethodException, MissingArgumentException

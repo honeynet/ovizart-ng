@@ -1,6 +1,7 @@
-"""
-Aggregate top level objects
-"""
+"""Ovizart interface definition"""
+
+__author__ = "ggercek"
+
 
 from core import *
 from datasource import *

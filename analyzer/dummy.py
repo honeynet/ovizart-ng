@@ -1,3 +1,6 @@
+
+__author__ = "ggercek"
+
 from ovizart import Analyzer
 from ovizart import Tags
 

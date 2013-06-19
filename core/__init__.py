@@ -1,4 +1,7 @@
 # Import inner modules
+
+__author__ = "ggercek"
+
 from data import *
 from decorators import *
 from tags import *

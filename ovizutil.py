@@ -1,3 +1,7 @@
+"""Some shared utility functions"""
+
+__author__ = "ggercek"
+
 def get(self, dict, key):
     """
     @private returns the value from dictionary
