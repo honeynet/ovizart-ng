@@ -1,4 +1,6 @@
 
+from outil import get_file_type
+
 __author__ = "ggercek"
 
 analyzers = {}
@@ -118,3 +120,58 @@ def list_available_modules():
     dump("ANALYZER", availableModules[ANALYZER])
     dump("REPORTER", availableModules[REPORTER])
     print "#########################"
+
+
+def evaluate(config):
+    global availableModules, dataSources, taggers, analyzers, reporters
+
+    # Read input file(s)
+    inputFiles = config['inputFiles']
+
+    # Select parser based on extension
+    inputFiles = get_file_type(inputFiles)
+
+    # Filter analyzers
+    # TODO: remove unwanted analyzers
+    # filterAnalyzers based on config parameter exclude_analyzer=[]
+    selectedAnalyzers = analyzers
+
+    # Select reporter module
+    # Currently only html is available
+    selectedReporters = availableModules[REPORTER]
+
+    for fileName, fileType in inputFiles:
+        parser = dataSources[fileType]
+
+        # Returns summary of pcap file with file names
+        summary = parser.parse(fileName)
+        # summary = {
+        #               inputFile: {
+        #                   filename: '',
+        #                   numberOfPackets: '',
+        #                   numberOfBytes: '',
+        #                   startTime: '',
+        #                   endTime: ''
+        #               },
+        #               flows: [
+        #                   {}.
+        #               ]
+        # }
+
+        # Select taggers based on file type
+        selectedTaggers = taggers[fileType]
+
+        flows = summary['flows']
+        # flow is an instance of data class
+        for flow in flows:
+            for tagger in selectedTaggers:
+                tagger.tag(flow)
+
+        for flow in flows:
+            for analyzer in selectedAnalyzers:
+                analyzer.analyze(flow)
+
+        for flow in flows:
+            for reporter in selectedReporters:
+                reporter.report(flow)
+
