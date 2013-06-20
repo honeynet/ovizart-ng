@@ -1,7 +1,7 @@
 
 __author__ = "ggercek"
 
-from ovizutil import set, get
+from outil import set, get
 
 
 class Data():
