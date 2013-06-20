@@ -66,7 +66,7 @@ class GenericDecorator:
 
         self.newAnalyzer = self.cls()
         self.__class__.registerMethod(self, self.newAnalyzer, self.tags)
-
+        return cls
 
 class DataSource(GenericDecorator):
     """Decorator for data source classes"""
