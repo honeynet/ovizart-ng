@@ -1,0 +1,283 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dfxml xmloutputversion='1.0'>
+  <metadata 
+  xmlns='http://afflib.org/tcpflow/' 
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
+  xmlns:dc='http://purl.org/dc/elements/1.1/'>
+    <dc:type>Feature Extraction</dc:type>
+  </metadata>
+  <creator version='1.0'>
+    <program>TCPFLOW</program>
+    <version>1.3.0</version>
+    <build_environment>
+      <compiler>GCC 4.7</compiler>
+    </build_environment>
+    <execution_environment>
+      <os_sysname>Linux</os_sysname>
+      <os_release>3.5.0-34-generic</os_release>
+      <os_version>#55-Ubuntu SMP Thu Jun 6 20:18:19 UTC 2013</os_version>
+      <host>huysuz</host>
+      <arch>x86_64</arch>
+      <command_line>tcpflow -i wlan0</command_line>
+      <uid>0</uid>
+      <start_time>2013-06-20T12:58:06Z</start_time>
+    </execution_environment>
+  </creator>
+  <configuration>
+  </configuration>
+  <fileobject>
+    <filename>192.168.001.103.38786-173.194.070.095.00080</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:16.002343Z' endtime='2013-06-20T15:58:21.747461Z' src_ipn='192.168.1.103' dst_ipn='173.194.70.95' packets='3' srcport='38786' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>173.194.070.095.00080-192.168.001.103.38786</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:16.060650Z' endtime='2013-06-20T15:58:21.804747Z' src_ipn='173.194.70.95' dst_ipn='192.168.1.103' packets='2' srcport='80' dstport='38786' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>076.074.166.034.00080-192.168.001.103.42595</filename>
+    <filesize>10983</filesize>
+    <tcpflow startime='2013-06-20T15:58:15.157393Z' endtime='2013-06-20T15:58:22.417474Z' src_ipn='76.74.166.34' dst_ipn='192.168.1.103' packets='13' srcport='80' dstport='42595' family='2' out_of_order_count='2' />
+  </fileobject>
+  <fileobject>
+    <filename>076.074.166.034.00080-192.168.001.103.42596</filename>
+    <filesize>34335</filesize>
+    <tcpflow startime='2013-06-20T15:58:15.698398Z' endtime='2013-06-20T15:58:22.417521Z' src_ipn='76.74.166.34' dst_ipn='192.168.1.103' packets='29' srcport='80' dstport='42596' family='2' out_of_order_count='1' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.42596-076.074.166.034.00080</filename>
+    <filesize>723</filesize>
+    <tcpflow startime='2013-06-20T15:58:15.485597Z' endtime='2013-06-20T15:58:22.417631Z' src_ipn='192.168.1.103' dst_ipn='76.74.166.34' packets='25' srcport='42596' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.42595-076.074.166.034.00080</filename>
+    <filesize>1046</filesize>
+    <tcpflow startime='2013-06-20T15:58:14.944645Z' endtime='2013-06-20T15:58:22.417714Z' src_ipn='192.168.1.103' dst_ipn='76.74.166.34' packets='15' srcport='42595' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>076.074.166.034.00080-192.168.001.103.42600</filename>
+    <filesize>7204</filesize>
+    <tcpflow startime='2013-06-20T15:58:16.797209Z' endtime='2013-06-20T15:58:22.418723Z' src_ipn='76.74.166.34' dst_ipn='192.168.1.103' packets='8' srcport='80' dstport='42600' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.42600-076.074.166.034.00080</filename>
+    <filesize>444</filesize>
+    <tcpflow startime='2013-06-20T15:58:16.580884Z' endtime='2013-06-20T15:58:22.419269Z' src_ipn='192.168.1.103' dst_ipn='76.74.166.34' packets='9' srcport='42600' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>076.074.166.034.00080-192.168.001.103.42602</filename>
+    <filesize>1008</filesize>
+    <tcpflow startime='2013-06-20T15:58:16.844343Z' endtime='2013-06-20T15:58:22.419388Z' src_ipn='76.74.166.34' dst_ipn='192.168.1.103' packets='4' srcport='80' dstport='42602' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.42602-076.074.166.034.00080</filename>
+    <filesize>452</filesize>
+    <tcpflow startime='2013-06-20T15:58:16.629055Z' endtime='2013-06-20T15:58:22.420256Z' src_ipn='192.168.1.103' dst_ipn='76.74.166.34' packets='5' srcport='42602' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.42603-076.074.166.034.00080</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:16.631252Z' endtime='2013-06-20T15:58:22.747925Z' src_ipn='192.168.1.103' dst_ipn='76.74.166.34' packets='4' srcport='42603' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>076.074.166.034.00080-192.168.001.103.42603</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:16.846057Z' endtime='2013-06-20T15:58:22.962421Z' src_ipn='76.74.166.34' dst_ipn='192.168.1.103' packets='3' srcport='80' dstport='42603' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>076.074.166.034.00080-192.168.001.103.42601</filename>
+    <filesize>34540</filesize>
+    <tcpflow startime='2013-06-20T15:58:16.840006Z' endtime='2013-06-20T15:58:23.317350Z' src_ipn='76.74.166.34' dst_ipn='192.168.1.103' packets='29' srcport='80' dstport='42601' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.42601-076.074.166.034.00080</filename>
+    <filesize>1058</filesize>
+    <tcpflow startime='2013-06-20T15:58:16.625763Z' endtime='2013-06-20T15:58:23.317568Z' src_ipn='192.168.1.103' dst_ipn='76.74.166.34' packets='27' srcport='42601' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>193.140.248.128.00080-192.168.001.103.60739</filename>
+    <filesize>21613</filesize>
+    <tcpflow startime='2013-06-20T15:58:19.663087Z' endtime='2013-06-20T15:58:25.448874Z' src_ipn='193.140.248.128' dst_ipn='192.168.1.103' packets='24' srcport='80' dstport='60739' family='2' out_of_order_count='6' />
+  </fileobject>
+  <fileobject>
+    <filename>193.140.248.128.00080-192.168.001.103.60743</filename>
+    <filesize>8401</filesize>
+    <tcpflow startime='2013-06-20T15:58:20.376808Z' endtime='2013-06-20T15:58:25.448910Z' src_ipn='193.140.248.128' dst_ipn='192.168.1.103' packets='13' srcport='80' dstport='60743' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>193.140.248.128.00080-192.168.001.103.60741</filename>
+    <filesize>11120</filesize>
+    <tcpflow startime='2013-06-20T15:58:20.376750Z' endtime='2013-06-20T15:58:25.448921Z' src_ipn='193.140.248.128' dst_ipn='192.168.1.103' packets='16' srcport='80' dstport='60741' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>193.140.248.128.00080-192.168.001.103.60740</filename>
+    <filesize>28376</filesize>
+    <tcpflow startime='2013-06-20T15:58:20.376703Z' endtime='2013-06-20T15:58:25.448930Z' src_ipn='193.140.248.128' dst_ipn='192.168.1.103' packets='26' srcport='80' dstport='60740' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.60740-193.140.248.128.00080</filename>
+    <filesize>7834</filesize>
+    <tcpflow startime='2013-06-20T15:58:20.371409Z' endtime='2013-06-20T15:58:25.449038Z' src_ipn='192.168.1.103' dst_ipn='193.140.248.128' packets='21' srcport='60740' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.60743-193.140.248.128.00080</filename>
+    <filesize>6836</filesize>
+    <tcpflow startime='2013-06-20T15:58:20.371656Z' endtime='2013-06-20T15:58:25.449106Z' src_ipn='192.168.1.103' dst_ipn='193.140.248.128' packets='15' srcport='60743' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.60739-193.140.248.128.00080</filename>
+    <filesize>8683</filesize>
+    <tcpflow startime='2013-06-20T15:58:19.660580Z' endtime='2013-06-20T15:58:25.449161Z' src_ipn='192.168.1.103' dst_ipn='193.140.248.128' packets='24' srcport='60739' dstport='80' family='2' out_of_order_count='6' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.60741-193.140.248.128.00080</filename>
+    <filesize>7854</filesize>
+    <tcpflow startime='2013-06-20T15:58:20.371527Z' endtime='2013-06-20T15:58:25.449225Z' src_ipn='192.168.1.103' dst_ipn='193.140.248.128' packets='17' srcport='60741' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>193.140.248.128.00080-192.168.001.103.60744</filename>
+    <filesize>101709</filesize>
+    <tcpflow startime='2013-06-20T15:58:20.376828Z' endtime='2013-06-20T15:58:25.633271Z' src_ipn='193.140.248.128' dst_ipn='192.168.1.103' packets='78' srcport='80' dstport='60744' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>193.140.248.128.00080-192.168.001.103.60742</filename>
+    <filesize>86523</filesize>
+    <tcpflow startime='2013-06-20T15:58:20.376781Z' endtime='2013-06-20T15:58:25.633294Z' src_ipn='193.140.248.128' dst_ipn='192.168.1.103' packets='67' srcport='80' dstport='60742' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.60742-193.140.248.128.00080</filename>
+    <filesize>7922</filesize>
+    <tcpflow startime='2013-06-20T15:58:20.371618Z' endtime='2013-06-20T15:58:25.633381Z' src_ipn='192.168.1.103' dst_ipn='193.140.248.128' packets='43' srcport='60742' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.60744-193.140.248.128.00080</filename>
+    <filesize>8869</filesize>
+    <tcpflow startime='2013-06-20T15:58:20.371696Z' endtime='2013-06-20T15:58:25.633410Z' src_ipn='192.168.1.103' dst_ipn='193.140.248.128' packets='45' srcport='60744' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.39898-069.064.068.170.00080</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:48.750688Z' endtime='2013-06-20T15:58:48.750688Z' src_ipn='192.168.1.103' dst_ipn='69.64.68.170' packets='1' srcport='39898' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.39897-069.064.068.170.00080</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:48.750806Z' endtime='2013-06-20T15:58:48.750806Z' src_ipn='192.168.1.103' dst_ipn='69.64.68.170' packets='1' srcport='39897' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.39896-069.064.068.170.00080</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:48.750850Z' endtime='2013-06-20T15:58:48.750850Z' src_ipn='192.168.1.103' dst_ipn='69.64.68.170' packets='1' srcport='39896' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.39899-069.064.068.170.00080</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:48.750884Z' endtime='2013-06-20T15:58:48.750884Z' src_ipn='192.168.1.103' dst_ipn='69.64.68.170' packets='1' srcport='39899' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.39901-069.064.068.170.00080</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:48.750913Z' endtime='2013-06-20T15:58:48.750913Z' src_ipn='192.168.1.103' dst_ipn='69.64.68.170' packets='1' srcport='39901' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.39900-069.064.068.170.00080</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:48.750946Z' endtime='2013-06-20T15:58:48.750946Z' src_ipn='192.168.1.103' dst_ipn='69.64.68.170' packets='1' srcport='39900' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>069.064.068.170.00080-192.168.001.103.39897</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:48.967445Z' endtime='2013-06-20T15:58:48.967445Z' src_ipn='69.64.68.170' dst_ipn='192.168.1.103' packets='1' srcport='80' dstport='39897' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>069.064.068.170.00080-192.168.001.103.39898</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:48.967544Z' endtime='2013-06-20T15:58:48.967544Z' src_ipn='69.64.68.170' dst_ipn='192.168.1.103' packets='1' srcport='80' dstport='39898' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>069.064.068.170.00080-192.168.001.103.39899</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:48.967581Z' endtime='2013-06-20T15:58:48.967581Z' src_ipn='69.64.68.170' dst_ipn='192.168.1.103' packets='1' srcport='80' dstport='39899' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>069.064.068.170.00080-192.168.001.103.39896</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:48.967965Z' endtime='2013-06-20T15:58:48.967965Z' src_ipn='69.64.68.170' dst_ipn='192.168.1.103' packets='1' srcport='80' dstport='39896' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>069.064.068.170.00080-192.168.001.103.39901</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:48.968440Z' endtime='2013-06-20T15:58:48.968440Z' src_ipn='69.64.68.170' dst_ipn='192.168.1.103' packets='1' srcport='80' dstport='39901' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>069.064.068.170.00080-192.168.001.103.39900</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:48.969512Z' endtime='2013-06-20T15:58:48.969512Z' src_ipn='69.64.68.170' dst_ipn='192.168.1.103' packets='1' srcport='80' dstport='39900' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.39894-069.064.068.170.00080</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:49.749446Z' endtime='2013-06-20T15:58:49.749446Z' src_ipn='192.168.1.103' dst_ipn='69.64.68.170' packets='1' srcport='39894' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>069.064.068.170.00080-192.168.001.103.39894</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:49.970774Z' endtime='2013-06-20T15:58:49.970774Z' src_ipn='69.64.68.170' dst_ipn='192.168.1.103' packets='1' srcport='80' dstport='39894' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.39895-069.064.068.170.00080</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:50.745481Z' endtime='2013-06-20T15:58:50.745481Z' src_ipn='192.168.1.103' dst_ipn='69.64.68.170' packets='1' srcport='39895' dstport='80' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>069.064.068.170.00080-192.168.001.103.39895</filename>
+    <filesize>0</filesize>
+    <tcpflow startime='2013-06-20T15:58:50.961742Z' endtime='2013-06-20T15:58:50.961742Z' src_ipn='69.64.68.170' dst_ipn='192.168.1.103' packets='1' srcport='80' dstport='39895' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.34372-173.194.113.043.00443</filename>
+    <filesize>573</filesize>
+    <tcpflow startime='2013-06-20T15:58:53.359104Z' endtime='2013-06-20T15:58:53.954355Z' src_ipn='192.168.1.103' dst_ipn='173.194.113.43' packets='8' srcport='34372' dstport='443' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>173.194.113.043.00443-192.168.001.103.34372</filename>
+    <filesize>222</filesize>
+    <tcpflow startime='2013-06-20T15:58:53.416368Z' endtime='2013-06-20T15:58:54.011194Z' src_ipn='173.194.113.43' dst_ipn='192.168.1.103' packets='6' srcport='443' dstport='34372' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>173.194.113.105.00443-192.168.001.103.54977</filename>
+    <filesize>139</filesize>
+    <tcpflow startime='2013-06-20T15:58:50.945283Z' endtime='2013-06-20T15:59:49.939635Z' src_ipn='173.194.113.105' dst_ipn='192.168.1.103' packets='4' srcport='443' dstport='54977' family='2' out_of_order_count='1' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.54977-173.194.113.105.00443</filename>
+    <filesize>142</filesize>
+    <tcpflow startime='2013-06-20T15:58:50.888646Z' endtime='2013-06-20T15:59:49.939824Z' src_ipn='192.168.1.103' dst_ipn='173.194.113.105' packets='8' srcport='54977' dstport='443' family='2' out_of_order_count='1' />
+  </fileobject>
+  <fileobject>
+    <filename>173.194.113.111.00443-192.168.001.103.60273</filename>
+    <filesize>139</filesize>
+    <tcpflow startime='2013-06-20T15:58:51.946354Z' endtime='2013-06-20T15:59:50.940531Z' src_ipn='173.194.113.111' dst_ipn='192.168.1.103' packets='4' srcport='443' dstport='60273' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>173.194.113.042.00443-192.168.001.103.51577</filename>
+    <filesize>139</filesize>
+    <tcpflow startime='2013-06-20T15:58:51.946450Z' endtime='2013-06-20T15:59:50.940573Z' src_ipn='173.194.113.42' dst_ipn='192.168.1.103' packets='4' srcport='443' dstport='51577' family='2' out_of_order_count='0' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.60273-173.194.113.111.00443</filename>
+    <filesize>142</filesize>
+    <tcpflow startime='2013-06-20T15:58:51.889699Z' endtime='2013-06-20T15:59:50.940689Z' src_ipn='192.168.1.103' dst_ipn='173.194.113.111' packets='8' srcport='60273' dstport='443' family='2' out_of_order_count='1' />
+  </fileobject>
+  <fileobject>
+    <filename>192.168.001.103.51577-173.194.113.042.00443</filename>
+    <filesize>142</filesize>
+    <tcpflow startime='2013-06-20T15:58:51.889960Z' endtime='2013-06-20T15:59:50.941243Z' src_ipn='192.168.1.103' dst_ipn='173.194.113.42' packets='8' srcport='51577' dstport='443' family='2' out_of_order_count='1' />
+  </fileobject>
+  <fileobject>
+    <filename>218.100.043.174.08001-192.168.001.103.33478</filename>
+    <filesize>7943</filesize>
+    <tcpflow startime='2013-06-20T15:58:46.901328Z' endtime='2013-06-20T15:59:58.043994Z' src_ipn='218.100.43.174' dst_ipn='192.168.1.103' packets='30' srcport='8001' dstport='33478' family='2' out_of_order_count='2' />
+  </fileobject>
+</dfxml>

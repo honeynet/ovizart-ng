@@ -2,4 +2,4 @@
 
 __author__ = "ggercek"
 
-import pcap_source
+import tcpflow

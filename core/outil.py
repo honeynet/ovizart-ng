@@ -3,7 +3,7 @@
 __author__ = "ggercek"
 
 
-def get(self, dict, key):
+def get(dict, key):
     """
     @protected returns the value from dictionary
     @param dict : dictionary
@@ -19,7 +19,7 @@ def get(self, dict, key):
     return val
 
 
-def set(self, dict, key, val):
+def set(dict, key, val):
     """
     @protected add or replace val on given dict with given key
     @param dict dictionary
@@ -27,7 +27,7 @@ def set(self, dict, key, val):
     @param val value
     @return old value if a value exists with given key, None otherwise
     """
-    oldVal = self.__get(dict, key)
+    oldVal = get(dict, key)
     dict[key] = val
     return oldVal
 

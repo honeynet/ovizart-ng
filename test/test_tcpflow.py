@@ -2,14 +2,10 @@ __author__ = 'ggercek'
 
 from unittest import TestCase
 
-from ovizart.tcpflow import TcpFlow
+from datasource.tcpflow import TcpFlow
 
-
-class TestPcapHandler(TestCase):
+class TestTcpFlow(TestCase):
 
     def test_parseReportXML(self):
-
         parser = TcpFlow()
-
-        parser.parseReportXML('output/report.xml')
-
+        parser.parseReportXML('../output/report.xml')
