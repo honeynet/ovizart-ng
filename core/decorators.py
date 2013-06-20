@@ -6,7 +6,7 @@ from exceptions import MissingMethodException, MissingArgumentException
 import inspect
 
 
-def checkMethod(cls, methodName):
+def checkMethod(cls, methodName, argName):
     """
     @private checks given class for given method name
     @param cls          : class to check
@@ -23,7 +23,6 @@ def checkMethod(cls, methodName):
         raise MissingMethodException(methodName, cls)
 
     # check methods argument
-    argName = 'data'
     found = False
     for m in methods:
         m = m[1]
@@ -43,6 +42,9 @@ class GenericDecorator:
     # method name to search
     methodName = None
 
+    # argument name to search
+    argName = None
+
     # register method callback
     registerMethod = None
 
@@ -60,7 +62,7 @@ class GenericDecorator:
         """
         # Check for the analyze method!!!
         self.cls = cls
-        checkMethod(self.cls, self.__class__.methodName)
+        checkMethod(self.cls, self.__class__.methodName, self.__class__.argName)
 
         self.newAnalyzer = self.cls()
         self.__class__.registerMethod(self, self.newAnalyzer, self.tags)
@@ -70,6 +72,7 @@ class DataSource(GenericDecorator):
     """Decorator for data source classes"""
 
     methodName = 'parse'
+    argName = 'filename'
     registerMethod = register_data_source
 
 
@@ -77,6 +80,7 @@ class Tagger(GenericDecorator):
     """Decorator for tagger classes"""
 
     methodName = 'tag'
+    argName = 'data'
     registerMethod = register_tagger
 
 
@@ -84,6 +88,7 @@ class Analyzer(GenericDecorator):
     """Decorator for analyzer classes"""
 
     methodName = 'analyze'
+    argName = 'data'
     registerMethod = register_analyzer
 
 
@@ -91,4 +96,5 @@ class Reporter(GenericDecorator):
     """Decorator for reporter classes"""
 
     methodName = 'report'
+    argName = 'data'
     registerMethod = register_reporter
