@@ -3,6 +3,9 @@
 __author__ = "ggercek"
 
 from xml.dom import minidom
+from subprocess import call
+import os
+import datetime
 
 from ovizart import Tags
 from core import DataSource
@@ -23,18 +26,30 @@ class TcpFlow:
 
     def parse(self, filename):
         """Separates given pcap file into separate pcap files"""
-        # TODO: Move this to conf.cfg or conf.py ?!
-        outputFolder = 'output/'
         summary = {'inputFile': {'filename': filename}, 'flows': []}
+        outputFolder = self.runTcpFlow(filename)
+        summary['flows'] = self.parseReportXML(outputFolder + 'report.xml')
+
+        return summary
+
+    def runTcpFlow(self, filename):
+        # TODO: Move this to conf.cfg or conf.py ?!
+        outputFolder = '../output/'
+
+        # get timestamp for folder name
+        newDir = outputFolder + datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f') + '/'
+
+        if not os.path.isdir(outputFolder):
+            os.mkdir(outputFolder)
+        os.mkdir(newDir)
 
         # Run tcpflow for given pcap file.
-        # TODO: Change working directory before starting tcpflow. We can not set output folder for generated pcap files.
-        # currentpath = os.getcwd()
-        # os.chdir(outputFolder)
-        # os.chdir(currentpath)
-        # tcpflow -r filename
-        summary['flows'] = self.parseReportXML('report.xml')
-        return summary
+        os.chdir(newDir)
+        cmd = 'tcpflow -r ' + filename + ' -o ' + newDir
+        print cmd
+        call(cmd, shell=True)
+        return newDir
+
 
     def parseReportXML(self, report):
         def __getTextData(node, target):
