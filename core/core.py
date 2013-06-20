@@ -1,7 +1,9 @@
-
+from analysis import Analysis
 from outil import get_file_type
 
 __author__ = "ggercek"
+
+_analysis = {}
 
 analyzers = {}
 taggers = {}
@@ -125,6 +127,10 @@ def list_available_modules():
 def evaluate(config):
     global availableModules, dataSources, taggers, analyzers, reporters
 
+    newAnalysis = Analysis()
+
+    _analysis[newAnalysis.id] = newAnalysis
+
     # Read input file(s)
     inputFiles = config['inputFiles']
 
@@ -164,14 +170,15 @@ def evaluate(config):
         flows = summary['flows']
         # flow is an instance of data class
         for flow in flows:
+            newAnalysis.data.append(flow)
             for tagger in selectedTaggers:
                 tagger.tag(flow)
 
         for flow in flows:
-            for analyzer in selectedAnalyzers:
+            for tags, analyzer in selectedAnalyzers:
                 analyzer.analyze(flow)
 
         for flow in flows:
-            for reporter in selectedReporters:
+            for tags, reporter in selectedReporters:
                 reporter.report(flow)
 
