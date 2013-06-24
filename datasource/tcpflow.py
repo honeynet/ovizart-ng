@@ -34,22 +34,21 @@ class TcpFlow:
 
     def runTcpFlow(self, filename):
         # TODO: Move this to conf.cfg or conf.py ?!
-        outputFolder = '../output/'
+        outputFolder = os.path.abspath('../output') + '/'
 
         # get timestamp for folder name
-        newDir = outputFolder + datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f') + '/'
+        newDir = outputFolder + datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f')
+        newDir = os.path.abspath(newDir) + '/'
 
         if not os.path.isdir(outputFolder):
             os.mkdir(outputFolder)
         os.mkdir(newDir)
 
         # Run tcpflow for given pcap file.
-        os.chdir(newDir)
         cmd = 'tcpflow -r ' + filename + ' -o ' + newDir
         print cmd
         call(cmd, shell=True)
         return newDir
-
 
     def parseReportXML(self, report):
         def __getTextData(node, target):
