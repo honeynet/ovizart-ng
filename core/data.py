@@ -14,7 +14,7 @@ class Analysis:
     FINISHED = "FINISHED"
 
     def __init__(self):
-        self.id = Analysis.generateId()
+        self.id = Analysis.__generateId()
         self.startTime = datetime.datetime.now()
         self.user = "<NoUserDefined>"
         self.config = None
@@ -23,13 +23,16 @@ class Analysis:
         self.summary = {}
 
     @staticmethod
-    def generateId():
+    def __generateId():
         Analysis.count += 1
         return Analysis.count
 
 
 class Data():
     """ Basic data representation class """
+
+    STREAM = 'stream'
+    DATA_SOURCE = 'data_source'
 
     def __init__(self):
         self.__data = {}
@@ -43,9 +46,9 @@ class Data():
         """
         if val:
             # TODO: Find a better solution, bug possibility!
-            return self.set(self.__data, key, val)
+            return self.__set(self.__data, key, val)
         else:
-            return self.get(self.__data, key)
+            return self.__get(self.__data, key)
 
     def tag(self, key, val=None):
         """Add or replace a tag value if val is defined otherwise
@@ -55,11 +58,11 @@ class Data():
         """
         if val:
             # TODO: Find a better solution, bug possibility!
-            return self.set(self.__tags, key, val)
+            return self.__set(self.__tags, key, val)
         else:
-            return self.get(self.__tags, key)
+            return self.__get(self.__tags, key)
 
-    def get(self, dict, key):
+    def __get(self, dict, key):
         """
         @protected returns the value from dictionary
         @param dict : dictionary
@@ -74,7 +77,7 @@ class Data():
             pass
         return val
 
-    def set(self, dict, key, val):
+    def __set(self, dict, key, val):
         """
         @protected add or replace val on given dict with given key
         @param dict dictionary
@@ -82,6 +85,18 @@ class Data():
         @param val value
         @return old value if a value exists with given key, None otherwise
         """
-        oldVal = self.get(dict, key)
+        oldVal = self.__get(dict, key)
         dict[key] = val
         return oldVal
+
+    def setStream(self, stream):
+        return self.data(Data.STREAM, stream)
+
+    def getStream(self):
+        return self.data(Data.STREAM)
+
+    def setDataSource(self, dataSource):
+        return self.tag(Data.DATA_SOURCE, dataSource)
+
+    def getDataSource(self):
+        return self.tag(Data.DATA_SOURCE)
