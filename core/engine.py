@@ -265,6 +265,9 @@ class GenericDecorator:
     # register method callback
     registerMethod = None
 
+    clsMethod = None
+    newMethod = None
+
     def __init__(self, tags):
         """
         Constructor
@@ -279,14 +282,13 @@ class GenericDecorator:
         """
         # Check for the analyze method!!!
         self.cls = cls
-        GenericDecorator.checkMethod(self.cls, self.__class__.methodName, self.__class__.argName)
+        self.checkMethod(self.cls, self.__class__.methodName, self.__class__.argName)
 
         self.newAnalyzer = self.cls()
         self.__class__.registerMethod(self, self.newAnalyzer, self.tags)
         return cls
 
-    @staticmethod
-    def checkMethod(cls, methodName, argName):
+    def checkMethod(self, cls, methodName, argName):
         """
         @private checks given class for given method name
         @param cls          : class to check
@@ -310,6 +312,11 @@ class GenericDecorator:
             # TODO: Refactor this control later.
             if args and len(args) == 2 and args[1] == argName:
                 found = True
+                if self.__class__.newMethod:
+                    self.__class__.clsMethod = m
+                    cls.__dict__['decorator_tags'] = self.tags
+                    # newMethod has to a tuple otherwise it will throw an exception
+                    cls.__dict__[methodName] = self.__class__.newMethod[0]
                 break
 
         if not found:
@@ -322,6 +329,22 @@ class DataSource(GenericDecorator):
     methodName = 'parse'
     argName = 'filename'
     registerMethod = register_data_source
+    clsMethod = None
+
+    def __init__(self, tags):
+        GenericDecorator.__init__(self, tags)
+        # TODO: Seems a bit weird find a soultion!!!
+        # If we directly set self.parse to newMethod variable then it will throw an exception but with this approach
+        # it is OK, no complain from python.
+        self.__class__.newMethod = (self.parse, )
+
+    # TODO: Find out why we must use a static function for this job
+    @staticmethod
+    def parse(cls, filename):
+        summary = DataSource.clsMethod(cls, filename)
+        for d in summary['data']:
+            d.setDataSource(cls.decorator_tags)
+        return summary
 
 
 class Tagger(GenericDecorator):
