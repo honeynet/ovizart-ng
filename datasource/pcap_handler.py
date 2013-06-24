@@ -116,7 +116,8 @@ class PcapDataSourceHandler:
         # Check for fragmentation
         fragOffset = data[6:8]
         fragOffset = _decode_short(fragOffset)
-        fragOffset = (fragOffset & 0x1fff) * 8
+        fragOffset = (fragOffset & 0x1fff) << 3
+        # TODO: find session based on IP.identification and flag
         #print fragOffset
 
         if fragOffset == 0 and ip_type == _ip_protocol['TCP'] or ip_type == _ip_protocol['UDP']:
@@ -130,6 +131,7 @@ class PcapDataSourceHandler:
             # if fragoffset is non zero then we can not read port values
             # TODO: use fragmented packets on reassembler.
             # TODO: store the streams in a hierarchical structure so that we can find the fragmented streams easier.
+            # TODO: apply RFC815 http://tools.ietf.org/html/rfc815
             pass
 
         ipv4Header = None
@@ -238,6 +240,6 @@ class Stream:
 if __name__ == '__main__':
     import os
     p = PcapDataSourceHandler()
-    f = os.path.abspath('../output/test-http.pcap')
-    #f = os.path.abspath('../output/test-fragmentation.pcap')
+    #f = os.path.abspath('../output/test-http.pcap')
+    f = os.path.abspath('../output/test-fragmentation.pcap')
     p.parse(f)
