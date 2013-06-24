@@ -7,9 +7,9 @@ from subprocess import call
 import os
 import datetime
 
-from ovizart import Tags
-from core import DataSource
-from core import Data
+from core.tags import Tags
+from core.engine import DataSource
+from core.data import Data
 
 PCAP = Tags.DataSource.PCAP
 

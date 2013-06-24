@@ -3,9 +3,9 @@ __author__ = 'ggercek'
 import pcap
 import struct
 
-from ovizart import Tags
-from core import DataSource
-from core import Data
+from core.tags import Tags
+from core.engine import DataSource
+from core.data import Data
 
 PCAP = Tags.DataSource.PCAP
 
@@ -50,7 +50,8 @@ _ip_protocol = {
 @DataSource(tags=PCAP)
 class PcapDataSourceHandler:
     """Parse pcap files and build up IP streams.
-    Streams are identified as follows, <start_time, protocol, ip1, [port1,] ip2, [port2]> ports will be used if port field exists.
+    Streams are identified as follows, <start_time, protocol, ip1, [port1,] ip2, [port2]>
+    ports will be used if port field exists.
     Streams will be finished with timeout value of 60 sec.
     """
     def __init__(self):
@@ -69,7 +70,7 @@ class PcapDataSourceHandler:
         p = pcap.pcapObject()
         p.open_offline(filename)
         # process all packets
-        p.dispatch(-1, self.getStreamHeader)
+        p.dispatch(-1, self.processPacket)
 
         global _count
         print 'count: ', _count
@@ -78,7 +79,7 @@ class PcapDataSourceHandler:
             print k
         return summary
 
-    def getStreamHeader(self, length, data, ts):
+    def processPacket(self, length, data, ts):
         global _count, _tpid, _ether_type
         ieee_8021q = data[12:14] == _tpid
         if ieee_8021q:

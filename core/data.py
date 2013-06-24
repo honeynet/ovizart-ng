@@ -1,7 +1,31 @@
 
 __author__ = "ggercek"
 
-from outil import set, get
+import datetime
+
+
+class Analysis:
+    """Data class for holding general analysis information"""
+    count = 0
+
+    INIT = "INIT"
+    ERROR = "ERROR"
+    RUNNING = "RUNNING"
+    FINISHED = "FINISHED"
+
+    def __init__(self):
+        self.id = Analysis.generateId()
+        self.startTime = datetime.datetime.now()
+        self.user = "<NoUserDefined>"
+        self.config = None
+        self.status = Analysis.INIT
+        self.data = []
+        self.summary = {}
+
+    @staticmethod
+    def generateId():
+        Analysis.count += 1
+        return Analysis.count
 
 
 class Data():
@@ -19,9 +43,9 @@ class Data():
         """
         if val:
             # TODO: Find a better solution, bug possibility!
-            return set(self.__data, key, val)
+            return self.set(self.__data, key, val)
         else:
-            return get(self.__data, key)
+            return self.get(self.__data, key)
 
     def tag(self, key, val=None):
         """Add or replace a tag value if val is defined otherwise
@@ -31,6 +55,33 @@ class Data():
         """
         if val:
             # TODO: Find a better solution, bug possibility!
-            return set(self.__tags, key, val)
+            return self.set(self.__tags, key, val)
         else:
-            return get(self.__tags, key)
+            return self.get(self.__tags, key)
+
+    def get(self, dict, key):
+        """
+        @protected returns the value from dictionary
+        @param dict : dictionary
+        @param key  : key value for requested info
+        @return value if key exists, None otherwise
+        """
+        val = None
+        try:
+            val = dict[key]
+        except KeyError:
+            # TODO: We should log such events
+            pass
+        return val
+
+    def set(self, dict, key, val):
+        """
+        @protected add or replace val on given dict with given key
+        @param dict dictionary
+        @param key key value
+        @param val value
+        @return old value if a value exists with given key, None otherwise
+        """
+        oldVal = self.get(dict, key)
+        dict[key] = val
+        return oldVal

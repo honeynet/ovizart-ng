@@ -1,8 +1,8 @@
 
 __author__ = "ggercek"
 
-from ovizart import Analyzer
-from ovizart import Tags
+from core.engine import Analyzer
+from core.tags import Tags
 
 # TODO: Revise this part. too long to use
 IRC = Tags.Protocol.IRC

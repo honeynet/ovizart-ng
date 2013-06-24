@@ -3,7 +3,7 @@
 __author__ = "ggercek"
 
 
-from core import *
+from core.engine import *
 from datasource import *
 from reporter import *
 from tagger import *

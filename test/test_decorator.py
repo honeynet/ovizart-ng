@@ -3,8 +3,8 @@ __author__ = "ggercek"
 
 from unittest import TestCase
 
-from core import MissingMethodException, MissingArgumentException
-from core.decorators import DataSource, Tagger, Analyzer, Reporter
+from core.engine import MissingMethodException, MissingArgumentException
+from core.engine import DataSource, Tagger, Analyzer, Reporter
 
 
 class TestGenericDecorator(TestCase):
