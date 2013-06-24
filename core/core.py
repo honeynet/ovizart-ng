@@ -104,7 +104,7 @@ def register_reporter(decorator, reporter, tags):
 
 
 def list_available_modules():
-    def dump(title, elem) :
+    def dump(title, elem):
         print
         print "   %s: " % title
 
@@ -132,14 +132,14 @@ def evaluate(config):
     _analysis[newAnalysis.id] = newAnalysis
 
     # Read input file(s)
-    inputFiles = config['inputFiles']
+    inputFiles = config.input_files
 
     # Select parser based on extension
     inputFiles = get_file_type(inputFiles)
 
     # Filter analyzers
     # TODO: remove unwanted analyzers
-    # filterAnalyzers based on config parameter exclude_analyzer=[]
+    # filterAnalyzers based on config parameter config.exclude_analyzer=[]
     selectedAnalyzers = analyzers
 
     # Select reporter module

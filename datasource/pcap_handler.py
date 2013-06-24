@@ -1,6 +1,8 @@
 __author__ = 'ggercek'
 
 import pcap
+import struct
+
 from ovizart import Tags
 from core import DataSource
 from core import Data
@@ -9,14 +11,16 @@ PCAP = Tags.DataSource.PCAP
 
 _count = 0
 
-import struct
+
 def _decode_byte(data):
     """Decodes one byte of network data into an unsigned char."""
     return struct.unpack('!B', data)[0]
 
+
 def _decode_short(data):
     """Decodes two bytes of network data into an unsigned short."""
     return struct.unpack('!H', data)[0]
+
 
 def address_to_string(b):
     """Converts an IP address to its string representation.
@@ -69,6 +73,9 @@ class PcapDataSourceHandler:
 
         global _count
         print 'count: ', _count
+        print len(self.streams)
+        for k in self.streams.keys():
+            print k
         return summary
 
     def getStreamHeader(self, length, data, ts):
@@ -91,7 +98,7 @@ class PcapDataSourceHandler:
         _count += 1
         self.dumpStreamHeader(streamHeader)
         stream = self.getStream(streamHeader, data)
-        if stream:
+        if not stream:
             stream = Stream.generateStream(streamHeader, data)
             # first packet automatically added to generated stream no need to add twice.
             self.streams[stream.key] = stream
@@ -106,13 +113,24 @@ class PcapDataSourceHandler:
         dst = data[16:20]
         sport = dport = None
 
-        if ip_type == _ip_protocol['TCP'] or ip_type == _ip_protocol['UDP']:
+        # Check for fragmentation
+        fragOffset = data[6:8]
+        fragOffset = _decode_short(fragOffset)
+        fragOffset = (fragOffset & 0x1fff) * 8
+        #print fragOffset
+
+        if fragOffset == 0 and ip_type == _ip_protocol['TCP'] or ip_type == _ip_protocol['UDP']:
             header_len = 4 * (_decode_byte(data[0]) & 0x0f)
             tot_len = _decode_short(data[2:4])
             pld = data[header_len:tot_len]
             #sport, dport = _process_tcp(ts, src, dst, pld)
             sport = _decode_short(pld[0:2])
             dport = _decode_short(pld[2:4])
+        else :
+            # if fragoffset is non zero then we can not read port values
+            # TODO: use fragmented packets on reassembler.
+            # TODO: store the streams in a hierarchical structure so that we can find the fragmented streams easier.
+            pass
 
         ipv4Header = None
         if sport and dport:
@@ -141,24 +159,7 @@ class PcapDataSourceHandler:
     def getStream(self, streamHeader, pkt):
         #protocol, srcIp, srcPort, dstIp, dstPort, ts = None
 
-        def _getKeys(protocol, srcIp, srcPort, dstIp, dstPort):
-            format = None; tuple1 = None; tuple2 = None
-
-            if srcPort and dstPort:
-                format = "%s_%s_%s"
-                tuple1 = (protocol, srcIp, dstIp)
-                tuple2 = (protocol, dstIp, srcIp)
-            else:
-                format = "%s_%s_%d_%s_%d"
-                tuple1 = (protocol, srcIp, srcPort, dstIp, dstPort)
-                tuple2 = (protocol, dstIp, dstPort, srcIp, srcPort)
-
-            key1 = format % tuple1
-            key2 = format % tuple2
-
-            return key1, key2
-
-        keys = _getKeys(protocol, srcIp, srcPort, dstIp, dstPort)
+        keys = Stream.generateKeys(streamHeader)
         stream = None
         if keys[0] in self.streams:
             # use src based key
@@ -166,11 +167,6 @@ class PcapDataSourceHandler:
         elif keys[1] in self.streams:
             # use dst based key
             stream = self.streams[keys[1]]
-        #else:
-            # new stream: use src based key
-            #s = Stream(protocol, srcIp, srcPort, dstIp, dstPort, ts, pkt)
-            #stream = self.streams[keys[0]]
-
         return stream
 
 
@@ -183,23 +179,17 @@ class Stream:
         self.dstPort = dstPort
         self.startTime = startTime
 
-        # TODO: Set proper key
-        if srcPort and dstPort:
-            self.key = "%d_%d_%d_%d" % (self.protocol, self.srcIP, self.dstIp, self.startTime)
-        else:
-            self.key = "%d_%d_%d_%d_%d_%d" % \
-                       (self.protocol, self.srcIP, self.srcPort, self.dstIp, self.dstPort, self.startTime)
+        self.key = Stream.generateKeys((protocol, srcIp, srcPort, dstIp, dstPort, startTime))[0]
 
         # TODO: take first packet as argument
         self.pkts = []
         self.addPacket(startTime, pkt)
 
     def addPacket(self, ts, pkt):
-
         if pkt:
             # check the last pkt time
             if not self.isTimeoutOccured(ts):
-                self.pkts.append(ts, pkt)
+                self.pkts.append((ts, pkt))
 
     def isTimeoutOccured(self, ts):
         result = False
@@ -208,6 +198,7 @@ class Stream:
             result = ts - last_ts > 60000
         return result
 
+    @staticmethod
     def generateStream(streamHeader, pkt):
         stream = None
         if len(streamHeader) == 4:
@@ -217,8 +208,36 @@ class Stream:
 
         return stream
 
+    @staticmethod
+    def generateKeys(streamHeader):
+        proto = 0; sip = 1; dip = 3; sport = 2; dport = 4; ts = -1;
+
+        if len(streamHeader) == 4 :
+            dip = 2
+            sport = None
+            dport = None
+        elif not (streamHeader[sport] and streamHeader[dport]):
+            sport = None
+            dport = None
+
+        proto = _decode_byte(streamHeader[proto])
+        sip = address_to_string(streamHeader[sip])
+        dip = address_to_string(streamHeader[dip])
+
+        if sport and dport:
+            sport = streamHeader[sport]
+            dport = streamHeader[dport]
+            key1 = "%s_%s_%d_%s_%d" % (proto, sip, sport, dip, dport)
+            key2 = "%s_%s_%d_%s_%d" % (proto, dip, dport, sip, sport)
+        else:
+            key1 = "%s_%s_%s" % (proto, sip, dip)
+            key2 = "%s_%s_%s" % (proto, dip, sip)
+
+        return key1, key2
+
 if __name__ == '__main__':
     import os
     p = PcapDataSourceHandler()
     f = os.path.abspath('../output/test-http.pcap')
+    #f = os.path.abspath('../output/test-fragmentation.pcap')
     p.parse(f)
