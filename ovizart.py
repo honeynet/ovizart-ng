@@ -9,6 +9,8 @@ from reporter import *
 from tagger import *
 from analyzer import *
 
+import conf as config
+
 
 class Ovizart():
     """
@@ -73,4 +75,3 @@ if __name__ == '__main__':
     config = {}
     ovizart = Ovizart(config)
     ovizart.listAvailableModules()
-    
