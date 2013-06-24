@@ -65,7 +65,7 @@ class PcapDataSourceHandler:
         @param filename: full path of given pcap file
         @return summary of the pcap file with stream information
         """
-        summary = {'inputFile': {'filename': filename}, 'flows': []}
+        summary = {'inputFile': {'filename': filename, 'numberOfPacket': 0, 'numberOfStreams': 0}, 'data': []}
 
         p = pcap.pcapObject()
         p.open_offline(filename)
@@ -76,7 +76,10 @@ class PcapDataSourceHandler:
         print 'count: ', _count
         print len(self.streams)
         for k in self.streams.keys():
-            print k
+            data = Data()
+            data.setStream(self.streams[k])
+            summary['data'].append(data)
+
         return summary
 
     def processPacket(self, length, data, ts):
@@ -97,7 +100,7 @@ class PcapDataSourceHandler:
             pass
 
         _count += 1
-        self.dumpStreamHeader(streamHeader)
+        #self.dumpStreamHeader(streamHeader)
         stream = self.getStream(streamHeader, data)
         if not stream:
             stream = Stream.generateStream(streamHeader, data)
@@ -106,7 +109,7 @@ class PcapDataSourceHandler:
         else:
             stream.addPacket(ts, data)
 
-        print stream.key
+        #print stream.key
 
     def _getIPv4Header(self, ts, data):
         ip_type = data[9]
