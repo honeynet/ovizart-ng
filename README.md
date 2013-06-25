@@ -26,4 +26,19 @@ Then <machinemanager>.conf is also important. You may see details here http://do
 In addition, you can also fill your Virustotal API key in processing.conf, if needed.
 
 
+Configure Guest Machine
+---------
+
+1. Get a Win XP SP3 first, please be carefull about piracy issues.
+
+2. Install XP on VirtualBox
+
+3. Configure networking stuffs (Normally, this will be done by VirtualBox automatically)
+
+4. Install Python inside WinXP
+
+5. Got the cuckoo/agent/agent.py and run it in WinXP
+
+6. Backup the VM
+
 
