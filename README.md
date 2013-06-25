@@ -26,6 +26,7 @@ Then <machinemanager>.conf is also important. You may see details here http://do
 In addition, you can also fill your Virustotal API key in processing.conf, if needed.
 
 
+<<<<<<< HEAD
 Configure Guest Machine
 ---------
 
@@ -41,4 +42,6 @@ Configure Guest Machine
 
 6. Backup the VM
 
+=======
+>>>>>>> 3f02c861de9f1f47fc9e6026337e328296c9e51b
 
