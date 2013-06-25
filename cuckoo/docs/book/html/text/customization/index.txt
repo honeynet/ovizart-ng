@@ -1,0 +1,47 @@
+
+Customization
+*************
+
+This chapter explains how to customize Cuckoo. Cuckoo is written in a
+modular architecture built to be as much customizable it can, to fit
+all user's needs.
+
+* Machine Managers
+
+  * Configuration
+
+  * LibVirt
+
+* Analysis Packages
+
+  * Getting started
+
+    * "start()"
+
+    * "check()"
+
+    * "finish()"
+
+  * Options
+
+  * Process API
+
+    * Methods
+
+* Processing Modules
+
+  * Global Container
+
+  * Getting started
+
+* Signatures
+
+  * Getting started
+
+  * Creating your new signature
+
+  * Helpers
+
+* Reporting Modules
+
+  * Getting Started
