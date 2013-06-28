@@ -17,16 +17,16 @@ Prepare for Cuckoo Sandbox
 ----------
 In order to install Cuckoo, some preparations are needed according to Cuckoo Sandbox Documents. 
 
-First, Installing Python libraries, you may find details at http://docs.cuckoosandbox.org/en/latest/installation/host/requirements.html
+1. Install Python libraries, you may find details at http://docs.cuckoosandbox.org/en/latest/installation/host/requirements.html
 as well as http://docs.cuckoosandbox.org/en/latest/installation/host/installation.html.
 
-Second, we may configure the Cuckoo Sandbox by specifing [machine_manager] which is vitualbox in this case, IP & port, and datebase.
+2. we may configure the Cuckoo Sandbox by specifing [machine_manager] which is vitualbox in this case, IP & port, and datebase.
 Then <machinemanager>.conf is also important. You may see details here http://docs.cuckoosandbox.org/en/latest/installation/host/configuration.html.
 
 In addition, you can also fill your Virustotal API key in processing.conf, if needed.
 
 
-<<<<<<< HEAD
+
 Configure Guest Machine
 ---------
 
@@ -40,8 +40,27 @@ Configure Guest Machine
 
 5. Got the cuckoo/agent/agent.py and run it in WinXP
 
-6. Backup the VM
+6. Backup the VM, if needed.
 
-=======
->>>>>>> 3f02c861de9f1f47fc9e6026337e328296c9e51b
+7. (Important) Save a snapshot of WinXP like this:
 
+	>$ VBoxManage snapshot "Name of VM" take "Name of snapshot" --pause	
+	
+	as suggested here: http://docs.cuckoosandbox.org/en/latest/installation/guest/saving.html
+	
+
+Get Cuckoo Sandbox Started
+----
+
+1. Basically, "python cuckoo.py" would be fine.
+
+2. If it starts successfully, you may use its utils/submit.py, python API, or REST API to submit your analysis request. 
+
+  Follow http://docs.cuckoosandbox.org/en/latest/usage/submit.html
+
+3. The analysis reports will be stored in the "storage" folder. By default, it will generate html and json files unless the python packages cuckoo depends on are missing. 
+
+
+
+
+	
