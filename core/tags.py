@@ -16,3 +16,4 @@ class Tags:
         HTTP = "HTTP"
         DNS = "DNS"
         IRC = "IRC"
+        SMTP = "SMTP"

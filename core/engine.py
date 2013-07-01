@@ -6,19 +6,22 @@ _analysis = {}
 
 analyzers = {}
 taggers = {}
+reassemblers = {}
 reporters = {}
 dataSources = {}
 
 ANALYZER = "ANALYZER"
 TAGGER = "TAGGER"
+REASSEMBLER = "REASSEMBLER"
 REPORTER = "REPORTER"
 DATASOURCE = "DATASOURCE"
 
 availableModules = {
-    DATASOURCE: [],
-    TAGGER:     [],
-    ANALYZER:   [],
-    REPORTER:   []
+    DATASOURCE:  [],
+    TAGGER:      [],
+    REASSEMBLER: [],
+    ANALYZER:    [],
+    REPORTER:    []
 }
 
 
@@ -73,6 +76,19 @@ def register_tagger(decorator, tagger, tags):
 
     availableModules[TAGGER].append(tagger)
 
+
+def register_reassembler(decorator, reassembler, tags):
+    """
+    @protected This method should be called by decorators, no need to call this method explicitly
+    Register analyzer according to given tags
+    @param analyzer : analyzer object to register
+    @param tags     : tags to represent matching criteria
+    @return
+    """
+    global reassemblers, availableModules, REASSEMBLER
+    __register(reassemblers, reassembler, tags)
+
+    availableModules[REASSEMBLER].append(reassembler)
 
 def register_analyzer(decorator, analyzer, tags):
     """
@@ -374,6 +390,13 @@ class Reporter(GenericDecorator):
     methodName = 'report'
     argName = 'data'
     registerMethod = register_reporter
+
+
+class Reassembler(GenericDecorator):
+    """Decorator for re-assembler classes"""
+    methodName = 'process'
+    argName = '_in'
+    registerMethod = register_reassembler
 
 #########################
 ### END OF DECORATORS ###
