@@ -2,14 +2,14 @@
 
 __author__ = "ggercek"
 
-
-from core.engine import *
+import os
+from core import *
 from datasource import *
 from reporter import *
 from tagger import *
 from analyzer import *
 
-import conf as config
+from conf import Config
 
 
 class Ovizart():
@@ -17,17 +17,19 @@ class Ovizart():
     Main class to define usage interface
     """
 
-    def __init__(self, config):
-        self.config = config
+    def __init__(self):
+        self.config = Config()
+        self.analysis = {}
 
     def updateConfig(self, key, value):
         """Updates a config property"""
+        self.config[key] = value
         pass
 
     def setConfig(self, config):
         """Overwrites config"""
         result = False
-        if config:
+        if config and type(config) == Config:
             self.config = config
             result = True
         return result
@@ -36,7 +38,12 @@ class Ovizart():
         """Sets the input file name
         this method is used for local files or after the upload process
         """
-        self.inputFile = inputFile
+        result = False
+        if inputFile and inputFile not in self.config.input_files:
+            inputFile = os.path.abspath(inputFile)
+            self.config.input_files.append(inputFile)
+            result = True
+        return result
 
     def uploadFile(self, file):
         """Uploads the remote file to the server then sets the filename"""
@@ -48,17 +55,27 @@ class Ovizart():
     def start(self):
         # TODO: Should be this function async or sync?
         # May be we should return some kind of handler/id for the analyze process
-        pass
+        # Currently sync!!!
+        analysis = engine.evaluate(self.config)
+        self.analysis[analysis.id] = analysis
+        return analysis
 
     def stop(self, analysisId):
         """Cancels a RUNNING analyze
         """
-        pass
+        result = False
+        if analysisId in self.analysis:
+            result = engine.stop(analysisId)
+        return result
 
     def getStatus(self, analysisId):
         """Returns status of analyze as RUNNING, CANCELED, FINISHED, ERROR
         """
-        pass
+        result = None
+        if analysisId in self.analysis:
+            result = self.analysis[analysisId].status
+
+        return result
 
     def getReport(self, analysisId):
         """Returns the analyze report
@@ -68,10 +85,9 @@ class Ovizart():
     def listAvailableModules(self):
         """Prints available modules in a human readable way.
         """
-        list_available_modules()
+        engine.list_available_modules()
 
 
 if __name__ == '__main__':
-    config = {}
-    ovizart = Ovizart(config)
+    ovizart = Ovizart()
     ovizart.listAvailableModules()

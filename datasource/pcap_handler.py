@@ -9,7 +9,7 @@ from core.data import Data
 
 PCAP = Tags.DataSource.PCAP
 
-_count = 0
+_numberOfPacket = 0
 
 
 def _decode_byte(data):
@@ -72,9 +72,9 @@ class PcapDataSourceHandler:
         # process all packets
         p.dispatch(-1, self.processPacket)
 
-        global _count
-        print 'count: ', _count
-        print len(self.streams)
+        global _numberOfPacket
+        summary['inputFile']['numberOfPacket'] = _numberOfPacket
+        summary['inputFile']['numberOfStreams'] = len(self.streams)
         for k in self.streams.keys():
             data = Data()
             data.setStream(self.streams[k])
@@ -83,7 +83,7 @@ class PcapDataSourceHandler:
         return summary
 
     def processPacket(self, length, data, ts):
-        global _count, _tpid, _ether_type
+        global _numberOfPacket, _tpid, _ether_type
         ieee_8021q = data[12:14] == _tpid
         if ieee_8021q:
         #    tci = data[14:16]
@@ -99,7 +99,7 @@ class PcapDataSourceHandler:
             # TODO: Add ipv6 support
             pass
 
-        _count += 1
+        _numberOfPacket += 1
         #self.dumpStreamHeader(streamHeader)
         stream = self.getStream(streamHeader, data)
         if not stream:
@@ -190,6 +190,12 @@ class Stream:
         # TODO: take first packet as argument
         self.pkts = []
         self.addPacket(startTime, pkt)
+
+    def __repr__(self):
+        s = 'Stream Object {key: %s, protocol: %d, srcIP: %s, srcPort: %s, dstIP: %s, dstPort: %s, startTime: %s, numberOfPacket: %d}' \
+            % (self.key, _decode_byte(self.protocol), address_to_string(self.srcIP), str(self.srcPort),
+            address_to_string(self.dstIp), str(self.dstPort), str(self.startTime), len(self.pkts))
+        return s
 
     def addPacket(self, ts, pkt):
         if pkt:

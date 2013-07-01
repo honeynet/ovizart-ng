@@ -1,3 +1,10 @@
 
 # Exclude unwanted analyzers
-exclude_analyzer = [ ]
+
+class Config():
+
+    def __init__(self):
+        self.exclude_analyzer = []
+        self.input_files = []
+
+

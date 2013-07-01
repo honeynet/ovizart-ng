@@ -145,6 +145,7 @@ def evaluate(config):
     global availableModules, dataSources, taggers, analyzers, reporters
 
     newAnalysis = Analysis()
+    newAnalysis.config = config
 
     _analysis[newAnalysis.id] = newAnalysis
 
@@ -163,8 +164,10 @@ def evaluate(config):
     # Currently only html is available
     selectedReporters = availableModules[REPORTER]
 
-    for fileName, fileType in inputFiles:
-        parser = dataSources[fileType]
+    for fileName in inputFiles.keys():
+        fileType = inputFiles[fileName]
+        # TODO: What if multiple parser exists?
+        parser = dataSources[fileType][0]
 
         # Returns summary of pcap file with file names
         summary = parser.parse(fileName)
@@ -180,11 +183,13 @@ def evaluate(config):
         #                   {}.
         #               ]
         # }
-
+        newAnalysis.files.append(summary['inputFile'])
         # Select taggers based on file type
-        selectedTaggers = taggers[fileType]
+        selectedTaggers = []
+        if fileType in taggers:
+            selectedTaggers = taggers[fileType]
 
-        flows = summary['flows']
+        flows = summary['data']
         # flow is an instance of data class
         for flow in flows:
             newAnalysis.data.append(flow)
@@ -192,15 +197,15 @@ def evaluate(config):
                 tagger.tag(flow)
 
         for flow in flows:
-            for tags, analyzer in selectedAnalyzers:
+            for tags in selectedAnalyzers.keys():
+                analyzer = selectedAnalyzers[tags][0]
                 analyzer.analyze(flow)
 
         for flow in flows:
             for tags, reporter in selectedReporters:
                 reporter.report(flow)
 
-
-
+    return newAnalysis
 ################################
 ################################
 ### Custom Exception classes ###

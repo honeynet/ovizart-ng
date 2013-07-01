@@ -20,12 +20,18 @@ class Analysis:
         self.config = None
         self.status = Analysis.INIT
         self.data = []
-        self.summary = {}
+        self.files = []
 
     @staticmethod
     def __generateId():
         Analysis.count += 1
         return Analysis.count
+
+    def __repr__(self):
+        s = 'Analysis Object{\n\tid: %d\n\tstartTime: %s\n\tuser: %s' \
+            '\n\tconfig: %s\n\tstatus: %s\n\tdata: %s\n\tfiles: %s\n}' % \
+            (self.id, str(self.startTime), self.user, self.config, self.status,self.data, self.files)
+        return s
 
 
 class Data():
@@ -61,6 +67,10 @@ class Data():
             return self.__set(self.__tags, key, val)
         else:
             return self.__get(self.__tags, key)
+
+    def __repr__(self):
+        s = "Data Object{\n\t\ttags: %s\n\t\tdata: %s\n\t}" % (self.__tags, self.__data)
+        return s
 
     def __get(self, dict, key):
         """
