@@ -14,7 +14,7 @@ from core.data import Data
 PCAP = Tags.DataSource.PCAP
 
 
-@DataSource(tags=PCAP)
+#@DataSource(tags=PCAP)
 class TcpFlow:
     """Pcap file handler, wrapper for tcpflow. Currently this class supports only offline traffic parsing"""
 
