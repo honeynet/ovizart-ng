@@ -14,6 +14,12 @@ class Tags:
     # TODO: Not a fancy way! Need to change it
     class Protocol:
         HTTP = "HTTP"
+        FTP = "FTP"
         DNS = "DNS"
         IRC = "IRC"
         SMTP = "SMTP"
+
+    class Attachment:
+        BINARY = "BINARY"
+        PLAIN_TEXT = "PLAIN_TEXT"
+        JAVASCRIPT = "JAVASCRIPT"
