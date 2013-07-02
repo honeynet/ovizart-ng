@@ -9,11 +9,11 @@ from core.tags import Tags
 
 SMTP = Tags.Protocol.SMTP
 
-@Reassembler(tags=SMTP)
+#@Reassembler(tags=SMTP)
 class SMTPReassembler(BaseReassembler):
 
-    def __init__(self):
-        BaseReassembler.__init__(self)
+    def __init__(self, outputFolder):
+        BaseReassembler.__init__(self, outputFolder)
 
     def processRequest(self, request):
         data = request[-1]
@@ -33,7 +33,11 @@ class SMTPReassembler(BaseReassembler):
             if fn:
                 # write data content
                 print 'file found: ', fn, 'content-type:', msg.get_content_type()
-                with open('/tmp/smtp/' + fn, 'wb') as fp:
+                # TODO: A recursive mkdir required, create a util function
+                import os
+                if not os.path.exists(self.outputFolder):
+                    os.mkdir(self.outputFolder)
+                with open(self.outputFolder + '/' + fn, 'wb') as fp:
                     fp.write(msg.get_payload(decode=True))
                     fp.flush()
             else:

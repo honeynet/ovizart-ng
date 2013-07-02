@@ -8,7 +8,7 @@ import os, subprocess
 
 
 def run_reassembler(pcap_file, parser_class, output_folder):
-    parser_script = "base_reassembler.py"
+    parser_script = "../reassembler/base_reassembler.py"
     pcap_file = os.path.abspath(pcap_file)
     parser_script = os.path.abspath(parser_script)
     output_folder = os.path.abspath(output_folder)
