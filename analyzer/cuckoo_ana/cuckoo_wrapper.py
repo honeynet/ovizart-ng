@@ -3,8 +3,12 @@ __author__ = "zqzas"
 import sys
 import json
 
-from cuckoo.lib.cuckoo.core.database import Database
-sys.path.append("../")
+try:
+    from cuckoo.lib.cuckoo.core.database import Database
+except ImportError:
+    noCuckoo = True
+
+sys.path.append("../../")
 from conf import Config
 
 try:
@@ -16,7 +20,6 @@ class CuckooWrapper:
     """ Use cuckoo sandbox to analyze """
 
     def __init__(self):
-        self.db = Database()
         self.config = Config()
 
     def __repr__(self):
@@ -29,6 +32,7 @@ class CuckooWrapper:
         @return         : a task id
         """
         if islocal:
+            self.db = Database()
             taskID = self.db.add_path(path)
             return taskID
 
