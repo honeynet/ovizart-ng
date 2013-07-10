@@ -5,6 +5,11 @@ Server side jsunpackn
 
 __author__ = "zqzas"
 
+__jsunpackn__ = "jsunpack-n-read-only" #the jsunpack-n folder
+
+
+import sys
+sys.path.append(__jsunpackn__)
 from hashlib import sha1
 import datetime
 
@@ -47,16 +52,16 @@ class Options:
             setattr(self, item, self.options[item])
 
         #Hard Encode for rules
-        fin = open('rules', 'r')
+        fin = open(__jsunpackn__ + '/rules', 'r')
         if fin:
             self.rules = fin.read()
             fin.close()
-        fin = open('rules.ascii', 'r')
+        fin = open(__jsunpackn__ + '/rules.ascii', 'r')
         if fin:
             self.rulesAscii = fin.read()
             fin.close()
         if self.options['htmlparse']:
-            fin = open(self.options['htmlparse'], 'r')
+            fin = open(__jsunpackn__ + '/' + self.options['htmlparse'], 'r')
             self.htmlparseconfig = fin.read()
             fin.close()
 
