@@ -17,6 +17,13 @@ class TestVTAnalyzer(unittest.TestCase):
         for url in urls:
             self.analyzer.analyzeUrl(url)
 
+    def test_bin(self):
+        binaries = ['testcases/test.bin']
+
+        for binary in binaries:
+            self.analyzer.analyzeBinary(binary)
+        
+
 if __name__ == '__main__':
     unittest.main()
 

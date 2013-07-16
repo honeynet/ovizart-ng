@@ -6,6 +6,7 @@ __author__ = "zqzas"
 
 import sys
 import urllib, urllib2, json
+import postfile
 
 sys.path.append("../../")
 from conf import Config
@@ -37,6 +38,7 @@ class VTWrapper:
 
         json = postfile.post_multipart(vt, selector, fields, files)
 
+        print '-------------------\n\n'
         print json
 
         return json
@@ -57,6 +59,7 @@ class VTWrapper:
         req = urllib2.Request(selector, data)
         response = urllib2.urlopen(req)
         json = response.read()
+        print '-------------------\n\n'
         print json
 
         return json
