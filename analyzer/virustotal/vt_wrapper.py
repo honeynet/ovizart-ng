@@ -5,12 +5,12 @@ VirusTotal Wrapper
 __author__ = "zqzas"
 
 import sys
-import urllib, urllib2, simplejson
+import urllib, urllib2, json
 
 sys.path.append("../../")
 from conf import Config
 
-APIKEY = Config().VT_APIKEY
+APIKEY = Config().vt_apikey
 
 class VTWrapper:
     def __init__(self):
@@ -50,15 +50,21 @@ class VTWrapper:
         @return         : the report
         """
 
-        selector = "https://www.virustotal.com/vtapi/v2/url/scan"
-        parameters = {"url": url, "apikey": APIKEY}
+        selector = "https://www.virustotal.com/vtapi/v2/url/report"       
+        parameters = {"resource": url, "apikey": APIKEY, 'scan': '1'}
+
         data = urllib.urlencode(parameters)
-        req = urllib2.Request(url, data)
+        req = urllib2.Request(selector, data)
         response = urllib2.urlopen(req)
         json = response.read()
         print json
 
         return json
+
+
+if __name__ == '__main__':
+    vt = VTWrapper()
+    vt.analyzeUrl('www.zqzas.com')
 
 
 
