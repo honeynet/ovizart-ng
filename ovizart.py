@@ -9,7 +9,7 @@ from reporter import *
 from tagger import *
 from analyzer import *
 
-from conf import Config
+from ovizconf import Config
 
 
 class Ovizart():
@@ -17,8 +17,11 @@ class Ovizart():
     Main class to define usage interface
     """
 
-    def __init__(self):
-        self.config = Config()
+    def __init__(self, config=None):
+        if config is None:
+            config = Config()
+
+        self.config = config
         self.analysis = {}
 
     def updateConfig(self, key, value):

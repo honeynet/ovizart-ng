@@ -10,18 +10,18 @@ class TestTcpFlow(TestCase):
 
     def test_parseReportXML(self):
         parser = TcpFlow()
-        f = os.path.abspath('../output/report.xml')
+        f = os.path.abspath('./pcap/report.xml')
         parser.parseReportXML(f)
 
     def test_run(self):
         parser = TcpFlow()
-        f = os.path.abspath('../output/test-http.pcap')
+        f = os.path.abspath('./pcap/test-http.pcap')
         print 'f: ', f
         out = parser.runTcpFlow(f)
         print out
 
     def test_parse(self):
         parser = TcpFlow()
-        f = os.path.abspath('../output/test-http.pcap')
+        f = os.path.abspath('./pcap/test-http.pcap')
         out = parser.parse(f)
         print out
