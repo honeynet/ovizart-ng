@@ -1,7 +1,9 @@
 __author__ = 'ggercek'
 
+import os
 import pcap
 import struct
+import dpkt
 
 from core.tags import Tags
 from core.engine import DataSource
@@ -56,16 +58,22 @@ class PcapDataSourceHandler:
     """
     def __init__(self):
         self.streams = {}
+        self.outputFolder = None
 
     def __repr__(self):
         return "Pcap Data Source Handler"
 
-    def parse(self, filename):
+    def parse(self, filename, outputFolder):
         """Parse given pcap file
         @param filename: full path of given pcap file
         @return summary of the pcap file with stream information
         """
-        summary = {'inputFile': {'filename': filename, 'numberOfPacket': 0, 'numberOfStreams': 0}, 'data': []}
+        summary = {'inputFile': {'filename': filename,
+                                 'numberOfPacket': 0,
+                                 'numberOfStreams': 0},
+                   'outputFolder': outputFolder,
+                   'data': []}
+        self.outputFolder = outputFolder
 
         p = pcap.pcapObject()
         p.open_offline(filename)
@@ -79,7 +87,9 @@ class PcapDataSourceHandler:
             data = Data()
             data.setStream(self.streams[k])
             summary['data'].append(data)
+            self.streams[k].closePcapFile()
 
+        self.outputFolder = None
         return summary
 
     def processPacket(self, length, data, ts):
@@ -103,13 +113,11 @@ class PcapDataSourceHandler:
         #self.dumpStreamHeader(streamHeader)
         stream = self.getStream(streamHeader, data)
         if not stream:
-            stream = Stream.generateStream(streamHeader, data)
+            stream = Stream.generateStream(streamHeader, data, self.outputFolder)
             # first packet automatically added to generated stream no need to add twice.
             self.streams[stream.key] = stream
         else:
             stream.addPacket(ts, data)
-
-        #print stream.key
 
     def _getIPv4Header(self, ts, data):
         ip_type = data[9]
@@ -155,7 +163,7 @@ class PcapDataSourceHandler:
         sip = address_to_string(streamHeader[sip])
         dip = address_to_string(streamHeader[dip])
 
-        if sport and dport :
+        if sport and dport:
             sport = streamHeader[sport]
             dport = streamHeader[dport]
 
@@ -177,7 +185,7 @@ class PcapDataSourceHandler:
 
 
 class Stream:
-    def __init__(self, protocol, srcIp, srcPort, dstIp, dstPort, startTime, pkt):
+    def __init__(self, protocol, srcIp, srcPort, dstIp, dstPort, startTime, pkt, outputFolder):
         self.protocol = protocol
         self.srcIP = srcIp
         self.srcPort = srcPort
@@ -187,36 +195,72 @@ class Stream:
 
         self.key = Stream.generateKeys((protocol, srcIp, srcPort, dstIp, dstPort, startTime))[0]
 
+        # File based variables
+        self.pcapFileName = os.path.join(outputFolder, self.key + ".pcap")
+        self.pcapFile = None
+        self.fileHandler = None
+        self.__openPcapFile()
+
         # TODO: take first packet as argument
-        self.pkts = []
+        #self.pkts = []
+        self.pktCount = 0
+        self.last_ts = None
         self.addPacket(startTime, pkt)
 
     def __repr__(self):
-        s = 'Stream Object {key: %s, protocol: %d, srcIP: %s, srcPort: %s, dstIP: %s, dstPort: %s, startTime: %s, numberOfPacket: %d}' \
+        s = 'Stream Object {key: %s, protocol: %d, srcIP: %s, srcPort: %s, dstIP: %s, dstPort: %s, startTime: %s, numberOfPacket: %d, pcapFile: %s}' \
             % (self.key, _decode_byte(self.protocol), address_to_string(self.srcIP), str(self.srcPort),
-            address_to_string(self.dstIp), str(self.dstPort), str(self.startTime), len(self.pkts))
+            address_to_string(self.dstIp), str(self.dstPort), str(self.startTime), self.pktCount, self.pcapFileName)
         return s
 
     def addPacket(self, ts, pkt):
         if pkt:
             # check the last pkt time
             if not self.isTimeoutOccured(ts):
-                self.pkts.append((ts, pkt))
+                if self.fileHandler:
+                    self.fileHandler.writepkt(pkt, ts)
+                    self.last_ts = ts
+                    self.pktCount += 1
+                #self.pkts.append((ts, pkt))
+
+    def __openPcapFile(self):
+        result = False
+        if not self.pcapFile or self.pcapFile.closed:
+            self.pcapFile = open(self.pcapFileName, 'wb')
+            self.fileHandler = dpkt.pcap.Writer(self.pcapFile)
+            result = True
+        return result
+
+    def closePcapFile(self):
+        result = False
+        if self.pcapFile or not self.pcapFile.closed:
+            self.pcapFile.flush()
+            self.fileHandler.close()
+            self.fileHandler = None
+            self.pcapFile = None
+            result = True
+        return result
 
     def isTimeoutOccured(self, ts):
         result = False
-        if self.pkts:
-            last_ts = self.pkts[-1][0]
-            result = ts - last_ts > 60000
+        if self.last_ts:
+            result = ts - self.last_ts > 60000
+
         return result
 
     @staticmethod
-    def generateStream(streamHeader, pkt):
+    def generateStream(streamHeader, pkt, outputFolder):
         stream = None
         if len(streamHeader) == 4:
-            stream = Stream(streamHeader[0], streamHeader[1], None,     streamHeader[2], None,     streamHeader[3], pkt)
+            stream = Stream(streamHeader[0], streamHeader[1],
+                            None,     streamHeader[2],
+                            None,     streamHeader[3],
+                            pkt, outputFolder)
         else:
-            stream = Stream(streamHeader[0], streamHeader[1], streamHeader[2], streamHeader[3], streamHeader[4], streamHeader[5], pkt)
+            stream = Stream(streamHeader[0], streamHeader[1],
+                            streamHeader[2], streamHeader[3],
+                            streamHeader[4], streamHeader[5],
+                            pkt, outputFolder)
 
         return stream
 
@@ -246,10 +290,3 @@ class Stream:
             key2 = "%s_%s_%s" % (proto, dip, sip)
 
         return key1, key2
-
-if __name__ == '__main__':
-    import os
-    p = PcapDataSourceHandler()
-    #f = os.path.abspath('../output/test-http.pcap')
-    f = os.path.abspath('../output/test-fragmentation.pcap')
-    p.parse(f)
