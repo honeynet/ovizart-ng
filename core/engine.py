@@ -1,4 +1,6 @@
 from data import Analysis
+import datetime
+import ovizutil
 
 __author__ = "ggercek"
 
@@ -180,13 +182,21 @@ def evaluate(config):
     # Currently only html is available
     selectedReporters = availableModules[REPORTER]
 
+    analysisFolder = datetime.datetime.now().strftime('analysis_%Y%m%d_%H%M%S_%f')
+    config.output_folder = config.output_folder + analysisFolder + "/"
+
     for fileName in inputFiles.keys():
         fileType = inputFiles[fileName]
         # TODO: What if multiple parser exists?
         parser = dataSources[fileType][0]
+        import os
+        # create output folder
+        outputFolder = config.output_folder + fileName.split("/")[-1]
+        outputFolder = os.path.join(config.output_folder, fileName.split("/")[-1])
+        ovizutil.createFolder(outputFolder)
 
         # Returns summary of pcap file with file names
-        summary = parser.parse(fileName)
+        summary = parser.parse(fileName, outputFolder)
         # summary = {
         #               inputFile: {
         #                   filename: '',
@@ -281,7 +291,7 @@ class GenericDecorator:
     methodName = None
 
     # argument name to search
-    argName = None
+    argNames = None
 
     # register method callback
     registerMethod = None
@@ -303,17 +313,18 @@ class GenericDecorator:
         """
         # Check for the analyze method!!!
         self.cls = cls
-        self.checkMethod(self.cls, self.__class__.methodName, self.__class__.argName)
+        self.checkMethod(self.cls, self.__class__.methodName, self.__class__.argNames)
 
         self.newAnalyzer = self.cls()
         self.__class__.registerMethod(self, self.newAnalyzer, self.tags)
         return cls
 
-    def checkMethod(self, cls, methodName, argName):
+    def checkMethod(self, cls, methodName, argNames):
         """
         @private checks given class for given method name
         @param cls          : class to check
         @param methodName   : methodName to control
+        @param argNames      : list of arguments to control
         @raise MissingMethodException if searched methodName does not exists in cls
         @raise MissingArgumentException if searched method does not defined with parameter data
         @return
@@ -331,24 +342,24 @@ class GenericDecorator:
             m = m[1]
             args = inspect.getargs(m.im_func.func_code).args
             # TODO: Refactor this control later.
-            if args and len(args) == 2 and args[1] == argName:
+            if args and len(args) == len(argNames) + 1 and args[1:] == argNames:
                 found = True
                 if self.__class__.newMethod:
                     self.__class__.clsMethod = m
                     cls.__dict__['decorator_tags'] = self.tags
-                    # newMethod has to a tuple otherwise it will throw an exception
+                    # newMethod has to be a tuple otherwise it will throw an exception
                     cls.__dict__[methodName] = self.__class__.newMethod[0]
                 break
 
         if not found:
-            raise MissingArgumentException(argName, methodName, cls)
+            raise MissingArgumentException(argNames, methodName, cls)
 
 
 class DataSource(GenericDecorator):
     """Decorator for data source classes"""
 
     methodName = 'parse'
-    argName = 'filename'
+    argNames = ['filename', 'outputFolder']
     registerMethod = register_data_source
     clsMethod = None
 
@@ -361,8 +372,8 @@ class DataSource(GenericDecorator):
 
     # TODO: Find out why we must use a static function for this job
     @staticmethod
-    def parse(cls, filename):
-        summary = DataSource.clsMethod(cls, filename)
+    def parse(cls, filename, outputFolder):
+        summary = DataSource.clsMethod(cls, filename, outputFolder)
         for d in summary['data']:
             d.setDataSource(cls.decorator_tags)
         return summary
@@ -372,7 +383,7 @@ class Tagger(GenericDecorator):
     """Decorator for tagger classes"""
 
     methodName = 'tag'
-    argName = 'data'
+    argNames = ['data']
     registerMethod = register_tagger
 
 
@@ -380,7 +391,7 @@ class Analyzer(GenericDecorator):
     """Decorator for analyzer classes"""
 
     methodName = 'analyze'
-    argName = 'data'
+    argNames = ['data']
     registerMethod = register_analyzer
 
 
@@ -388,14 +399,14 @@ class Reporter(GenericDecorator):
     """Decorator for reporter classes"""
 
     methodName = 'report'
-    argName = 'data'
+    argNames = ['data']
     registerMethod = register_reporter
 
 
 class Reassembler(GenericDecorator):
     """Decorator for re-assembler classes"""
     methodName = 'process'
-    argName = '_in'
+    argNames = ['_in']
     registerMethod = register_reassembler
 
 #########################
