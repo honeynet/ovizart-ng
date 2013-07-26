@@ -5,13 +5,17 @@ Server side jsunpackn
 
 __author__ = "zqzas"
 
-__jsunpackn__ = "jsunpack-n-read-only" #the jsunpack-n folder
 
 
 import sys
+sys.path.append("../../")
+from conf import Config
+__jsunpackn__ = Config().jsunpackn_path
 sys.path.append(__jsunpackn__)
+
 from hashlib import sha1
 import datetime
+
 
 try:
     import jsunpackn
@@ -46,8 +50,10 @@ class Options:
                 }
 
         self.tmpdir = '/tmp' # these temporary files are necessary for decoding, but you can use any path and they will be deleted afterwards
-        self.logdir = self.outdir = '' # an empty storage filepath means no directory of output files will be created
-        self.decoded = '' #NO decoding logfile, otherwise = self.outdir + '/decoded.log'
+        self.logdir = self.outdir = __jsunpackn__ + '/log' # an empty storage filepath means no directory of output files will be created
+
+
+        self.decoded =self.outdir + '/decoded.log'  #NO decoding logfile, otherwise = self.outdir + '/decoded.log'
         for item in self.options:
             setattr(self, item, self.options[item])
 
@@ -84,6 +90,7 @@ class JsunpacknWrapper:
 
         HASH = sha1(str(datetime.datetime.now()) + userdata).hexdigest()
 
+
         options = Options()
 
         #According to the document and exampleimport.py of jsunpack-n
@@ -107,9 +114,11 @@ class JsunpacknWrapper:
                 print 'file              type=%s, hash=%s, data=%d bytes' % (type, hash, len(data))
             for printable, impact, msg in js.rooturl[url].msg:
                 print 'output message    printable=%d, impact=%d, msg=%s' % (printable, impact, msg)
+
+        return "The reports has been saved in %s." % (options.logdir)
         
 if __name__ == "__main__":
     wrapper = JsunpacknWrapper()
 
-    wrapper.analyzeJs('http://bing.com')
+    wrapper.analyzeJs('http://fudan.edu.cn')
 
