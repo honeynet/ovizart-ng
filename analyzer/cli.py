@@ -20,7 +20,7 @@ def main():
     while True:
         parser = argparse.ArgumentParser(description = "An CLI for analyzer wrappers.")
 
-        parser.add_argument("-v", "--virustotal", action = "store_true", help = "Using VirusTotal to analyze binary or url")
+        parser.add_argument("-v", "--virustotal", action = "store_true", help = "Using VirusTotal to analyze binary, pcap or url")
         parser.add_argument("-c", "--cuckoo", action = "store_true", help = "Using Cuckoo Sandbox to analyze binary")
 
         parser.add_argument("-j", "--jsunpackn", action = "store_true", help = "Using Jsunpack-n to analyze url")
