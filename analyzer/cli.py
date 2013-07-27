@@ -18,7 +18,7 @@ def main():
     start = True
 
     while True:
-        parser = argparse.ArgumentParser(description = "An CLI for analyzer wrappers.")
+        parser = argparse.ArgumentParser(description = "An CLI for analyzer wrappers.\nExample: --virustotal --url http://google.com")
 
         parser.add_argument("-v", "--virustotal", action = "store_true", help = "Using VirusTotal to analyze binary, pcap or url")
         parser.add_argument("-c", "--cuckoo", action = "store_true", help = "Using Cuckoo Sandbox to analyze binary")
@@ -27,7 +27,7 @@ def main():
         
         parser.add_argument("-u" , "--url", help = "Input an url")
 
-        parser.add_argument("-b", "--binary", help = "Input an binary (path)")
+        parser.add_argument("-f", "--file", help = "Input a file (path)")
 
         if start:
             args = parser.parse_args()
@@ -36,8 +36,8 @@ def main():
             cmd = str(raw_input(">>>"))
             args = parser.parse_args(cmd.split())
 
-        if args.url == None and args.binary == None:
-            print "You must input an url or binary(path)."
+        if args.url == None and args.file == None:
+            print "You must input an url or file(path)."
             print parser.print_help()
             #return
             continue # continuous shell type interface 
@@ -51,14 +51,14 @@ def main():
             if args.url != None:
                 response += analyzer.analyzeUrl(args.url)
             else:
-                response += analyzer.analyzeBinary(args.binary)
+                response += analyzer.analyzeBinary(args.file)
 
         if args.cuckoo:
             from cuckoo_wrapper import CuckooWrapper
             print "Cuckoo analyzing", '.' * 30
             analyzer = CuckooWrapper()
             if args.binary != None:
-                response += str(analyzer.analyzeMalware(args.binary))
+                response += str(analyzer.analyzeMalware(args.file))
 
 
         if args.jsunpackn:
