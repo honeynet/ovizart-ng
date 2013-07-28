@@ -7,6 +7,7 @@ from core import *
 from datasource import *
 from reporter import *
 from tagger import *
+from reassembler import *
 from analyzer import *
 
 from ovizconf import Config

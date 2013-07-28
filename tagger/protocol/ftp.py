@@ -258,7 +258,7 @@ class FTPData(Packet):
     class for dissecting the ftp data
     @attention: it inherets Packet class from Scapy library
     """
-    name = "ftp"
+    name = "FTP Request"
     fields_desc = [FTPDataField("data", "")]
 
 
@@ -267,7 +267,8 @@ class FTPResponse(Packet):
     class for dissecting the ftp responses
     @attention: it inherets Packet class from Scapy library
     """
-    name = "ftp"
+    protocol = "FTP"
+    name = "FTP Response"
     fields_desc = [FTPResField("command", "", "H"),
                     FTPResArgField("argument", "", "H")]
 

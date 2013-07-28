@@ -13,6 +13,7 @@ from scapy.layers.inet import IP
 from scapy.layers.inet import TCP as OldTCP
 from scapy.layers.inet import UDP as OldUDP
 import re
+import struct
 
 from tagger.protocol import *
 
@@ -28,6 +29,7 @@ udp_signatures = [
     ()
              ]
 
+
 @Tagger(tags=PCAP)
 class ProtocolTagger:
 
@@ -40,7 +42,6 @@ class ProtocolTagger:
             # if signatures are empty
             return OldTCP.guess_payload_class(self, payload)
 
-
     class UDP(OldUDP):
         def guess_payload_class(self, payload):
             for sig, cls in udp_signatures:
@@ -49,7 +50,6 @@ class ProtocolTagger:
 
             # if signatures are empty
             return OldUDP.guess_payload_class(self, payload)
-
 
     split_layers(IP, OldTCP)
     #split_layers(IP, OldUDP)
@@ -61,5 +61,22 @@ class ProtocolTagger:
         # Collect all lastlayer to check the application layer protocol.
         # tag the found protocols to stream
         stream = data.getStream()
-        pcapFile = stream.getPcapFile()
-        pass
+        # TODO: Change this part
+        protocol = struct.unpack('!B', stream.protocol)[0]
+
+        recognized_layers = []
+        if protocol == 6:
+            recognized_layers = [layers for signatures, layers in tcp_signatures]
+        elif protocol == 17:
+            recognized_layers = [layers for signatures, layers in udp_signatures]
+
+        pcapFile = stream.pcapFileName
+        pkts = rdpcap(pcapFile)
+
+        for p in pkts:
+            for layer in recognized_layers:
+                if p.haslayer(layer):
+                    data.setApplicationLayerProtocol(layer.protocol)
+                    return
+
+        data.setApplicationLayerProtocol('UNKNOWN')

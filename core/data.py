@@ -39,6 +39,7 @@ class Data():
 
     STREAM = 'stream'
     DATA_SOURCE = 'data_source'
+    APP_LAYER_PROTOCOL = 'app_layer_protocol'
 
     def __init__(self):
         self.__data = {}
@@ -110,3 +111,9 @@ class Data():
 
     def getDataSource(self):
         return self.tag(Data.DATA_SOURCE)
+
+    def setApplicationLayerProtocol(self, protocol):
+        return self.tag(Data.APP_LAYER_PROTOCOL, protocol)
+
+    def getApplicationLayerProtocol(self):
+        return self.tag(Data.APP_LAYER_PROTOCOL)

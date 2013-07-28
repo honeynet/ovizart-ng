@@ -34,7 +34,7 @@ other "field classes".
                 #HTTP methods as per rfc2616 http://www.ietf.org/rfc/rfc2616
                 #There are other methods in other RFCs but nobody cares about those.
                 if f[0].lower() in HTTPMethodsRFC2616:
-                    print 'request'
+                    #print 'request'
                     # ls.remove(ls[0])
                     # for element in ls:
                     #     remain = remain + element
@@ -182,7 +182,8 @@ class HTTPRequest(Packet):
 class for handling http requests
 @attention: it inherets Packet from Scapy library
 """
-    name = "HTTPRequest"
+    protocol = "HTTP"
+    name = "HTTP Request"
     fields_desc = [HTTPReqField("method", "", "H"),
                     HTTPField("cache-control: ", "", "H"),
                     HTTPField("connection: ", "", "H"),
@@ -334,7 +335,8 @@ class HTTPResponse(Packet):
 class for handling http responses
 @attention: it inherets Packet from Scapy library
 """
-    name = "http"
+    protocol = "HTTP"
+    name = "HTTP Response"
     fields_desc = [HTTPResField("status-line: ", "", "H"),#responses123
                     HTTPField("cache-control: ", "", "H"),
                     HTTPField("connection: ", "", "H"),

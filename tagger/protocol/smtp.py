@@ -32,6 +32,7 @@ data so make it 0 to handle all of the data.
 
 
 class SMTPRequest(Packet):
+    protocol = "SMTP"
     name = "SMTP Request"
     fields_desc = [SMTPReqField("cmd", "", "H"),
                    StrField("req_param", "",),
