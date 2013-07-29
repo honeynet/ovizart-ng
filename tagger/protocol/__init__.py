@@ -32,6 +32,12 @@ udp_signatures = [
 
 @Tagger(tags=PCAP)
 class ProtocolTagger:
+    """Parse the splitted pcap files and try to recognize application layer protocol of packets, based on the
+    signatures registered to system. Currently supported protocols are: SMTP, HTTP, FTP
+    """
+
+    def __repr__(self):
+        return "Protocol Tagger based on Packet Signatures"
 
     class TCP(OldTCP):
         def guess_payload_class(self, payload):
@@ -68,7 +74,8 @@ class ProtocolTagger:
         if protocol == 6:
             recognized_layers = [layers for signatures, layers in tcp_signatures]
         elif protocol == 17:
-            recognized_layers = [layers for signatures, layers in udp_signatures]
+            #recognized_layers = [layers for signatures, layers in udp_signatures]
+            pass
 
         pcapFile = stream.pcapFileName
         pkts = rdpcap(pcapFile)
