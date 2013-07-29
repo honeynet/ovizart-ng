@@ -229,6 +229,7 @@ def evaluate(config):
         for flow in flows:
             for tag in selectedAnalyzers.keys():
                 for analyzer in selectedAnalyzers[tag]:
+                    analyzer.setConfig(config)
                     if flow.tag(tag):
                         analyzer.analyze(flow)
 

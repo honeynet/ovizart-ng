@@ -1,7 +1,8 @@
 __author__ = "zqzas"
 
-import os, sys
-sys.path.append('cuckoo')
+import os
+#import sys
+#sys.path.append('cuckoo')
 import unittest
 
 from cuckoo_wrapper import *
