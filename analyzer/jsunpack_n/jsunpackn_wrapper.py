@@ -4,14 +4,15 @@ Server side jsunpackn
 """
 __author__ = "zqzas"
 
+import sys
+sys.path.append("../../")
+
 from analyzer import BaseAnalyzer
 from core.engine import Analyzer
 from core.tags import Tags
 
 JAVASCRIPT = Tags.Attachment.JAVASCRIPT
 from ovizconf import Config
-import sys
-sys.path.append("../../")
 
 from hashlib import sha1
 import datetime
@@ -95,6 +96,7 @@ class JsunpacknWrapper(BaseAnalyzer):
             self.conf = Config()
 
         __jsunpackn__ = self.conf.jsunpackn_path
+        print '!!!', __jsunpackn__ 
         sys.path.append(__jsunpackn__)
 
         try:
@@ -130,6 +132,6 @@ class JsunpacknWrapper(BaseAnalyzer):
 
         return "The reports has been saved in %s." % (options.logdir)
         
-# if __name__ == "__main__":
-#     wrapper = JsunpacknWrapper()
-#     wrapper.analyzeJs('http://fudan.edu.cn')
+if __name__ == "__main__":
+     wrapper = JsunpacknWrapper()
+     wrapper.analyzeJs('http://fudan.edu.cn')
