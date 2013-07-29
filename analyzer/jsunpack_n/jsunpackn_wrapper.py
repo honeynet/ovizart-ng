@@ -2,28 +2,24 @@
 Server side jsunpackn
 
 """
-
 __author__ = "zqzas"
 
+from analyzer import BaseAnalyzer
+from core.engine import Analyzer
+from core.tags import Tags
 
-
+JAVASCRIPT = Tags.Attachment.JAVASCRIPT
+from ovizconf import Config
 import sys
 sys.path.append("../../")
-from conf import Config
-__jsunpackn__ = Config().jsunpackn_path
-sys.path.append(__jsunpackn__)
 
 from hashlib import sha1
 import datetime
+import os
 
-
-try:
-    import jsunpackn
-except ImportError:
-    print "Import Error. Please check your jsunpackn!"
 
 class Options:
-    def __init__(self):
+    def __init__(self, __jsunpackn__):
         self.options =  {
                 'timeout':30,
                 'redoevaltime':1,
@@ -72,14 +68,22 @@ class Options:
             fin.close()
 
 
+@Analyzer(tags=JAVASCRIPT)
+class JsunpacknWrapper(BaseAnalyzer):
+    """Wrapper class for analyzing javascript files by using jsunpack-n tool"""
 
-
-
-class JsunpacknWrapper:
     def __init__(self):
+        BaseAnalyzer.__init__(self)
         pass
+
     def __repr__(self):
-        print "A jsunpack-n wrapper"
+        return "JSunpack-n Wrapper"
+
+    def analyze(self, data):
+        jsFiles = data.tag(JAVASCRIPT)
+        folder = data.getAttachmentsFolder()
+        for jsFile in jsFiles:
+            self.analyzeJs(os.path.join(folder, jsFile))
 
     def analyzeJs(self, userdata):
         """
@@ -87,11 +91,20 @@ class JsunpacknWrapper:
         @param userdata : a js file or a URL that to be analyzed
         @return         : the report
         """
+        if self.conf is None:
+            self.conf = Config()
+
+        __jsunpackn__ = self.conf.jsunpackn_path
+        sys.path.append(__jsunpackn__)
+
+        try:
+            import jsunpackn
+        except ImportError:
+            print "Import Error. Please check your jsunpackn!"
 
         HASH = sha1(str(datetime.datetime.now()) + userdata).hexdigest()
 
-
-        options = Options()
+        options = Options(__jsunpackn__)
 
         #According to the document and exampleimport.py of jsunpack-n
 
@@ -117,8 +130,6 @@ class JsunpacknWrapper:
 
         return "The reports has been saved in %s." % (options.logdir)
         
-if __name__ == "__main__":
-    wrapper = JsunpacknWrapper()
-
-    wrapper.analyzeJs('http://fudan.edu.cn')
-
+# if __name__ == "__main__":
+#     wrapper = JsunpacknWrapper()
+#     wrapper.analyzeJs('http://fudan.edu.cn')

@@ -4,6 +4,7 @@ __author__ = "ggercek"
 
 
 class BaseAnalyzer:
+    """Base Analyzer"""
 
     def __init__(self):
         self.conf = None
@@ -14,6 +15,6 @@ class BaseAnalyzer:
 import p2p
 import dummy
 import cuckoo
-import jsunpackn
+import jsunpack_n
 import virustotal
 

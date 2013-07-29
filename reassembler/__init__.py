@@ -52,7 +52,7 @@ class Reassembler():
 
         run_reassembler(pcap_file, parser_class, output_folder)
         # Check for attachment folder and add tags for those
-        attachmentPath = os.path.join(output_folder, 'attachments')
+        attachmentPath = data.getAttachmentsFolder() #os.path.join(output_folder, 'attachments')
         if os.path.exists(attachmentPath):
             # Get the list of file
             attachments = []

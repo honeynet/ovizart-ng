@@ -2,7 +2,7 @@
 __author__ = "ggercek"
 
 import datetime
-
+import os
 
 class Analysis:
     """Data class for holding general analysis information"""
@@ -124,3 +124,6 @@ class Data():
 
     def getAttachments(self):
         return self.tag(Data.ATTACHMENTS)
+
+    def getAttachmentsFolder(self):
+        return os.path.join(self.getStream().outputFolder, 'attachments')
