@@ -222,6 +222,10 @@ def evaluate(config):
             for tagger in selectedTaggers:
                 tagger.tag(flow)
 
+        reassembler = reassemblers[fileType][0]
+        for flow in flows:
+            reassembler.process(flow)
+
         for flow in flows:
             for tags in selectedAnalyzers.keys():
                 analyzer = selectedAnalyzers[tags][0]
@@ -315,8 +319,8 @@ class GenericDecorator:
         self.cls = cls
         self.checkMethod(self.cls, self.__class__.methodName, self.__class__.argNames)
 
-        self.newAnalyzer = self.cls()
-        self.__class__.registerMethod(self, self.newAnalyzer, self.tags)
+        self.newObject = self.cls()
+        self.__class__.registerMethod(self, self.newObject, self.tags)
         return cls
 
     def checkMethod(self, cls, methodName, argNames):
@@ -406,7 +410,7 @@ class Reporter(GenericDecorator):
 class Reassembler(GenericDecorator):
     """Decorator for re-assembler classes"""
     methodName = 'process'
-    argNames = ['_in']
+    argNames = ['data']
     registerMethod = register_reassembler
 
 #########################

@@ -40,6 +40,7 @@ class Data():
     STREAM = 'stream'
     DATA_SOURCE = 'data_source'
     APP_LAYER_PROTOCOL = 'app_layer_protocol'
+    ATTACHMENTS = 'attachments'
 
     def __init__(self):
         self.__data = {}
@@ -117,3 +118,9 @@ class Data():
 
     def getApplicationLayerProtocol(self):
         return self.tag(Data.APP_LAYER_PROTOCOL)
+
+    def setAttachments(self, attachments):
+        return self.tag(Data.ATTACHMENTS, attachments)
+
+    def getAttachments(self):
+        return self.tag(Data.ATTACHMENTS)

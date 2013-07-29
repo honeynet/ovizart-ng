@@ -1,30 +1,45 @@
 #!/usr/bin/env python
 import sys
+import os
+import reassembler
 
 __author__ = 'ggercek'
 
 
 class BaseReassembler():
+    target = 'UNKNOWN'
+    requestFile = 'request.traffic'
+    responseFile = 'response.traffic'
+    totalFile = 'total.traffic'
 
     def __init__(self, outputFolder):
         self.outputFolder = outputFolder
-        pass
+
+    def __appendToFile(self, filename, data):
+        filename = os.path.join(self.outputFolder, filename)
+        f = open(filename, 'ab')
+        f.write(data)
+        f.write('\n\r')
+        f.flush()
+        f.close()
 
     def process(self, _in):
         size = 0
         request = self.parseMessage(_in)
-        print request[0], ' -- ', request[1], '###' #, request[2]
+        #print request[0], ' -- ', request[1], '###' #, request[2]
         self.processRequest(request)
 
         response = self.parseMessage(_in)
         self.processResponse(response)
-        print response[0], ' -- ', response[1], ' ### ' #, response[2]
+        #print response[0], ' -- ', response[1], ' ### ' #, response[2]
 
     def processRequest(self, request):
-        pass
+        self.__appendToFile(BaseReassembler.requestFile, request[2])
+        self.__appendToFile(BaseReassembler.totalFile, request[2])
 
     def processResponse(self, response):
-        pass
+        self.__appendToFile(BaseReassembler.responseFile, response[2])
+        self.__appendToFile(BaseReassembler.totalFile, response[2])
 
     def parseMessage(self, _in):
         dir = _in.read(6)
@@ -52,13 +67,11 @@ if __name__ == '__main__':
     arguments = sys.argv[-1].split('|')
     parser_name = arguments[0]
     outputFolder = arguments[1]
-    print parser_name
+    #print parser_name
 
     def getReassemblerbyName(name):
-        import reassembler
         c = getattr(reassembler, name)
-        print 'c:', c
-
+        #print 'c:', c
         return c
 
     ParserClass = getReassemblerbyName(parser_name)
@@ -66,7 +79,6 @@ if __name__ == '__main__':
     if not ParserClass:
         # Use generic reassembler and store it to folder as session
         ParserClass = BaseReassembler
-        pass
 
     res = ParserClass(outputFolder)
     res.process(sys.stdin)
