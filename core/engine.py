@@ -184,7 +184,7 @@ def evaluate(config):
 
     analysisFolder = datetime.datetime.now().strftime('analysis_%Y%m%d_%H%M%S_%f')
     config.output_folder = config.output_folder + analysisFolder + "/"
-    newAnalysis = Analysis.RUNNING
+    newAnalysis.status = Analysis.RUNNING
     for fileName in inputFiles.keys():
         fileType = inputFiles[fileName]
         # TODO: What if multiple parser exists?
