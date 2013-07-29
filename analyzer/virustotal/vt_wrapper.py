@@ -4,20 +4,52 @@ VirusTotal Wrapper
 
 __author__ = "zqzas"
 
+import os
 import sys
 import urllib, urllib2, json
 import postfile
 
+from core.engine import Analyzer
+from core.tags import Tags
+from analyzer import BaseAnalyzer
+
+BINARY = Tags.Attachment.BINARY
+
 sys.path.append("../../")
-from conf import Config
+from ovizconf import Config
 
-APIKEY = Config().vt_apikey
+#APIKEY = Config().vt_apikey
 
-class VTWrapper:
+
+@Analyzer(tags=BINARY)
+class VTWrapper(BaseAnalyzer):
+    """Wrapper class for Virus Total"""
+
     def __init__(self):
-        pass
+        BaseAnalyzer.__init__(self)
+
     def __repr__(self):
-        print "A virustotal wrapper"
+        return "A virustotal wrapper"
+
+    def analyze(self, data):
+
+        def retrievePath(data):
+            """ get the path of data """
+            stream = data.getStream()
+            files = []
+            attachments = data.getAttachments()
+            folder = data.getAttachmentsFolder()
+            for a in attachments:
+                filename = a[0]
+                filetype = a[1]
+                if filetype.endswith('binary'):
+                    filename = os.path.join(folder, filename)
+                    files.append(filename)
+
+            return files
+
+        path = retrievePath(data)[0]
+        self.analyzeBinary(path)
 
     def analyzeBinary(self, path):
         """
@@ -26,11 +58,14 @@ class VTWrapper:
         @return         : the report
         """
 
+        if self.conf in None:
+            self.conf = Config()
+
         vt = 'www.virustotal.com'
 
         selector = "https://www.virustotal.com/vtapi/v2/file/scan"
 
-        fields = [("apikey", APIKEY)]
+        fields = [("apikey", self.conf.vt_apikey)]
 
         binary = open(path, "rb").read()
 
@@ -43,8 +78,6 @@ class VTWrapper:
 
         return json
 
-
-
     def analyzeUrl(self, url):
         """
         Analyze URL
@@ -52,8 +85,11 @@ class VTWrapper:
         @return         : the report
         """
 
+        if self.conf in None:
+            self.conf = Config()
+
         selector = "https://www.virustotal.com/vtapi/v2/url/report"       
-        parameters = {"resource": url, "apikey": APIKEY, 'scan': '1'}
+        parameters = {"resource": url, "apikey": self.conf.vt_apikey, 'scan': '1'}
 
         data = urllib.urlencode(parameters)
         req = urllib2.Request(selector, data)
