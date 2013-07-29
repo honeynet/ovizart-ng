@@ -196,7 +196,8 @@ class Stream:
         self.key = Stream.generateKeys((protocol, srcIp, srcPort, dstIp, dstPort, startTime))[0]
 
         # File based variables
-        self.pcapFileName = os.path.join(outputFolder, self.key + ".pcap")
+        self.outputFolder = os.path.join(outputFolder, self.key)
+        self.pcapFileName = os.path.join(self.outputFolder, self.key + ".pcap")
         self.pcapFile = None
         self.fileHandler = None
         self.__openPcapFile()
@@ -224,10 +225,13 @@ class Stream:
                 #self.pkts.append((ts, pkt))
 
     def __openPcapFile(self):
+        import ovizutil
         result = False
         if not self.pcapFile or self.pcapFile.closed:
+            ovizutil.createFolder(self.outputFolder)
+
             self.pcapFile = open(self.pcapFileName, 'wb')
-            self.fileHandler = dpkt.pcap.Writer(self.pcapFile)
+            self.fileHandler = dpkt.pcap.Writer(self.pcapFile, snaplen=65535)
             result = True
         return result
 
