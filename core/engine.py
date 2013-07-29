@@ -184,7 +184,7 @@ def evaluate(config):
 
     analysisFolder = datetime.datetime.now().strftime('analysis_%Y%m%d_%H%M%S_%f')
     config.output_folder = config.output_folder + analysisFolder + "/"
-
+    newAnalysis = Analysis.RUNNING
     for fileName in inputFiles.keys():
         fileType = inputFiles[fileName]
         # TODO: What if multiple parser exists?
@@ -227,14 +227,16 @@ def evaluate(config):
             reassembler.process(flow)
 
         for flow in flows:
-            for tags in selectedAnalyzers.keys():
-                analyzer = selectedAnalyzers[tags][0]
-                analyzer.analyze(flow)
+            for tag in selectedAnalyzers.keys():
+                for analyzer in selectedAnalyzers[tag]:
+                    if flow.tag(tag):
+                        analyzer.analyze(flow)
 
         for flow in flows:
-            for tags, reporter in selectedReporters:
+            for tag, reporter in selectedReporters:
                 reporter.report(flow)
 
+    newAnalysis.status = Analysis.FINISHED
     return newAnalysis
 ################################
 ################################

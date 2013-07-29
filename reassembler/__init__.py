@@ -6,6 +6,8 @@ from smtp_reassembler import *
 from core.tags import Tags
 
 PCAP = Tags.DataSource.PCAP
+BINARY = Tags.Attachment.BINARY
+PLAIN_TEXT = Tags.Attachment.PLAIN_TEXT
 
 import os
 import subprocess
@@ -58,4 +60,9 @@ class Reassembler():
             for f in filenames:
                 ftype = ovizutil.checkFileType(os.path.join(attachmentPath, f))
                 attachments.append((f, ftype))
+                if ftype.endswith('binary'):
+                    data.tag(BINARY, 1)
+                elif ftype.startswith('text'):
+                    data.tag(PLAIN_TEXT, 1)
+
             data.setAttachments(attachments)
