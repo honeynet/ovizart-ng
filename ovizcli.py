@@ -24,6 +24,7 @@ def main(args):
     ovizart = Ovizart()
     if args.list_available:
         ovizart.listAvailableModules()
+
     elif not (args.virustotal or args.cuckoo or args.jsunpackn):
         for inputFile in args.input:
             ovizart.setInputFile(inputFile)
@@ -31,31 +32,47 @@ def main(args):
         ovizart.config.output_folder = args.output
         analysis = ovizart.start()
         print analysis
-    else:
 
+    else:
         response = []
         if args.virustotal:
+            if args.file is None and args.url is None:
+                print "You need to specify --file and/or --url parameters"
+                print "Usage: ovizcli.py -vt --file FILE --url URL"
+                sys.exit(1)
+
             from analyzer.virustotal.vt_wrapper import VTWrapper
             print "Virustotal analyzing", '.' * 30
             analyzer = VTWrapper()
-            if args.url != None:
+            if args.url:
                 response += analyzer.analyzeUrl(args.url)
-            else:
+
+            if args.file:
                 response += analyzer.analyzeBinary(args.file)
 
         if args.cuckoo:
+            if args.file is None:
+                print "You need to specify --file parameter"
+                print "Usage: ovizcli.py -ck --file FILE"
+                sys.exit(1)
+
             from analyzer.cuckoo.cuckoo_wrapper import CuckooWrapper
             print "Cuckoo analyzing", '.' * 30
             analyzer = CuckooWrapper()
-            if args.file != None:
+            if args.file:
                 response += str(analyzer.analyzeMalware(args.file))
 
         if args.jsunpackn:
+            if args.url is None:
+                print "You need to specify --url parameter"
+                print "Usage: ovizcli.py -js --url URL"
+                sys.exit(1)
+
             from analyzer.jsunpack_n.jsunpackn_wrapper import JsunpacknWrapper
             print "Jsunpack-n analyzing", '.' * 30
             analyzer = JsunpacknWrapper()
 
-            if args.url != None:
+            if args.url:
                 response += analyzer.analyzeJs(args.url)
 
         print response
