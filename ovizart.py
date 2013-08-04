@@ -3,14 +3,30 @@
 __author__ = "ggercek"
 
 import os
+import sys
+from ovizconf import Config, PROJECT_ROOT
+
+
+def addToPath(pathToAdd):
+    PROJECT_ROOT = os.path.abspath(__file__)
+    PROJECT_ROOT = os.path.dirname(PROJECT_ROOT)
+    pathToAdd = os.path.join(PROJECT_ROOT, pathToAdd)
+    sys.path.append(pathToAdd)
+
+addToPath("analyzer")
+addToPath("core")
+addToPath("datasource")
+addToPath("reassembler")
+addToPath("reporter")
+addToPath("tagger")
+addToPath("test")
+
 from core import *
 from datasource import *
 from reporter import *
 from tagger import *
 from reassembler import *
 from analyzer import *
-
-from ovizconf import Config
 
 
 class Ovizart():
@@ -90,8 +106,3 @@ class Ovizart():
         """Prints available modules in a human readable way.
         """
         engine.list_available_modules()
-
-
-if __name__ == '__main__':
-    ovizart = Ovizart()
-    ovizart.listAvailableModules()
