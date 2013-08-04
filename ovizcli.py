@@ -45,10 +45,10 @@ def main(args):
             print "Virustotal analyzing", '.' * 30
             analyzer = VTWrapper()
             if args.url:
-                response += analyzer.analyzeUrl(args.url)
+                response.append(analyzer.analyzeUrl(args.url))
 
             if args.file:
-                response += analyzer.analyzeBinary(args.file)
+                response.append(analyzer.analyzeBinary(args.file))
 
         if args.cuckoo:
             if args.file is None:
@@ -60,7 +60,7 @@ def main(args):
             print "Cuckoo analyzing", '.' * 30
             analyzer = CuckooWrapper()
             if args.file:
-                response += str(analyzer.analyzeMalware(args.file))
+                response.append(str(analyzer.analyzeMalware(args.file)))
 
         if args.jsunpackn:
             if args.url is None:
@@ -73,8 +73,9 @@ def main(args):
             analyzer = JsunpacknWrapper()
 
             if args.url:
-                response += analyzer.analyzeJs(args.url)
+                response.append(analyzer.analyzeJs(args.url))
 
+        print "\n\nResponse:"
         print response
 
 if __name__ == "__main__":
