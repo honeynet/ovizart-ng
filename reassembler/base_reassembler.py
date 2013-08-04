@@ -1,6 +1,17 @@
 #!/usr/bin/env python
 import sys
 import os
+
+def addToPath(pathToAdd):
+    PROJECT_ROOT = os.path.abspath(__file__)
+    PROJECT_ROOT = os.path.dirname(PROJECT_ROOT)
+    pathToAdd = os.path.join(PROJECT_ROOT, pathToAdd)
+    sys.path.append(pathToAdd)
+
+addToPath("../")
+#addToPath('reassembler')
+
+
 import reassembler
 
 __author__ = 'ggercek'
@@ -64,6 +75,7 @@ class BaseReassembler():
 
 
 if __name__ == '__main__':
+
     arguments = sys.argv[-1].split('|')
     parser_name = arguments[0]
     outputFolder = arguments[1]
