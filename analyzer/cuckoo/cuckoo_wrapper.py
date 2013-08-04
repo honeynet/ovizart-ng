@@ -45,17 +45,18 @@ class CuckooWrapper:
 
         r = requests.post(srv + "/tasks/create/file", files=binary).text
 
-        print r
+        #print r
 
         dict_json = json.loads(r)
         try:
             task_id = dict_json['task_id']
+            dict_json['url'] = "%s/tasks/view/%d" % (srv, task_id)
         except:
             raise Exception("Create task error when sending to remote cuckoo!")
 
-        print "You may check the reports at: ( %s/tasks/report/%d/html ) after it's available." % (srv, task_id)
+        print "You may check the reports at: ( %s/tasks/view/%d ) after it's available." % (srv, task_id)
 
-        return task_id
+        return dict_json
 
 
 

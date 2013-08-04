@@ -23,3 +23,9 @@ class Tags:
         BINARY = "BINARY"
         PLAIN_TEXT = "PLAIN_TEXT"
         JAVASCRIPT = "JAVASCRIPT"
+
+    class AnalyzerResponse:
+        ANALYZER_RESPONSES = "ANALYZER_RESPONSES"
+        VT_RESPONSE = "VT_RESPONSE"
+        JSU_RESPONSE = "JSU_RESPONSE"
+        CK_RESPONSE = "CK_RESPONSE"

@@ -127,3 +127,12 @@ class Data():
 
     def getAttachmentsFolder(self):
         return os.path.join(self.getStream().outputFolder, 'attachments')
+
+    def addAnalyzerResponse(self, responseTag, response):
+        from core.tags import Tags
+        ANALYZER_RESPONSES = Tags.AnalyzerResponse.ANALYZER_RESPONSES
+        responses = self.tag(ANALYZER_RESPONSES)
+        if responses:
+            responses.append((responseTag, response))
+        else:
+            self.tag(ANALYZER_RESPONSES, [(responseTag, response)])
