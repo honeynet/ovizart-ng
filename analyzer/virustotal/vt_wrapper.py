@@ -58,7 +58,7 @@ class VTWrapper(BaseAnalyzer):
         @return         : the report
         """
 
-        if self.conf in None:
+        if self.conf is None:
             self.conf = Config()
 
         vt = 'www.virustotal.com'
@@ -85,7 +85,7 @@ class VTWrapper(BaseAnalyzer):
         @return         : the report
         """
 
-        if self.conf in None:
+        if self.conf is None:
             self.conf = Config()
 
         selector = "https://www.virustotal.com/vtapi/v2/url/report"       
