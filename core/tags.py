@@ -9,7 +9,10 @@ __author__ = "ggercek"
 class Tags:
 
     class DataSource:
+        URL = "URL"
         PCAP = "PCAP"
+        BINARY = "BINARY"
+        PLAINTEXT = "PLAINTEXT"
 
     # TODO: Not a fancy way! Need to change it
     class Protocol:
