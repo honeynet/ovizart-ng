@@ -25,19 +25,19 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         self.__do('DELETE')
 
     def __do(self, httpMethod):
-        print '%s method to URL: %s' % (httpMethod, self.path)
+        #print '%s method to URL: %s' % (httpMethod, self.path)
         api = API.getMethod(httpMethod, self.path)
-        print 'api:', api
+        #print 'api:', api
         if api:
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
             f, data = api
 
-            print '##', httpMethod, ',', data, '##'
+            #print '##', httpMethod, ',', data, '##'
             if httpMethod != 'GET':
                 data = self.__parseData()
-            print '>>', httpMethod, ',', data, '##'
+            #print '>>', httpMethod, ',', data, '##'
             result = f(data)
             self.wfile.write(result)
         else:
