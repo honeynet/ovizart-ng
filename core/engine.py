@@ -120,7 +120,7 @@ def register_reporter(decorator, reporter, tags):
     availableModules[REPORTER].append(reporter)
 
 
-def list_available_modules():
+def list_available_modules(moduleType=None):
     def dump(title, elem):
         print
         print "   %s: " % title
@@ -134,10 +134,16 @@ def list_available_modules():
     global availableModules
     print "#########################"
     print "LIST OF AVAILABLE MODULES"
-    dump("DATASOURCE", availableModules[DATASOURCE])
-    dump("TAGGER", availableModules[TAGGER])
-    dump("ANALYZER", availableModules[ANALYZER])
-    dump("REPORTER", availableModules[REPORTER])
+    if moduleType is None:
+        dump("DATASOURCE", availableModules[DATASOURCE])
+        dump("TAGGER", availableModules[TAGGER])
+        dump("ANALYZER", availableModules[ANALYZER])
+        dump("REPORTER", availableModules[REPORTER])
+    elif moduleType in [DATASOURCE, TAGGER, ANALYZER, REPORTER]:
+        dump(moduleType, availableModules[moduleType])
+    else:
+        print "Error no such module type exists:", moduleType, ". Please enter one of the following module names", \
+            DATASOURCE, TAGGER, ANALYZER, REPORTER
     print "#########################"
 
 
@@ -157,6 +163,98 @@ def get_file_type(inputFiles):
                 pass
 
     return result
+
+
+def _read(config):
+    global availableModules, dataSources, taggers, analyzers, reporters
+
+    newAnalysis = Analysis()
+    newAnalysis.config = config
+
+    _analysis[newAnalysis.id] = newAnalysis
+
+    # Read input file(s)
+    inputFiles = config.input_files
+
+    # Select parser based on extension
+    inputFiles = get_file_type(inputFiles)
+
+    analysisFolder = datetime.datetime.now().strftime('analysis_%Y%m%d_%H%M%S_%f')
+    config.output_folder = config.output_folder + analysisFolder + "/"
+    newAnalysis.status = Analysis.RUNNING
+    for fileName in inputFiles.keys():
+        fileType = inputFiles[fileName]
+        # TODO: What if multiple parser exists?
+        parser = dataSources[fileType][0]
+        import os
+        # create output folder
+        outputFolder = config.output_folder + fileName.split("/")[-1]
+        outputFolder = os.path.join(config.output_folder, fileName.split("/")[-1])
+        ovizutil.createFolder(outputFolder)
+
+        # Returns summary of pcap file with file names
+        summary = parser.parse(fileName, outputFolder)
+        # summary = {
+        #               inputFile: {
+        #                   filename: '',
+        #                   numberOfPackets: '',
+        #                   numberOfBytes: '',
+        #                   startTime: '',
+        #                   endTime: ''
+        #               },
+        #               flows: [
+        #                   {}.
+        #               ]
+        # }
+        newAnalysis.files.append(summary['inputFile'])
+        # Select taggers based on file type
+        selectedTaggers = []
+        if fileType in taggers:
+            selectedTaggers = taggers[fileType]
+
+        flows = summary['data']
+        # flow is an instance of data class
+        for flow in flows:
+            newAnalysis.data.append(flow)
+            for tagger in selectedTaggers:
+                tagger.tag(flow)
+
+        reassembler = reassemblers[fileType][0]
+        for flow in flows:
+            reassembler.process(flow)
+
+    return newAnalysis
+
+
+def _analyze(newAnalysis):
+
+    config = newAnalysis.config
+    # Filter analyzers
+    # TODO: remove unwanted analyzers
+    # filterAnalyzers based on config parameter config.exclude_analyzer=[]
+    selectedAnalyzers = analyzers
+
+    flows = newAnalysis.data
+    for flow in flows:
+        for tag in selectedAnalyzers.keys():
+            for analyzer in selectedAnalyzers[tag]:
+                analyzer.setConfig(config)
+                if flow.tag(tag):
+                    analyzer.analyze(flow)
+
+
+def _view(newAnalysis):
+
+    config = newAnalysis.config
+
+    # Select reporter module
+    # Currently only html is available
+    selectedReporters = availableModules[REPORTER]
+
+    flows = newAnalysis.data
+    for flow in flows:
+        for tag, reporter in selectedReporters:
+            reporter.report(flow)
 
 
 def evaluate(config):

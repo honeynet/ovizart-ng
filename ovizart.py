@@ -102,7 +102,24 @@ class Ovizart():
         """
         pass
 
-    def listAvailableModules(self):
+    #######################################
+    ### Interactive shell functionality ###
+    #######################################
+    def listAvailableModules(self, moduleType=None):
         """Prints available modules in a human readable way.
         """
-        engine.list_available_modules()
+        engine.list_available_modules(moduleType)
+
+
+    def read(self, pcapFile):
+        self.setInputFile(pcapFile)
+        return engine._read(self.config)
+
+    def analysis(self, newAnalysis, selectedAnalyzers):
+        # Decide excluded analyzers here!!!!
+        # TODO: Update newAnalysis.config.exclude_analyzer with incoming input
+        engine._analyze(newAnalysis)
+
+    def view(self, newAnalysis, reportType):
+        # Select reporter based on reportType parameter
+        engine._view(newAnalysis)
