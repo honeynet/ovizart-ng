@@ -8,7 +8,7 @@ __author__ = "zqzas"
 import argparse
 import sys
 sys.path.append("cuckoo")
-sys.path.append("jsunpack-n")
+sys.path.append("jsunpack_n")
 sys.path.append("virustotal")
 sys.path.append("../")
 
