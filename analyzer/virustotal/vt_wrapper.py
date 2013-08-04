@@ -14,6 +14,7 @@ from core.tags import Tags
 from analyzer import BaseAnalyzer
 
 BINARY = Tags.Attachment.BINARY
+VT_RESPONSE = Tags.AnalyzerResponse.VT_RESPONSE
 
 sys.path.append("../../")
 from ovizconf import Config
@@ -49,7 +50,10 @@ class VTWrapper(BaseAnalyzer):
             return files
 
         path = retrievePath(data)[0]
-        self.analyzeBinary(path)
+        response = self.analyzeBinary(path)
+        #if response['response_code'] == 1:
+        # Come back later for result
+        data.addAnalyzerResponse(VT_RESPONSE, response)
 
     def analyzeBinary(self, path):
         """

@@ -8,7 +8,7 @@ from ovizart import Ovizart
 
 def main(args):
     parser = argparse.ArgumentParser(description="Ovizart CLI")
-    parser.add_argument("-i", "--input", nargs="+", type=file, help="path of pcap file")
+    parser.add_argument("-i", "--input", nargs="+", type=str, help="path of pcap file")
     parser.add_argument("-o", "--output", help="path of output folder")
     parser.add_argument("-c", "--config", action="store_true", help="config file")
     parser.add_argument("-l", "--list-available", action="store_true", help="list available modules")

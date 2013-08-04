@@ -3,11 +3,13 @@ __author__ = 'ggercek'
 from ovizconf import PROJECT_ROOT
 from base_reassembler import *
 from smtp_reassembler import *
+from http_reassembler import *
 from core.tags import Tags
 
 PCAP = Tags.DataSource.PCAP
 BINARY = Tags.Attachment.BINARY
 PLAIN_TEXT = Tags.Attachment.PLAIN_TEXT
+JAVASCRIPT = Tags.Attachment.JAVASCRIPT
 
 import os
 import subprocess
@@ -15,12 +17,13 @@ import ovizutil
 
 parsers = {
     BaseReassembler.target: 'BaseReassembler',
-    SMTPReassembler.target: 'SMTPReassembler'
+    SMTPReassembler.target: 'SMTPReassembler',
+    HTTPReassembler.target: 'HTTPReassembler'
 }
 
 def run_reassembler(pcap_file, parser_class, output_folder):
-    parser_script = PROJECT_ROOT + "/reassembler/base_reassembler.py"
-    print parser_script
+    parser_script = PROJECT_ROOT + "reassembler/base_reassembler.py"
+    #print parser_script
     pcap_file = os.path.abspath(pcap_file)
     parser_script = os.path.abspath(parser_script)
     output_folder = os.path.abspath(output_folder)
@@ -60,10 +63,22 @@ class Reassembler():
             filenames = [f for f in os.listdir(attachmentPath)]
             for f in filenames:
                 ftype = ovizutil.checkFileType(os.path.join(attachmentPath, f))
-                attachments.append((f, ftype))
+                ftypeTag = None
+
                 if ftype.endswith('binary'):
-                    data.tag(BINARY, 1)
+                    ftypeTag = BINARY
                 elif ftype.startswith('text'):
-                    data.tag(PLAIN_TEXT, 1)
+                    if f.endswith('.js'):
+                        ftypeTag = JAVASCRIPT
+                    else:
+                        ftypeTag = PLAIN_TEXT
+
+                files = data.tag(ftypeTag)
+                if files is None:
+                    data.tag(ftypeTag, [f])
+                else:
+                    files.append(f)
+
+                attachments.append((f, ftype, ftypeTag))
 
             data.setAttachments(attachments)

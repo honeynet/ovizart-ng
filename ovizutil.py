@@ -8,6 +8,7 @@ def createFolder(outputFolder):
 
 
 def checkFileType(filename):
+    # TODO: replace this approach with mimetypes
     import os
     f = os.popen('file -bi ' + filename, 'r')
     return f.read().strip()

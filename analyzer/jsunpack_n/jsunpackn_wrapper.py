@@ -81,6 +81,10 @@ class JsunpacknWrapper(BaseAnalyzer):
         return "JSunpack-n Wrapper"
 
     def analyze(self, data):
+        if self.conf.jsunpackn_path == '':
+            print 'jsunpackn_path is not set in config file. Skipping analyzer!!!'
+            return
+
         jsFiles = data.tag(JAVASCRIPT)
         folder = data.getAttachmentsFolder()
         for jsFile in jsFiles:
