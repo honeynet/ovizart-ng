@@ -1,6 +1,6 @@
 __author__ = 'ggercek'
 
-
+from ovizconf import PROJECT_ROOT
 from base_reassembler import *
 from smtp_reassembler import *
 from core.tags import Tags
@@ -19,7 +19,8 @@ parsers = {
 }
 
 def run_reassembler(pcap_file, parser_class, output_folder):
-    parser_script = "../reassembler/base_reassembler.py"
+    parser_script = PROJECT_ROOT + "/reassembler/base_reassembler.py"
+    print parser_script
     pcap_file = os.path.abspath(pcap_file)
     parser_script = os.path.abspath(parser_script)
     output_folder = os.path.abspath(output_folder)
