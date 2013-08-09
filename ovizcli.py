@@ -54,12 +54,15 @@ def main(args):
     parser.add_argument("-vt", "--virus-total",    action="store_true", help="Using VirusTotal to analyze binary or url")
     parser.add_argument("-ck", "--cuckoo",         action="store_true", help="Using Cuckoo Sandbox to analyze binary")
     parser.add_argument("-js", "--jsunpackn",      action="store_true", help="Using Jsunpack-n to analyze url")
+    parser.add_argument("-V", "--verbose", action="store_true", help="Verbose mode")
 
     args = parser.parse_args(args)
 
     # process input files
     inputFiles = {PCAP: [], BINARY: [], URL: [], PLAINTEXT: []}
     for inputFile in args.input:
+        if args.verbose:
+            print 'Start checking input type...'
         inputType = checkInputValue(inputFile)
         print 'name:', inputFile, 'type:', inputType
 
@@ -71,6 +74,8 @@ def main(args):
             print 'invalid input file: ', inputFile
 
     ovizart = Ovizart()
+    if args.verbose:
+        print "Ovizart main module is loaded..."
     if args.list_available:
         ovizart.listAvailableModules()
         sys.exit(1)
@@ -84,6 +89,8 @@ def main(args):
         sys.exit(1)
 
     if inputFiles[PCAP]:
+        if args.verbose:
+            print "Start analyzing pcap..."
 
         if args.output is None:
             print "Error: output folder must be set for pcap processing"
@@ -98,6 +105,9 @@ def main(args):
 
     # Wrappers
     response = []
+    if args.verbose:
+        if args.virus_total or args.cuckoo or args.jsunpackn:
+            print "Entering external analyzer..."
     if args.virus_total:
         if not (inputFiles[BINARY] or inputFiles[URL]):
             print "Error: No Binary or URL given for virus-total wrapper to process"
@@ -143,8 +153,14 @@ def main(args):
 
         response.append(analyzer.analyzeJs(inputFiles[URL]))
 
+    if args.verbose:
+        print "Analysis is done."
+
     print "\n\nResponse:"
     print response
+    
+    if args.verbose:
+        print "Bye."
 
 if __name__ == "__main__":
     main(sys.argv[1:])
