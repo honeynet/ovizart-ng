@@ -119,10 +119,11 @@ def main(args):
         print "Virus-total analyzing", '.' * 30
         analyzer = VTWrapper()
         if inputFiles[URL]:
-            response.append(analyzer.analyzeUrl(inputFiles[URL]))
+            print inputFiles[URL]
+            response.append([analyzer.analyzeUrl(url) for url in inputFiles[URL]])
 
         if inputFiles[BINARY]:
-            response.append(analyzer.analyzeBinary(inputFiles[BINARY]))
+            response.append([analyzer.analyzeBinary(binary) for binary in inputFiles[BINARY]])
 
     if args.cuckoo:
         if not inputFiles[BINARY]:
@@ -136,7 +137,7 @@ def main(args):
         from analyzer.cuckoo.cuckoo_wrapper import CuckooWrapper
         print "Cuckoo analyzing", '.' * 30
         analyzer = CuckooWrapper()
-        response.append(str(analyzer.analyzeMalware(inputFiles[BINARY])))
+        response.append(str([analyzer.analyzeMalware(binary) for binary in inputFiles[BINARY]]))
 
     if args.jsunpackn:
         if not inputFiles[URL]:
@@ -151,7 +152,7 @@ def main(args):
         print "Jsunpack-n analyzing", '.' * 30
         analyzer = JsunpacknWrapper()
 
-        response.append(analyzer.analyzeJs(inputFiles[URL]))
+        response.append([analyzer.analyzeJs(url) for url in inputFiles[URL]])
 
     if args.verbose:
         print "Analysis is done."
