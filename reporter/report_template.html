@@ -1,0 +1,109 @@
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ovizart-ng</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<style>
+{% include "css/bootstrap.min.css" %}
+{% include "css/bootstrap-responsive.min.css" %}
+
+
+body {
+    margin-top: 20px;
+}
+.footer {
+    margin-top: 45px;
+    padding: 35px 0 36px;
+    border-top: 1px solid #e5e5e5;
+}
+.footer p {
+    margin-bottom: 0;
+    color: #555;
+}
+.mono {
+    font-family: monospace;
+}
+.signature {
+    padding: 6px;
+    margin-bottom: 3px;
+}
+img.fade {
+    opacity:0.4;
+    filter:alpha(opacity=40);
+}
+img.fade:hover {
+    opacity:1.0;
+    filter:alpha(opacity=100);
+}
+.section-title {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px;
+    margin-top: 20px;
+    padding-bottom: 3px;
+}
+.filesystem {
+    background-color: #ffe3c5; {# Light Orange #}
+}
+.registry {
+    background-color: #ffc5c5; {# Light Red #}
+}
+.process {
+    background-color: #c5e0ff; {# Light Blue #}
+}
+.services {
+    background-color: #ccc5ff;
+}
+.device {
+    background-color: #ccc5ff;
+}
+.network {
+    background-color: #d3ffc5; {# Light Green #}
+}
+.socket {
+    background-color: #d3ffc5;
+}
+.synchronization {
+    background-color: #f9c5ff;
+}
+</style>
+</head>
+<body>
+<div class="container-fluid">
+
+    <!--
+    {% block content %}{% endblock %}
+    -->
+
+    <div class="section-title">
+        <h4>Ovizart-ng Reports</h4>
+
+    </div>
+
+    <section id="reports">
+        <ul>
+            {% for key in results %}
+            <tr>
+                <td>{{key}}</td>
+                <td>{{results[key]}}</td>
+            </tr>
+            <br>
+            {% endfor %}
+        </ul>
+    </section>
+
+
+
+
+    <footer class="footer">
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy;<a href="#">Ovizart-ng</a></p>
+    </footer>
+</div>
+<script>
+{% include "js/bootstrap.min.js" %}
+{% include "js/functions.js" %}
+</script>
+</body>
+</html>

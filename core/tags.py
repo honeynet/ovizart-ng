@@ -32,3 +32,8 @@ class Tags:
         VT_RESPONSE = "VT_RESPONSE"
         JSU_RESPONSE = "JSU_RESPONSE"
         CK_RESPONSE = "CK_RESPONSE"
+
+
+    class Reporter:
+        HTML = "HTML"
+        
