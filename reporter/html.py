@@ -63,14 +63,14 @@ class HTMLReporter(BaseReporter):
         except (TypeError, IOError) as e:
             raise Exception("HTML write failed: %s" % e)
 
+        return html
 
 
-"""
+
 if __name__ == "__main__":
     rpt = HTMLReporter()
     rpt.report({"hello": "zqzas", "13123":"131231231"})
 
-"""
 
 
 

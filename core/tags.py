@@ -36,4 +36,5 @@ class Tags:
 
     class Reporter:
         HTML = "HTML"
+        PDF = "PDF"
         
