@@ -25,6 +25,6 @@ class Config():
         self.jsunpackn_path = ""
 
         # Virus Total API options
-        self.vt_apikey = ""
+        self.vt_apikey = "545b985a35ca91e6bd5232c9cfb3549dd5e74a506ea960336472f86be156ec8d"
 
 

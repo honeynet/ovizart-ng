@@ -504,7 +504,7 @@ class Reporter(GenericDecorator):
     """Decorator for reporter classes"""
 
     methodName = 'report'
-    argNames = ['data']
+    argNames = ['data', 'output_path']
     registerMethod = register_reporter
 
 

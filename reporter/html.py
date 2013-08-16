@@ -29,10 +29,11 @@ class HTMLReporter(BaseReporter):
     def __repr__(self):
         return "HTML Reporter"
 
-    def report(self, data):
+    def report(self, data, output_path = ''):
         """
         Generate HTML
         @param results: results dict
+        @param output_path: optional
         
         """
 
@@ -56,8 +57,11 @@ class HTMLReporter(BaseReporter):
         except Exception as e:
             raise Exception("HTML generation failed: %s" % e)
 
+        if (output_path != ''):
+            output_path += '/'
+
         try:
-            report = open("report.html", "w")
+            report = open(output_path + "report.html", "w")
             report.write(html)
             report.close()
         except (TypeError, IOError) as e:
@@ -66,10 +70,11 @@ class HTMLReporter(BaseReporter):
         return html
 
 
-
+'''
 if __name__ == "__main__":
     rpt = HTMLReporter()
     rpt.report({"hello": "zqzas", "13123":"131231231"})
+'''
 
 
 

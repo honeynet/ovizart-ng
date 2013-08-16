@@ -28,7 +28,7 @@ class PDFReporter(BaseReporter):
     def __repr__(self):
         return "PDF Reporter"
 
-    def report(self, data):
+    def report(self, data, output_path = ''):
         """
         Generate PDF
         @param results: results dict
@@ -38,7 +38,10 @@ class PDFReporter(BaseReporter):
 
         sourceHtml = self.htmlreporter.report(data)
 
-        outputFilename = "report.pdf"
+        if output_path != '':
+            output_path += '/'
+
+        outputFilename = output_path + "report.pdf"
 
         resultFile = open(outputFilename, "w+b")
 
