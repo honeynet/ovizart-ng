@@ -81,15 +81,19 @@ img.fade:hover {
     </div>
 
     <section id="reports">
-        <ul>
-            {% for key in results %}
+    <table class ="table table-striped table-bordered">
+
+        <colgroup>
+            <col width="150" />
+            <col width="*" />
+        </colgroup>       
+        {% for key in results %}
             <tr>
-                <td>{{key}}</td>
-                <td>{{results[key]}}</td>
+                <th>{{key}}</th>
+                <td><span class="mono">{{results[key]}}</span></td>
             </tr>
-            <br>
-            {% endfor %}
-        </ul>
+        {% endfor %}
+    </table>
     </section>
 
 

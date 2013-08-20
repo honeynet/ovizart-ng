@@ -11,6 +11,9 @@ from core.engine import Reporter
 from core.tags import Tags
 from reporter import BaseReporter
 
+import json
+
+
 HTML = Tags.Reporter.HTML
 
 try:
@@ -69,13 +72,11 @@ class HTMLReporter(BaseReporter):
 
         return html
 
-
 '''
 if __name__ == "__main__":
     rpt = HTMLReporter()
     rpt.report({"hello": "zqzas", "13123":"131231231"})
 '''
-
 
 
 
