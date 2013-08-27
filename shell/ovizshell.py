@@ -1,7 +1,7 @@
 __auther__ = "zqzas"
 
 import sys
-sys.append("..")
+sys.path.append("..")
 
 from ovizart import Ovizart
 import ovizcli
@@ -26,7 +26,7 @@ configData = {'output':'', 'input':'', 'external_tool': '', 'verbose':''}
 def getSet(cmd, set_dict):
     set_pos = cmd.find('set ') + 4
     equal_pos = cmd.find('=')
-    key = cmd[set_pos: equal_pos].lstrp().strip()
+    key = cmd[set_pos: equal_pos].lstrip().strip()
     value = cmd[equal_pos + 1 :].split()[0]
     set_dict[key] = value
     return
@@ -34,9 +34,7 @@ def getSet(cmd, set_dict):
 
 while True:
     if configData['input'] == '':
-        print   """
-                Please set input: a file or an url. 
-                Example:
+        print   """Please set input: a file or an url. \nExample:
                 set input=http://google.com
                 """
 
