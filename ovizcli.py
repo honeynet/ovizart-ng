@@ -42,7 +42,9 @@ def checkInputValue(inputValue):
     return None
 
 
-def main(args):
+def cli_main(args):
+    #print args
+
     parser = argparse.ArgumentParser(description="Ovizart CLI")
     parser.add_argument("-i",   "--input", required=True, nargs="+", type=str, help="input value may be URL, binary or "
                                                                                   "pcap file. You can specify multiple "
@@ -164,4 +166,4 @@ def main(args):
         print "Bye."
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    cli_main(sys.argv[1:])
