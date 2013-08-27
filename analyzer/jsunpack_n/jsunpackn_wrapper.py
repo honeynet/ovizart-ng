@@ -96,17 +96,21 @@ class JsunpacknWrapper(BaseAnalyzer):
         @param userdata : a js file or a URL that to be analyzed
         @return         : the report
         """
+        print userdata
+
         if self.conf is None:
             self.conf = Config()
 
         __jsunpackn__ = self.conf.jsunpackn_path
         print '!!!', __jsunpackn__ 
         sys.path.append(__jsunpackn__)
-
+        '''
         try:
             import jsunpackn
-        except ImportError:
-            print "Import Error. Please check your jsunpackn!"
+        except ImportError as err:
+            print "Import Error. Please check your jsunpackn! : %s" % (err)
+        '''
+        import jsunpackn
 
         HASH = sha1(str(datetime.datetime.now()) + userdata).hexdigest()
 

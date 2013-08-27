@@ -3,7 +3,7 @@ __auther__ = "zqzas"
 import os, sys
 import unittest
 
-from html import HTMLReporter
+from html_reporter import HTMLReporter
 
 '''Testing HTML Reporter'''
 

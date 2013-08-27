@@ -11,4 +11,4 @@ class BaseReporter:
     def setConfig(self, config):
         self.conf = config
 
-import html
+import html_reporter 

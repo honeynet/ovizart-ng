@@ -11,7 +11,7 @@ from core.engine import Reporter
 from core.tags import Tags
 from reporter import BaseReporter
 
-from html import HTMLReporter
+from html_reporter import HTMLReporter
 from xhtml2pdf import pisa
 
 
