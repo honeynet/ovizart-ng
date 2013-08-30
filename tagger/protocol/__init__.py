@@ -68,7 +68,8 @@ class ProtocolTagger:
         # tag the found protocols to stream
         stream = data.getStream()
         # TODO: Change this part
-        protocol = struct.unpack('!B', stream.protocol)[0]
+        #protocol = struct.unpack('!B', stream.protocol)[0]
+        protocol = stream.protocol
 
         recognized_layers = []
         if protocol == 6:

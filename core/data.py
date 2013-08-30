@@ -4,6 +4,7 @@ __author__ = "ggercek"
 import datetime
 import os
 
+
 class Analysis:
     """Data class for holding general analysis information"""
     count = 0
@@ -14,7 +15,7 @@ class Analysis:
     FINISHED = "FINISHED"
 
     def __init__(self):
-        self.id = Analysis.__generateId()
+        self._id = None  # Analysis.__generateId()
         self.startTime = datetime.datetime.now()
         self.user = "<NoUserDefined>"
         self.config = None
@@ -22,15 +23,15 @@ class Analysis:
         self.data = []
         self.files = []
 
-    @staticmethod
-    def __generateId():
-        Analysis.count += 1
-        return Analysis.count
+#    @staticmethod
+#    def __generateId():
+#        Analysis.count += 1
+#        return Analysis.count
 
     def __repr__(self):
-        s = 'Analysis Object{\n\tid: %d\n\tstartTime: %s\n\tuser: %s' \
+        s = 'Analysis Object{\n\tid: %s\n\tstartTime: %s\n\tuser: %s' \
             '\n\tconfig: %s\n\tstatus: %s\n\tdata: %s\n\tfiles: %s\n}' % \
-            (self.id, str(self.startTime), self.user, self.config, self.status,self.data, self.files)
+            (self._id, str(self.startTime), self.user, self.config, self.status, self.data, self.files)
         return s
 
 
