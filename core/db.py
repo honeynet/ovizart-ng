@@ -48,6 +48,7 @@ def getStream(analysisId, searchCriteria=None):
     return result
 
 def todict(obj, classkey=None):
+    # Taken from stackoverflow: http://stackoverflow.com/questions/1036409/recursively-convert-python-object-graph-to-dictionary
     if isinstance(obj, dict):
         for k in obj.keys():
             obj[k] = todict(obj[k], classkey)

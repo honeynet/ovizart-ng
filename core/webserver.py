@@ -50,14 +50,88 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         import cgi
         postvars = {}
         ctype, pdict = cgi.parse_header(self.headers['content-type'])
+        remainbytes = int(self.headers['content-length'])
+
         if ctype == 'application/json':
             length = int(self.headers['content-length'])
             content = self.rfile.read(length)
             postvars = json.loads(content)
+        elif ctype == 'multipart/form-data':
+            # Handle upload
+            result, data = self.__processUpload()
+            if result:
+                postvars['filename'] = data
 
-        # TODO: Add file upload support
-        # A sample: https://gist.github.com/UniIsland/3346170
         return postvars
+
+    def __processUpload(self):
+        import os
+        import datetime
+
+        boundary = None
+        try:
+            boundary = self.headers.plisttext.split("=")[1]
+        except IndexError:
+
+            # STREAM upload handling
+            print 'No Boundry trying to read stream'
+            remainbytes = int(self.headers['content-length'])
+            path = self.translate_path(self.path)
+
+            timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f')
+            fn = os.path.join(path, 'uploadedFile_%s'%timestamp)
+            out = open(fn, 'wb')
+            print 'fn:', fn
+            rlen = 4096
+            while remainbytes > 0:
+                if rlen > remainbytes:
+                    rlen = remainbytes
+                chunk = self.rfile.read(rlen)
+                remainbytes -= len(chunk)
+                out.write(chunk)
+                out.flush()
+            out.close()
+            print "Done!!!"
+            return True, fn
+
+        remainbytes = int(self.headers['content-length'])
+        line = self.rfile.readline()
+        remainbytes -= len(line)
+        if not boundary in line:
+            return False, None  #"Content NOT begin with boundary"
+        line = self.rfile.readline()
+        remainbytes -= len(line)
+        fn = re.findall(r'Content-Disposition.*name="file"; filename="(.*)"', line)
+        if not fn:
+            return False, None  #"Can't find out file name..."
+        path = self.translate_path(self.path)
+        fn = os.path.join(path, fn[0])
+        line = self.rfile.readline()
+        remainbytes -= len(line)
+        line = self.rfile.readline()
+        remainbytes -= len(line)
+        try:
+            out = open(fn, 'wb')
+        except IOError:
+            return False, None  #"Can't create file to write, do you have permission to write?")
+        preline = self.rfile.readline()
+        remainbytes -= len(preline)
+        while remainbytes > 0:
+            line = self.rfile.readline()
+            remainbytes -= len(line)
+            if boundary in line:
+                preline = preline[0:-1]
+                if preline.endswith('\r'):
+                    preline = preline[0:-1]
+                out.write(preline)
+                out.close()
+                return True, fn  #"File '%s' upload success!" % fn
+            else:
+                out.write(preline)
+                preline = line
+        return False, None  #"Unexpected end of data."
+
+
 
 
 class API():
