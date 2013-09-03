@@ -332,7 +332,7 @@ def evaluate(config):
                         analyzer.analyze(flow)
 
         for flow in flows:
-            for tag, reporter in selectedReporters:
+            for reporter in selectedReporters:
                 reporter.report(flow)
 
     newAnalysis.status = Analysis.FINISHED

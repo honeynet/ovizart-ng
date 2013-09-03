@@ -8,6 +8,7 @@ import sys
 sys.path.append("..")
 
 from core.engine import Reporter
+from core.data import Data
 from core.tags import Tags
 from reporter import BaseReporter
 
@@ -46,11 +47,16 @@ class HTMLReporter(BaseReporter):
         #report path
         results = data
 
+        
         if type(results) is str:
             try:
                 results = json.loads(results)
             except ValueError:
                 raise ValueError("No JSON object could be decoded; This method accepts json string or dict.")
+
+        if isinstance(results, Data):
+            results = results.getDict()
+
 
         env = Environment(autoescape=True, loader = FileSystemLoader('.'))
 

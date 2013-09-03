@@ -136,3 +136,7 @@ class Data():
             responses.append((responseTag, response))
         else:
             self.tag(ANALYZER_RESPONSES, [(responseTag, response)])
+
+    def getDict(self):
+        return {'tags': self.__tags, 'data': self.__data}
+
