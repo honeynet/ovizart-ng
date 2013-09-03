@@ -80,7 +80,7 @@ def cli_main(args):
         print "Ovizart main module is loaded..."
     if args.list_available:
         ovizart.listAvailableModules()
-        sys.exit(1)
+        return
 
     if not inputFiles[PCAP] and not (args.virus_total or args.cuckoo or args.jsunpackn):
         print "Error: No pcap file given."
@@ -88,7 +88,8 @@ def cli_main(args):
             print "Please give a pcap file or use -vt or -ck option for binary files like these.", inputFiles[BINARY]
         if inputFiles[URL]:
             print "Please give a pcap file or use -vt or -js option for urls like these.", inputFiles[URL]
-        sys.exit(1)
+        return
+        
 
     if inputFiles[PCAP]:
         if args.verbose:
@@ -96,7 +97,7 @@ def cli_main(args):
 
         if args.output is None:
             print "Error: output folder must be set for pcap processing"
-            sys.exit(1)
+            return
         # Use only pcap files
         for inputFile in inputFiles[PCAP]:
             ovizart.setInputFile(inputFile)
@@ -115,8 +116,8 @@ def cli_main(args):
             print "Error: No Binary or URL given for virus-total wrapper to process"
             if inputFiles[PCAP]:
                 print "Please remove -vt option to process pcap files.", inputFiles[PCAP]
-            sys.exit(1)
-
+            return
+            
         from analyzer.virustotal.vt_wrapper import VTWrapper
         print "Virus-total analyzing", '.' * 30
         analyzer = VTWrapper()
@@ -133,9 +134,8 @@ def cli_main(args):
             if inputFiles[PCAP]:
                 print "Please remove -ck option to process pcap files.", inputFiles[PCAP]
             if inputFiles[URL]:
-                print "Please remove -ck option to process urls, use -jk or -vt options for urls.", inputFiles[URL]
-            sys.exit(1)
-
+                print "Please remove -ck option to process urls, use -js or -vt options for urls.", inputFiles[URL]
+            return
         from analyzer.cuckoo.cuckoo_wrapper import CuckooWrapper
         print "Cuckoo analyzing", '.' * 30
         analyzer = CuckooWrapper()
@@ -148,7 +148,7 @@ def cli_main(args):
                 print "Please remove -js option to process pcap files.", inputFiles[PCAP]
             if inputFiles[BINARY]:
                 print "Please remove -js option to process binary files.", inputFiles[PCAP]
-            sys.exit(1)
+            return
 
         from analyzer.jsunpack_n.jsunpackn_wrapper import JsunpacknWrapper
         print "Jsunpack-n analyzing", '.' * 30
