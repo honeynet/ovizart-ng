@@ -7,6 +7,7 @@ from ovizart import Ovizart
 from ovizcli import cli_main
 
 import cmd
+#thanks to http://www.farmckon.net/?p=181
 try:
         import readline
 except ImportError:
@@ -101,6 +102,17 @@ class OvizShell(cmd.Cmd):
         return True
 
 if __name__ == '__main__':
-    OvizShell().cmdloop()
+    help_info = """
+A interactive shell for ovizart-ng with the autocomplete(press tab) and help support
+Example:
+    > set input = http://mal.site
+    > set output = /tmp
+    > set external_tool = -js
+    > show
+    > start
+
+For the more info, you may also refer to ovizcli.py
+    """
+    OvizShell().cmdloop(help_info)
 
  
