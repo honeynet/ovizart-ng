@@ -8,6 +8,7 @@ class OvizartProxy():
 
     LOGIN_URL = 'login'
     UPLOAD_URL = 'upload'
+    START_URL = 'start'
 
     def __init__(self, protocol, host, port=80):
         self.protocol = protocol
@@ -15,6 +16,9 @@ class OvizartProxy():
         self.port = port
         self.login_success = False
         self.cookies = None
+
+    def __generateLink(self, url):
+        return "%s://%s:%s/%s"%(self.protocol, self.host, self.port, url)
 
     def login(self, username, password):
         url = self.__generateLink(OvizartProxy.LOGIN_URL)
@@ -36,19 +40,16 @@ class OvizartProxy():
         url = self.__generateLink(OvizartProxy.UPLOAD_URL) + '/' + filename
         result = "NA"
         with open(filepath, 'r') as f:
+            # Form based approach
             #response = requests.post(url, verify=False, files={'file': (filename, f)}, cookies=self.cookies)
-            response = requests.post(url, verify=False, data=f, headers={'content-type': 'application/octet-stream'}, cookies=self.cookies)
+            # Stream based approach
+            response = requests.post(url, verify=False, data=f, headers={'content-type': 'application/octet-stream'},
+                                     cookies=self.cookies)
             result = json.loads(response.content)
-
-
-        # TODO: Consider using stream options for large files!!!
-        # For streaming use following;
-        # with open('massive-body') as f:
-        #     requests.post('http://some.url/streamed', data=f)
-        # TODO: Based on file size choose upload option!!!! Webserver have stream support now!
-        #with open('/home/hforge/Downloads/target_based_frag.pdf', 'r') as f:
-        #    requests.post('http://localhost:8000', data=f)
         return result
 
-    def __generateLink(self, url):
-        return "%s://%s:%s/%s"%(self.protocol, self.host, self.port, url)
+    def start(self):
+        url = self.__generateLink(OvizartProxy.START_URL)
+        response = requests.post(url, verify=False, headers={'content-type': 'application/json'}, cookies=self.cookies)
+        result = json.loads(response.content)
+        return result

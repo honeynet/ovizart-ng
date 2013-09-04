@@ -65,16 +65,11 @@ def set_config(data):
 @API(method="POST", url=r"^/start$")
 def start(data):
     # Start the analyzer and return the analysis id
-
-    pass
+    analysis = data['cookie'].data['ovizart'].startASync()
+    return json.dumps({'AnalysisId': analysis._id, 'Status': analysis.status})
 
 
 @API(method="POST", url=r"^/stop$")
 def stop(data):
     # Stop the analysis based on id
-    pass
-
-
-@API(method="POST", url=r"^/set/input$")
-def set_input_pcap(data):
     pass

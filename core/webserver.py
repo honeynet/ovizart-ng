@@ -136,8 +136,9 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 
         if ctype == 'application/json':
             length = int(self.headers['content-length'])
-            content = self.rfile.read(length)
-            postvars = json.loads(content)
+            if length > 0:
+                content = self.rfile.read(length)
+                postvars = json.loads(content)
         elif ctype == 'multipart/form-data' or ctype == 'application/octet-stream':
             # Handle upload
             result, data = self.__processUpload(ctype)

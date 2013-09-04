@@ -1,6 +1,7 @@
 __author__ = 'ggercek'
 
 from pymongo import Connection
+from bson.objectid import ObjectId
 
 connection = Connection('localhost', 27017)
 
@@ -14,22 +15,24 @@ def saveAnalysis(analysis):
     global _analysisCollection
     #d = analysis.__dict__
     d = todict(analysis)
-    print 'dict:', d
     if analysis._id:
         # Update analysis object
-        _analysisCollection.update({'_id': analysis._id}, d)
+        #_analysisCollection.update({'_id': ObjectId(unicode(d['_id']))}, d)
+        d['_id'] = ObjectId(d['_id'])
+        _analysisCollection.save(d)
+        d['_id'] = str(d['_id'])
     else:
         del d['_id']
         # new analysis created insert to db
         id = _analysisCollection.insert(d)
-        d['_id'] = id
+        analysis._id = str(id)
 
 
 def getAnalysis(id=None):
     """Returns the requested analysis object or list of analysis objects if id is now specified."""
     result = []
     if id:
-        result.append(_analysisCollection.find({'_id': id}))
+        result.extend(_analysisCollection.find({'_id': ObjectId(unicode(id))}))
     else:
         result.extend(_analysisCollection.find())
 
@@ -40,10 +43,13 @@ def getStream(analysisId, searchCriteria=None):
     """Returns Stream objects of an analysis according to given searchCriteria"""
 
     result = []
-    if searchCriteria:
-        result.extend(_analysisCollection.find(searchCriteria))
-    else:
-        result.extend(_analysisCollection.find())
+    _analysis = _analysisCollection.find({'_id': ObjectId(unicode(id))})
+
+    # TODO:Revise this part !!!
+    # if searchCriteria:
+    #     result.extend(_analysisCollection.find(searchCriteria))
+    # else:
+    #     result.extend()
 
     return result
 
