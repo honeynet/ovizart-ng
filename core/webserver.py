@@ -8,7 +8,8 @@ import argparse
 import re
 import urlparse
 import json
-
+import ssl
+from gencert import createCert
 
 class HTTPRequestHandler(BaseHTTPRequestHandler):
 
@@ -25,6 +26,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         self.__do('DELETE')
 
     def __do(self, httpMethod):
+        print 'headers:',  self.headers
         #print '%s method to URL: %s' % (httpMethod, self.path)
         api = API.getMethod(httpMethod, self.path)
         #print 'api:', api
@@ -178,6 +180,12 @@ class API():
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     allow_reuse_address = True
 
+    def __init__(self, server_info, handler):
+        HTTPServer.__init__(self, server_info, handler)
+        certFile = createCert()
+        print 'certFile:', certFile
+        self.socket = ssl.wrap_socket(self.socket, certfile=certFile, server_side=True)
+
     def shutdown(self):
         self.socket.close()
         HTTPServer.shutdown(self)
@@ -216,7 +224,11 @@ if __name__ == '__main__':
     #args = parser.parse_args()
 
     #server = SimpleHttpServer(args.ip, args.port)
+    import sys
+    sys.path.append('../')
     server = OvizartRestServer('localhost', 9009)
     print 'HTTP Server Running...........'
     server.start()
+    import os
+    print 'pid:', os.getpid()
     server.waitForThread()

@@ -1,2 +1,3 @@
 pymongo
 requests
+M2Crypto
