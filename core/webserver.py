@@ -57,26 +57,31 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         print 'headers: ', self.headers
         if 'Cookie' in self.headers:
             c = Cookie.SimpleCookie(self.headers["Cookie"])
-            val = c['value'].value
-            print 'val:', val
-            if val in self.server.cookies:
-                cookie = self.server.cookies[val]
-                if cookie.isValid(clientIpAddress, val):
-                    cookie.visited()
+            if 'value' in c:
+                val = c['value'].value
+                print 'val:', val
+                if val in self.server.cookies:
+                    cookie = self.server.cookies[val]
+                    if cookie.isValid(clientIpAddress, val):
+                        cookie.visited()
+                        return cookie
+                    else:
+                        del c['value']
+                        del cookie
+                        cookie = None
+                        self.send_headers("Set-Cookie", "access_token=deleted; Expires=Thu, 01-Jan-1970 00:00:00 GMT")
+                        return None
                 else:
-                    del c['value']
-                    del cookie
-                    cookie = None
-                    self.send_headers("Set-Cookie", "access_token=deleted; Expires=Thu, 01-Jan-1970 00:00:00 GMT")
-        else:
-            # New user arrivied!!!!
-            cookie = Cookie.SimpleCookie()
-            val = ''.join(random.choice(string.ascii_letters+string.digits) for x in xrange(200))
-            cookie['value'] = val
-            self.send_header('Set-Cookie', cookie.output(header=''))
-            #self.end_headers()
-            cookie = CookieEntry(clientIpAddress, val)
-            self.server.cookies[val] = cookie
+                    return None
+
+        # New user arrivied!!!!
+        cookie = Cookie.SimpleCookie()
+        val = ''.join(random.choice(string.ascii_letters+string.digits) for x in xrange(200))
+        cookie['value'] = val
+        self.send_header('Set-Cookie', cookie.output(header=''))
+        #self.end_headers()
+        cookie = CookieEntry(clientIpAddress, val)
+        self.server.cookies[val] = cookie
 
         return cookie
 
@@ -96,6 +101,11 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
                 return
 
             f, data = api
+            f, isAuth = f
+
+            if isAuth and not cookie.isAuth:
+                self.send_response(403, "You don't have permission to do this!!!")
+                return
 
             #print '##', httpMethod, ',', data, '##'
             if httpMethod != 'GET':
@@ -196,30 +206,35 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
                 preline = line
         return False, None  #"Unexpected end of data."
 
-class API():
-    api_methods = {
-        'GET':  {},
-        'POST': {},
-        'PUT':  {},
-        'DELETE':{}
-    }
 
-    def __init__(self, method='GET', url='/test/00/'):
+api_methods = {
+    'GET':  {},
+    'POST': {},
+    'PUT':  {},
+    'DELETE':{}
+}
+
+
+class API():
+
+
+    def __init__(self, method='GET', url='/test/00/', isAuth=False):
         self.method = method
         self.url = url
+        self.isAuth = isAuth
         print 'API decorator:', 'method:', method, 'url:', url
 
     def __call__(self, func):
+        global api_methods
         print 'Register method'
         method = self.method
         url = self.url
-        api_methods = API.api_methods
 
         if method in api_methods.keys():
             if url in api_methods[method].keys():
                 raise Exception('URL is already registered: %s for method: %s' % (url, method))
             else:
-                api_methods[method][url] = func
+                api_methods[method][url] = func, self.isAuth
         else:
             raise Exception('No such registered HTTP method: %s for given url: %s' % (method, url))
 
@@ -227,14 +242,17 @@ class API():
 
     @staticmethod
     def getMethod(requestType, path):
-        if API.api_methods[requestType]:
-            for val in API.api_methods[requestType].iterkeys():
+        global api_methods
+        print 'api_methods:', api_methods
+        if api_methods[requestType]:
+            for val in api_methods[requestType].iterkeys():
                 m = re.search(val, path)
                 if None != m:
                     data = m.groupdict()
-                    return API.api_methods[requestType][val], data
+                    return api_methods[requestType][val], data
 
         return None
+
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     allow_reuse_address = True
@@ -242,16 +260,18 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     def __init__(self, server_info, handler):
         self.cookies = {}
         HTTPServer.__init__(self, server_info, handler)
-        certFile = createCert()
-        self.socket = ssl.wrap_socket(self.socket, certfile=certFile, server_side=True)
 
     def shutdown(self):
         self.socket.close()
         HTTPServer.shutdown(self)
 
+
 class OvizartRestServer():
-    def __init__(self, ip, port):
+    def __init__(self, ip, port, isSSL=False):
         self.server = ThreadedHTTPServer((ip, port), HTTPRequestHandler)
+        if isSSL:
+            certFile = createCert()
+            self.server.socket = ssl.wrap_socket(self.server.socket, certfile=certFile, server_side=True)
 
     def start(self):
         self.server_thread = threading.Thread(target=self.server.serve_forever)
@@ -267,7 +287,7 @@ class OvizartRestServer():
 
 
 # A sample rest method
-@API(method='GET', url=r"^/(?P<first_name>\w+)/(?P<last_name>\w+)/?$")
+@API(method='GET', url=r"^/(?P<first_name>\w+)/(?P<last_name>\w+)/?$", isAuth=True)
 def processGET(data):
     name = data['first_name']
     surname = data['last_name']
@@ -284,9 +304,13 @@ if __name__ == '__main__':
     #server = SimpleHttpServer(args.ip, args.port)
     import sys
     sys.path.append('../')
-    server = OvizartRestServer('localhost', 9009)
+    #global api_methods
+    #import ovizapi
+
+    server = OvizartRestServer('localhost', 9009, False)
     print 'HTTP Server Running...........'
     server.start()
+    print 'api_methods: ', api_methods
     import os
     print 'pid:', os.getpid()
 
