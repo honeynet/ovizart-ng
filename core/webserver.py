@@ -14,7 +14,11 @@ import Cookie
 import string
 import random
 import time
-
+import posixpath
+import urllib
+import os
+from ovizconf import UPLOAD_FOLDER
+import datetime
 
 class CookieEntry():
     def __init__(self, ipAddress, value):
@@ -30,7 +34,7 @@ class CookieEntry():
 
     def isValid(self, ipAddress, value):
         # TODO: check also timeout
-        return (self.ipAddress == ipAddress and self.value == value)
+        return (self.ipAddress == ipAddress and self.value == value and not self.isExpired)
 
     def __repr__(self):
         return "isExpired: %s, isAuth: %s, lastVisit: %s, ipAddress: %s, value: %s, data: %s"% \
@@ -109,8 +113,11 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 
             #print '##', httpMethod, ',', data, '##'
             if httpMethod != 'GET':
-                data = self.__parseData()
-                data['cookie'] = cookie
+                _data = self.__parseData()
+                if _data:
+                    data = dict(data.items() + _data.items())
+
+            data['cookie'] = cookie
 
             #print '>>', httpMethod, ',', data, '##'
             result = f(data)
@@ -131,32 +138,24 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
             length = int(self.headers['content-length'])
             content = self.rfile.read(length)
             postvars = json.loads(content)
-        elif ctype == 'multipart/form-data':
+        elif ctype == 'multipart/form-data' or ctype == 'application/octet-stream':
             # Handle upload
-            result, data = self.__processUpload()
+            result, data = self.__processUpload(ctype)
             if result:
-                postvars['filename'] = data
+                postvars['uploaded_filename'] = data
 
         return postvars
 
-    def __processUpload(self):
-        import os
-        import datetime
-
+    def __processUpload(self, ctype):
         boundary = None
-        try:
-            boundary = self.headers.plisttext.split("=")[1]
-        except IndexError:
 
+        if ctype == 'application/octet-stream':
             # STREAM upload handling
-            print 'No Boundry trying to read stream'
             remainbytes = int(self.headers['content-length'])
-            path = self.translate_path(self.path)
-
             timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-            fn = os.path.join(path, 'uploadedFile_%s'%timestamp)
+            fn = os.path.join(UPLOAD_FOLDER, 'uploadedFile_%s'%timestamp)
+            print '[stream] fn:', fn
             out = open(fn, 'wb')
-            print 'fn:', fn
             rlen = 4096
             while remainbytes > 0:
                 if rlen > remainbytes:
@@ -166,46 +165,72 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
                 out.write(chunk)
                 out.flush()
             out.close()
-            print "Done!!!"
+            print "[stream] Done!!!"
             return True, fn
 
-        remainbytes = int(self.headers['content-length'])
-        line = self.rfile.readline()
-        remainbytes -= len(line)
-        if not boundary in line:
-            return False, None  #"Content NOT begin with boundary"
-        line = self.rfile.readline()
-        remainbytes -= len(line)
-        fn = re.findall(r'Content-Disposition.*name="file"; filename="(.*)"', line)
-        if not fn:
-            return False, None  #"Can't find out file name..."
-        path = self.translate_path(self.path)
-        fn = os.path.join(path, fn[0])
-        line = self.rfile.readline()
-        remainbytes -= len(line)
-        line = self.rfile.readline()
-        remainbytes -= len(line)
-        try:
-            out = open(fn, 'wb')
-        except IOError:
-            return False, None  #"Can't create file to write, do you have permission to write?")
-        preline = self.rfile.readline()
-        remainbytes -= len(preline)
-        while remainbytes > 0:
+        elif ctype == 'multipart/form-data':
+            boundary = self.headers.plisttext.split("=")[1]
+            remainbytes = int(self.headers['content-length'])
             line = self.rfile.readline()
             remainbytes -= len(line)
-            if boundary in line:
-                preline = preline[0:-1]
-                if preline.endswith('\r'):
+            if not boundary in line:
+                return False, None  #"Content NOT begin with boundary"
+            line = self.rfile.readline()
+            remainbytes -= len(line)
+            fn = re.findall(r'Content-Disposition.*name="file"; filename="(.*)"', line)
+            if not fn:
+                return False, None  #"Can't find out file name..."
+            #path = self.translate_path(self.path)
+            fn = os.path.join(UPLOAD_FOLDER, fn[0])
+            print '[post] fn:', fn
+            line = self.rfile.readline()
+            remainbytes -= len(line)
+            line = self.rfile.readline()
+            remainbytes -= len(line)
+            try:
+                out = open(fn, 'wb')
+            except IOError:
+                return False, None  #"Can't create file to write, do you have permission to write?")
+            preline = self.rfile.readline()
+            remainbytes -= len(preline)
+            while remainbytes > 0:
+                line = self.rfile.readline()
+                remainbytes -= len(line)
+                if boundary in line:
                     preline = preline[0:-1]
-                out.write(preline)
-                out.close()
-                return True, fn  #"File '%s' upload success!" % fn
-            else:
-                out.write(preline)
-                preline = line
+                    if preline.endswith('\r'):
+                        preline = preline[0:-1]
+                    out.write(preline)
+                    out.close()
+                    return True, fn  #"File '%s' upload success!" % fn
+                else:
+                    out.write(preline)
+                    preline = line
+
         return False, None  #"Unexpected end of data."
 
+
+    # def translate_path(self, path):
+    #     """Translate a /-separated PATH to the local filename syntax.
+    #
+    #     Components that mean special things to the local file system
+    #     (e.g. drive or directory names) are ignored.  (XXX They should
+    #     probably be diagnosed.)
+    #
+    #     """
+    #     # abandon query parameters
+    #     path = path.split('?',1)[0]
+    #     path = path.split('#',1)[0]
+    #     path = posixpath.normpath(urllib.unquote(path))
+    #     words = path.split('/')
+    #     words = filter(None, words)
+    #     path = os.getcwd()
+    #     for word in words:
+    #         drive, word = os.path.splitdrive(word)
+    #         head, word = os.path.split(word)
+    #         if word in (os.curdir, os.pardir): continue
+    #         path = os.path.join(path, word)
+    #     return path
 
 api_methods = {
     'GET':  {},
@@ -218,7 +243,7 @@ api_methods = {
 class API():
 
 
-    def __init__(self, method='GET', url='/test/00/', isAuth=False):
+    def __init__(self, method='GET', url='/test/00/', isAuth=True):
         self.method = method
         self.url = url
         self.isAuth = isAuth
@@ -287,7 +312,7 @@ class OvizartRestServer():
 
 
 # A sample rest method
-@API(method='GET', url=r"^/(?P<first_name>\w+)/(?P<last_name>\w+)/?$", isAuth=True)
+@API(method='GET', url=r"^/(?P<first_name>\w+)/(?P<last_name>\w+)/?$")
 def processGET(data):
     name = data['first_name']
     surname = data['last_name']
