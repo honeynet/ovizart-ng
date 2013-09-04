@@ -10,6 +10,32 @@ import urlparse
 import json
 import ssl
 from gencert import createCert
+import Cookie
+import string
+import random
+import time
+
+
+class CookieEntry():
+    def __init__(self, ipAddress, value):
+        self.isExpired = False
+        self.isAuth = False
+        self.lastVisit = time.time()
+        self.ipAddress = ipAddress
+        self.value = value
+        self.data = {}
+
+    def visited(self):
+        self.lastVisit = time.time()
+
+    def isValid(self, ipAddress, value):
+        # TODO: check also timeout
+        return (self.ipAddress == ipAddress and self.value == value)
+
+    def __repr__(self):
+        return "isExpired: %s, isAuth: %s, lastVisit: %s, ipAddress: %s, value: %s, data: %s"% \
+            (self.isExpired, self.isAuth, self.lastVisit, self.ipAddress, self.value, self.data)
+
 
 class HTTPRequestHandler(BaseHTTPRequestHandler):
 
@@ -25,20 +51,57 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
     def do_DELETE(self):
         self.__do('DELETE')
 
+    def __process_cookie(self):
+        cookie = None
+        clientIpAddress = self.client_address[0]
+        print 'headers: ', self.headers
+        if 'Cookie' in self.headers:
+            c = Cookie.SimpleCookie(self.headers["Cookie"])
+            val = c['value'].value
+            print 'val:', val
+            if val in self.server.cookies:
+                cookie = self.server.cookies[val]
+                if cookie.isValid(clientIpAddress, val):
+                    cookie.visited()
+                else:
+                    del c['value']
+                    del cookie
+                    cookie = None
+                    self.send_headers("Set-Cookie", "access_token=deleted; Expires=Thu, 01-Jan-1970 00:00:00 GMT")
+        else:
+            # New user arrivied!!!!
+            cookie = Cookie.SimpleCookie()
+            val = ''.join(random.choice(string.ascii_letters+string.digits) for x in xrange(200))
+            cookie['value'] = val
+            self.send_header('Set-Cookie', cookie.output(header=''))
+            #self.end_headers()
+            cookie = CookieEntry(clientIpAddress, val)
+            self.server.cookies[val] = cookie
+
+        return cookie
+
     def __do(self, httpMethod):
-        print 'headers:',  self.headers
         #print '%s method to URL: %s' % (httpMethod, self.path)
         api = API.getMethod(httpMethod, self.path)
         #print 'api:', api
         if api:
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
+
+            cookie = self.__process_cookie()
+            print 'Cookie:', cookie
+
             self.end_headers()
+            if cookie is None:
+                return
+
             f, data = api
 
             #print '##', httpMethod, ',', data, '##'
             if httpMethod != 'GET':
                 data = self.__parseData()
+                data['cookie'] = cookie
+
             #print '>>', httpMethod, ',', data, '##'
             result = f(data)
             self.wfile.write(result)
@@ -133,9 +196,6 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
                 preline = line
         return False, None  #"Unexpected end of data."
 
-
-
-
 class API():
     api_methods = {
         'GET':  {},
@@ -176,20 +236,18 @@ class API():
 
         return None
 
-
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     allow_reuse_address = True
 
     def __init__(self, server_info, handler):
+        self.cookies = {}
         HTTPServer.__init__(self, server_info, handler)
         certFile = createCert()
-        print 'certFile:', certFile
         self.socket = ssl.wrap_socket(self.socket, certfile=certFile, server_side=True)
 
     def shutdown(self):
         self.socket.close()
         HTTPServer.shutdown(self)
-
 
 class OvizartRestServer():
     def __init__(self, ip, port):
@@ -231,4 +289,5 @@ if __name__ == '__main__':
     server.start()
     import os
     print 'pid:', os.getpid()
+
     server.waitForThread()
