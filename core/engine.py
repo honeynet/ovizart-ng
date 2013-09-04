@@ -259,15 +259,27 @@ def _view(newAnalysis):
         for tag, reporter in selectedReporters:
             reporter.report(flow)
 
-
-def evaluate(config):
-    global availableModules, dataSources, taggers, analyzers, reporters
-
+def evaluateASync(config):
     newAnalysis = Analysis()
     newAnalysis.config = config
     db.saveAnalysis(newAnalysis)
-
     _analysis[newAnalysis._id] = newAnalysis
+
+    # start a thread here
+    # TODO: Improve this solution
+    import thread
+    thread.start_new_thread(evaluate, (config, newAnalysis))
+    return newAnalysis
+
+def evaluate(config, newAnalysis=None):
+    global availableModules, dataSources, taggers, analyzers, reporters
+
+    if newAnalysis is None:
+        newAnalysis = Analysis()
+        newAnalysis.config = config
+        db.saveAnalysis(newAnalysis)
+
+        _analysis[newAnalysis._id] = newAnalysis
 
     # Read input file(s)
     inputFiles = config.input_files
@@ -339,8 +351,8 @@ def evaluate(config):
             for tag, reporter in selectedReporters:
                 reporter.report(flow)
 
-    db.saveAnalysis(newAnalysis)
     newAnalysis.status = Analysis.FINISHED
+    db.saveAnalysis(newAnalysis)
     return newAnalysis
 ################################
 ################################

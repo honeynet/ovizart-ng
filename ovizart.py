@@ -80,6 +80,11 @@ class Ovizart():
         self.analysis[analysis._id] = analysis
         return analysis
 
+    def startASync(self):
+        analysis = engine.evaluateASync(self.config)
+        self.analysis[analysis._id] = analysis
+        return analysis
+
     def stop(self, analysisId):
         """Cancels a RUNNING analyze
         """
