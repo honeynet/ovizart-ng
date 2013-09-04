@@ -4,8 +4,10 @@ HTML reporter
 
 __author__ = "zqzas"
 
-import sys
+import sys, os
 sys.path.append("..")
+REPORTER_ROOT = os.path.dirname(os.path.abspath(__file__)) + '/'
+sys.path.append(REPORTER_ROOT)
 
 from core.engine import Reporter
 from core.data import Data
@@ -58,8 +60,7 @@ class HTMLReporter(BaseReporter):
             results = results.getDict()
 
 
-        env = Environment(autoescape=True, loader = FileSystemLoader('.'))
-
+        env = Environment(autoescape=True, loader = FileSystemLoader(REPORTER_ROOT))
         try:
             tpl = env.get_template("report_template.html")
             html = tpl.render({"results" : results})
