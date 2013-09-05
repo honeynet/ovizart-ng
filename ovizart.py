@@ -80,8 +80,8 @@ class Ovizart():
         self.analysis[analysis._id] = analysis
         return analysis
 
-    def startASync(self):
-        analysis = engine.evaluateASync(self.config)
+    def startASync(self, userid=None):
+        analysis = engine.evaluateASync(self.config, userid)
         self.analysis[analysis._id] = analysis
         return analysis
 

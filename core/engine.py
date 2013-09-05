@@ -259,8 +259,9 @@ def _view(newAnalysis):
         for tag, reporter in selectedReporters:
             reporter.report(flow)
 
-def evaluateASync(config):
+def evaluateASync(config, userid=None):
     newAnalysis = Analysis()
+    newAnalysis.user = userid
     newAnalysis.config = config
     db.saveAnalysis(newAnalysis)
     _analysis[newAnalysis._id] = newAnalysis
@@ -271,11 +272,12 @@ def evaluateASync(config):
     thread.start_new_thread(evaluate, (config, newAnalysis))
     return newAnalysis
 
-def evaluate(config, newAnalysis=None):
+def evaluate(config, newAnalysis=None, userid=None):
     global availableModules, dataSources, taggers, analyzers, reporters
 
     if newAnalysis is None:
         newAnalysis = Analysis()
+        newAnalysis.user = userid
         newAnalysis.config = config
         db.saveAnalysis(newAnalysis)
 

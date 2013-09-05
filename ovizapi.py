@@ -5,6 +5,7 @@ from ovizart import Ovizart
 from core.webserver import API
 import json
 import os
+import db
 
 @API(method="POST", url=r"^/login$", isAuth=False)
 def login(data):
@@ -13,14 +14,15 @@ def login(data):
     username = data['username']
     password = data['password']
 
-    # TODO: Replace this dummy check
-    if username == "admin" and password == "admin":
+    userid = db.getUser(username, password)
+    if userid:
+    #if username == "admin" and password == "admin":
         data['cookie'].isAuth = True
         data['cookie'].data['ovizart'] = Ovizart()
+        data['cookie'].data['userid'] = userid
         response["Status"] = "OK"
         response["username"] = username
-        # TODO: Get user id from DB
-        response["userid"] = 1000
+        response["userid"] = userid
 
     return json.dumps(response)
 
@@ -68,7 +70,8 @@ def set_config(data):
 @API(method="POST", url=r"^/start$")
 def start(data):
     # Start the analyzer and return the analysis id
-    analysis = data['cookie'].data['ovizart'].startASync()
+    userid = data['cookie'].data['userid']
+    analysis = data['cookie'].data['ovizart'].startASync(userid)
     return json.dumps({'AnalysisId': analysis._id, 'Status': analysis.status})
 
 
