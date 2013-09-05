@@ -90,4 +90,9 @@ def removeUser(username, password):
 
 def getUser(username, password):
     result = _users.find({'username': username, 'password': password}, {'_id': 1})
+    if result.count() == 0:
+        return None
+    else:
+        result = str(result.next()['_id'])
+
     return result
