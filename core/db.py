@@ -89,5 +89,5 @@ def removeUser(username, password):
 
 
 def getUser(username, password):
-    result = _users.find({'username': username, 'password': password}).count() == 1
+    result = _users.find({'username': username, 'password': password}, {'_id': 1})
     return result
