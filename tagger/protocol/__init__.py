@@ -1,4 +1,4 @@
-__author__ = 'hforge'
+__author__ = 'ggercek'
 
 from smtp import *
 from http import *
