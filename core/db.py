@@ -7,6 +7,7 @@ connection = Connection('localhost', 27017)
 
 _db = connection['ovizart']
 _analysisCollection = _db.analysis
+_users = _db.users
 
 
 def saveAnalysis(analysis):
@@ -68,3 +69,25 @@ def todict(obj, classkey=None):
         return data
     else:
         return obj
+
+
+def addUser(username, password, name, surname, emailAddress):
+    import datetime
+    # Check for username, is in use?
+    users = _users.find({'username': username})
+    if users.count() > 0:
+        return False
+    else:
+        result = _users.insert({'username': username, 'password': password, 'dayOfRegister:': datetime.datetime.now(),
+                       'name': name, 'surname': surname, 'email': emailAddress})
+        return True
+
+
+def removeUser(username, password):
+    result = _users.remove({'username': username, 'password': password})
+    return result
+
+
+def getUser(username, password):
+    result = _users.find({'username': username, 'password': password}).count() == 1
+    return result
