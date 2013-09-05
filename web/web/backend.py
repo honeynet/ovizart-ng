@@ -38,11 +38,13 @@ class OvizartAuthenticationBackend(object):
             response = op.login(username, password)
             if response['Status'] == 'OK':
                 userid = response['userid']
-                user = User(username=username, pk=userid)
+                userid_int = int(userid[12:], 16)
+                user = User(username=username, pk=userid_int)
                 user.is_staff = True
                 user.is_superuser = True
                 user.__dict__['ovizart'] = op
-                user_cache[userid] = user
+                user.__dict__['userid'] = userid
+                user_cache[userid_int] = user
                 user.save()
 
         return user
