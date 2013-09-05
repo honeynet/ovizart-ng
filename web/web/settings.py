@@ -14,8 +14,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'django.db',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
@@ -133,6 +133,21 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'ui'
 )
+
+###################################
+# Authentication Related Settings
+AUTHENTICATION_BACKENDS = (
+    'web.backend.OvizartAuthenticationBackend',
+)
+
+#AUTH_USER_MODEL = 'web.OvizartUser'
+
+LOGIN_REDIRECT_URL = '/index'
+LOGIN_URL = '/login'
+LOGOUT_URL = '/logout'
+# End Of Authentication Related Settings
+###################################
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
