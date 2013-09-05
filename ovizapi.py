@@ -18,6 +18,9 @@ def login(data):
         data['cookie'].isAuth = True
         data['cookie'].data['ovizart'] = Ovizart()
         response["Status"] = "OK"
+        response["username"] = username
+        # TODO: Get user id from DB
+        response["userid"] = 1000
 
     return json.dumps(response)
 

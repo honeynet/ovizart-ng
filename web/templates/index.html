@@ -1,7 +1,113 @@
-<html>
-<head></head>
+{% extends 'base.html' %}
 
-<body>
-{{hello_text}}
-</body>
-</html>
+{% block content %}
+        {{ request.user.get_profile }}
+        <br/>
+        Some stuff will be shown here!!!!
+        <div class="alert alert-success">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<h4>Success!</h4>
+			Well done, please try another option too!!
+		</div>
+
+		<div class="btn-group">
+		  <button class="btn">Browse</button>
+		  <button class="btn">Compare</button>
+		  <button class="btn">Upload</button>
+		  <button class="btn">Download</button>
+		  <button class="btn">Delete</button>
+		</div>
+
+		<br /><br />
+
+        <table class="table table-striped table-bordered table-hover">
+		  <thead>
+			<tr>
+				<th>Name</th>
+				<th class="table-status">Status</th>
+				<th class="table-date">Last Updated</th>
+			</tr>
+		  </thead>
+		  <tbody>
+			<tr class="info">
+				<td>Firewall optimization is running. Collecting packet signatures.</td>
+				<td>
+					<div class="progress progress-striped active">
+					  <div class="bar" style="width: 40%;"></div>
+					</div>
+				</td>
+				<td>Just Now</td>
+			</tr>
+			<tr>
+				<td>Somthing else coming up!</td>
+				<td>Completed!</td>
+				<td>Jan 27, 2010 15:26</td>
+			</tr>
+			<tr>
+				<td>Different task</td>
+				<td>Completed!</td>
+				<td>Jan 27, 2010 15:26</td>
+			</tr>
+			<tr>
+				<td>Somthing else coming up!</td>
+				<td>Completed!</td>
+				<td>Jan 27, 2010 15:26</td>
+			</tr>
+			<tr>
+				<td>Different task</td>
+				<td>Completed!</td>
+				<td>Jan 27, 2010 15:26</td>
+			</tr>
+			<tr>
+				<td>Somthing else coming up!</td>
+				<td>Completed!</td>
+				<td>Jan 27, 2010 15:26</td>
+			</tr>
+			<tr>
+				<td>Different task</td>
+				<td>Completed!</td>
+				<td>Jan 27, 2010 15:26</td>
+			</tr>
+			<tr>
+				<td>Somthing else coming up!</td>
+				<td>Completed!</td>
+				<td>Jan 27, 2010 15:26</td>
+			</tr>
+			<tr>
+				<td>Different task</td>
+				<td>Completed!</td>
+				<td>Jan 27, 2010 15:26</td>
+			</tr>
+			<tr>
+				<td>Somthing else coming up!</td>
+				<td>Completed!</td>
+				<td>Jan 27, 2010 15:26</td>
+			</tr>
+			<tr>
+				<td>Different task</td>
+				<td>Completed!</td>
+				<td>Jan 27, 2010 15:26</td>
+			</tr>
+			<tr class="error">
+				<td>Postpone this one</td>
+				<td>Cancelled by the user</td>
+				<td>-</td>
+			</tr>
+			</tbody>
+	  </table>
+
+
+	  <div class="pagination pagination-right">
+		  <ul>
+			<li class="disabled"><a href="#">&laquo;</a></li>
+			<li class="active"><a href="#">1</a></li>
+			<li><a href="#">2</a></li>
+			<li><a href="#">3</a></li>
+			<li><a href="#">4</a></li>
+			<li><a href="#">5</a></li>
+			<li><a href="#">6</a></li>
+			<li><a href="#">7</a></li>
+			<li><a href="#">&raquo;</a></li>
+		  </ul>
+		</div>
+{% endblock %}
