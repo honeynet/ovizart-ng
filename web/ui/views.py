@@ -4,10 +4,24 @@ from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
 from django.contrib.auth.decorators import login_required
+import os
+import time
 
 @login_required
 def index(request):
-    return render_to_response('index.html', {})
+    analysisList = request.user.ovizart.getAnalysis()
+    for a in analysisList:
+        a['id'] = a['_id']
+        del a['_id']
+
+        ts = a['startTime']
+        a['startTime'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(ts))
+
+        for f in a['files']:
+            f['filename'] = os.path.basename(f['filename'])
+
+
+    return render_to_response('index.html', {'analysisList': analysisList, 'username': request.user.username})
 
 
 def login(request):
