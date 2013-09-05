@@ -62,7 +62,7 @@ class OvizartProxy():
         result = json.loads(response.content)
         return result
 
-    def getAnalysis(self, analysisId):
+    def getAnalysis(self, analysisId=None):
         url = self.__generateLink(OvizartProxy.LIST_ANALYSIS)
 
         if analysisId:
