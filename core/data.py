@@ -3,6 +3,7 @@ __author__ = "ggercek"
 
 import datetime
 import os
+import time
 
 
 class Analysis:
@@ -16,7 +17,7 @@ class Analysis:
 
     def __init__(self):
         self._id = None  # Analysis.__generateId()
-        self.startTime = datetime.datetime.now()
+        self.startTime = time.time()  # datetime.datetime.now()
         self.user = "<NoUserDefined>"
         self.config = None
         self.status = Analysis.INIT

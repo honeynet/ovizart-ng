@@ -9,6 +9,7 @@ class OvizartProxy():
     LOGIN_URL = 'login'
     UPLOAD_URL = 'upload'
     START_URL = 'start'
+    LIST_ANALYSIS = 'analysis'
 
     def __init__(self, protocol, host, port=80):
         self.protocol = protocol
@@ -16,6 +17,9 @@ class OvizartProxy():
         self.port = port
         self.login_success = False
         self.cookies = None
+        self.userid = None
+        self.username = None
+        self.password = None
 
     def __generateLink(self, url):
         return "%s://%s:%s/%s"%(self.protocol, self.host, self.port, url)
@@ -28,8 +32,12 @@ class OvizartProxy():
         # Check for login success?
         result = json.loads(response.content)
         if result['Status'] == 'OK':
+            userid = result['userid']
             self.login_success = True
             self.cookies = response.cookies
+            self.username = username
+            self.password = password
+            self.userid = userid
 
         return result
 
@@ -51,5 +59,15 @@ class OvizartProxy():
     def start(self):
         url = self.__generateLink(OvizartProxy.START_URL)
         response = requests.post(url, verify=False, headers={'content-type': 'application/json'}, cookies=self.cookies)
+        result = json.loads(response.content)
+        return result
+
+    def getAnalysis(self, analysisId):
+        url = self.__generateLink(OvizartProxy.LIST_ANALYSIS)
+
+        if analysisId:
+            url = url + '/' + analysisId
+
+        response = requests.get(url, verify=False, headers={'content-type': 'application/json'}, cookies=self.cookies)
         result = json.loads(response.content)
         return result

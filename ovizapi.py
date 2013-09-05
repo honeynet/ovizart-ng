@@ -5,7 +5,7 @@ from ovizart import Ovizart
 from core.webserver import API
 import json
 import os
-import db
+from core import db
 
 @API(method="POST", url=r"^/login$", isAuth=False)
 def login(data):
@@ -79,3 +79,19 @@ def start(data):
 def stop(data):
     # Stop the analysis based on id
     pass
+
+
+@API(method="GET", url=r"^/analysis$")
+def get_analysisList(data):
+    userid = data['cookie'].data['userid']
+    analysisList = db.getAnalysisByUserId(userid)
+    return json.dumps(analysisList)
+
+# TODO: Merge this 2 in one !!!
+@API(method="GET", url=r"^/analysis/(?P<analysisId>.+)$")
+def get_analysisDetails(data):
+    userid = data['cookie'].data['userid']
+    analysisId = data['analysisId']
+    analysisDetails = db.getAnalysisById(userid, analysisId)
+    return json.dumps(analysisDetails)
+

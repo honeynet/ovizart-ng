@@ -2,6 +2,7 @@ __author__ = 'ggercek'
 
 from pymongo import Connection
 from bson.objectid import ObjectId
+import time
 
 connection = Connection('localhost', 27017)
 
@@ -78,7 +79,7 @@ def addUser(username, password, name, surname, emailAddress):
     if users.count() > 0:
         return False
     else:
-        result = _users.insert({'username': username, 'password': password, 'dayOfRegister:': datetime.datetime.now(),
+        result = _users.insert({'username': username, 'password': password, 'dayOfRegister:': time.time(),
                        'name': name, 'surname': surname, 'email': emailAddress})
         return True
 
@@ -105,3 +106,21 @@ def getUserById(userid):
     else:
         result = result.next()
     return result
+
+
+def getAnalysisByUserId(userid):
+    result = []
+    for a in _analysisCollection.find({'user': userid}, {'_id':1, 'status': 1, 'startTime':1, 'files':1}):
+        a['_id'] = str(a['_id'])
+        result.append(a)
+
+    return result
+
+def getAnalysisById(userid, analysisId):
+    result = _analysisCollection.find({'user': userid, '_id': ObjectId(analysisId)})
+    if result.count() == 0:
+        return None
+    else:
+        result = result.next()
+        result['_id'] = str(result['_id'])
+        return result
