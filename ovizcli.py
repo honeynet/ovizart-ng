@@ -39,7 +39,8 @@ def checkInputValue(inputValue):
                 elif ftype.startswith('text'):
                     return PLAINTEXT
 
-    return None
+    #return None
+    return PLAINTEXT
 
 
 def cli_main(args):
@@ -142,7 +143,7 @@ def cli_main(args):
         response.append(str([analyzer.analyzeMalware(binary) for binary in inputFiles[BINARY]]))
 
     if args.jsunpackn:
-        if not inputFiles[URL]:
+        if not inputFiles[URL] and not inputFiles[PLAINTEXT]:
             print "Error: No urls given for jsunpack-n wrapper to process"
             if inputFiles[PCAP]:
                 print "Please remove -js option to process pcap files.", inputFiles[PCAP]
@@ -155,6 +156,7 @@ def cli_main(args):
         analyzer = JsunpacknWrapper()
 
         response.append([analyzer.analyzeJs(url) for url in inputFiles[URL]])
+        response.append([analyzer.analyzeJs(text) for text in inputFiles[PLAINTEXT]])
 
     if args.verbose:
         print "Analysis is done."
