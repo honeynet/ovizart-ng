@@ -5,6 +5,8 @@ import sys
 import argparse
 from ovizart import Ovizart
 from core.tags import Tags
+from reporter.html_reporter import HTMLReporter
+from ovizconf import PROJECT_ROOT
 
 PCAP = Tags.DataSource.PCAP
 BINARY = Tags.DataSource.BINARY
@@ -14,6 +16,8 @@ PLAINTEXT = Tags.DataSource.PLAINTEXT
 
 def checkInputValue(inputValue):
     if inputValue:
+        if inputValue.endswith('.exe'):
+            return BINARY
         if inputValue.endswith('.pcap'):
             return PCAP
         else:
@@ -113,7 +117,7 @@ def cli_main(args):
         if args.virus_total or args.cuckoo or args.jsunpackn:
             print "Entering external analyzer..."
     if args.virus_total:
-        if not (inputFiles[BINARY] or inputFiles[URL]):
+        if not (inputFiles[BINARY] or inputFiles[URL] or inputFiles[PLAINTEXT]):
             print "Error: No Binary or URL given for virus-total wrapper to process"
             if inputFiles[PCAP]:
                 print "Please remove -vt option to process pcap files.", inputFiles[PCAP]
@@ -124,10 +128,12 @@ def cli_main(args):
         analyzer = VTWrapper()
         if inputFiles[URL]:
             print inputFiles[URL]
-            response.append([analyzer.analyzeUrl(url) for url in inputFiles[URL]])
+            response += [analyzer.analyzeUrl(url) for url in inputFiles[URL]]
 
         if inputFiles[BINARY]:
-            response.append([analyzer.analyzeBinary(binary) for binary in inputFiles[BINARY]])
+            response += [analyzer.analyzeBinary(binary) for binary in inputFiles[BINARY]]
+
+
 
     if args.cuckoo:
         if not inputFiles[BINARY]:
@@ -155,14 +161,27 @@ def cli_main(args):
         print "Jsunpack-n analyzing", '.' * 30
         analyzer = JsunpacknWrapper()
 
-        response.append([analyzer.analyzeJs(url) for url in inputFiles[URL]])
-        response.append([analyzer.analyzeJs(text) for text in inputFiles[PLAINTEXT]])
+        response += [analyzer.analyzeJs(url) for url in inputFiles[URL]]
+        response += [analyzer.analyzeJs(text) for text in inputFiles[PLAINTEXT]]
 
     if args.verbose:
         print "Analysis is done."
 
     print "\n\nResponse:"
     print response
+
+    for result in response:
+        if (result == None or result == ''):
+            continue
+        import webbrowser
+        print PROJECT_ROOT + 'reporter/report.html'
+        rptr = HTMLReporter()
+        if (result[0] == '{'):
+            rptr.report(result)
+        else:
+            rptr.report('{"results": "%s"}' % (result))
+
+        webbrowser.open_new_tab('file://' + PROJECT_ROOT + 'reporter/report.html')
     
     if args.verbose:
         print "Bye."
