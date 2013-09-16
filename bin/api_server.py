@@ -45,14 +45,14 @@ def main(args):
 
     args = parser.parse_args(args)
 
-    daemon = APIServer('/tmp/daemon-example.pid', host=args.host, port=args.port, isSSL=args.isSSL)
+    daemon = APIServer('/tmp/ovizart_api.pid', host=args.host, port=args.port, isSSL=args.isSSL)
 
     if 'start' == args.action:
-            daemon.start()
+        daemon.start()
     elif 'stop' == args.action:
-            daemon.stop()
+        daemon.stop()
     elif 'restart' == args.action:
-            daemon.restart()
+        daemon.restart()
 
 if __name__ == "__main__":
     main(sys.argv[1:])
