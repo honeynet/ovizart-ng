@@ -11,7 +11,7 @@ class OvizartProxy():
     START_URL = 'start'
     LIST_ANALYSIS = 'analysis'
 
-    def __init__(self, protocol, host, port=80):
+    def __init__(self, protocol='https', host='localhost', port=9009):
         self.protocol = protocol
         self.host = host
         self.port = port
@@ -41,19 +41,30 @@ class OvizartProxy():
 
         return result
 
-    def uploadFile(self, filename):
+    def uploadFile(self, filename, fileobj=None):
         import os
+        result = "NA"
         filepath = os.path.abspath(filename)
         filename = os.path.basename(filepath)
-        url = self.__generateLink(OvizartProxy.UPLOAD_URL) + '/' + filename
-        result = "NA"
-        with open(filepath, 'r') as f:
-            # Form based approach
-            #response = requests.post(url, verify=False, files={'file': (filename, f)}, cookies=self.cookies)
-            # Stream based approach
-            response = requests.post(url, verify=False, data=f, headers={'content-type': 'application/octet-stream'},
-                                     cookies=self.cookies)
-            result = json.loads(response.content)
+
+        if fileobj:
+                url = self.__generateLink(OvizartProxy.UPLOAD_URL) + '/' + filename
+                response = requests.post(url, verify=False, data=fileobj, headers={'content-type': 'application/octet-stream'},
+                                         cookies=self.cookies)
+                result = json.loads(response.content)
+
+        elif filename:
+            url = self.__generateLink(OvizartProxy.UPLOAD_URL) + '/' + filename
+            with open(filepath, 'r') as f:
+                # Form based approach
+                #response = requests.post(url, verify=False, files={'file': (filename, f)}, cookies=self.cookies)
+                # Stream based approach
+                response = requests.post(url, verify=False, data=f, headers={'content-type': 'application/octet-stream',
+                                                                             'Connection':'close'},
+                                         cookies=self.cookies)
+                result = json.loads(response.content)
+
+
         return result
 
     def start(self):
