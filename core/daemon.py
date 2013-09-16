@@ -97,48 +97,28 @@ class Daemon:
         Stop the daemon
         """
         # Get the pid from the pidfile
-        print '1'
         try:
             pf = file(self.pidfile,'r')
-            print '2'
             pid = int(pf.read().strip())
-            print '3'
             pf.close()
-            print '4'
         except IOError:
-            print '5'
             pid = None
-        print '6'
         if not pid:
-            print '7'
             message = "pidfile %s does not exist. Daemon not running?\n"
-            print '8'
             sys.stderr.write(message % self.pidfile)
-            print '9'
             return # not an error in a restart
-        print '10'
         # Try killing the daemon process
         try:
-
             while 1:
-                print '11'
                 os.kill(pid, SIGTERM)
-                print '12'
                 time.sleep(0.1)
         except OSError, err:
-            print '13'
             err = str(err)
-            print '14'
             if err.find("No such process") > 0:
-                print '15'
                 if os.path.exists(self.pidfile):
-                    print '16'
                     os.remove(self.pidfile)
-                    print '17'
             else:
-                print '18'
                 print str(err)
-                print '19'
                 sys.exit(1)
 
     def restart(self):
