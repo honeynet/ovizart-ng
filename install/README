@@ -1,2 +1,60 @@
-In order to run ovizart you need to install following tools:
-  - Justniffer (tested with 0.5.11) - http://justniffer.sourceforge.net/
+# Prepare environment
+# For UBUNTU
+
+# install python development files for pynids
+sudo apt-get install python-dev
+
+# install pynids before justniffer
+mkdir -p ~/src
+# Clone the repository
+git clone https://github.com/MITRECND/pynids
+cd pynids
+# build it, install any missing library according to output
+sudo python setup.py build
+# install it
+sudo python setup.py install
+
+# Justniffer requirements
+# regular expression library for C++ (default version)
+sudo apt-get install build-essential libboost-regex-dev libboost-program-options-dev libboost-iostreams-dev
+
+# install justniffer from http://justniffer.sourceforge.net/
+mkdir -p ~/src/justniffer
+cd ~/src/justniffer
+wget http://sourceforge.net/projects/justniffer/files/latest/download?source=files -O justniffer_0.5.11.tar.gz
+tar xvf justniffer_0.5.11.tar.gz
+cd justniffer_0.5.11
+./configure
+make 
+sudo make install
+
+# install mongodb
+sudo apt-get install mongodb
+
+#install M2Crypto
+sudo apt-get install python-m2crypto
+
+
+# checkout git repo
+cd ~/src/
+git clone https://github.com/honeynet/ovizart-ng.git
+
+# install pip requirements
+cd ~/src/ovizart-ng/
+pip install -r install/pip_requirements.txt
+
+# Now create a user to use ovizart.
+~/src/ovizart-ng/bin/create_user.py <username> <password> <name> <surname> <emailAddress>
+
+# Start daemon: This script will start REST API server
+~/src/ovizart-ng/bin/api_server.py start [--host localhost] [--port 9009] [--isSSL]
+
+# Stop daemon
+~/src/ovizart-ng/bin/api_server.py stop
+
+# Start Web UI
+~/src/ovizart-ng/bin/ui_server.py start
+# Press Ctrl + C to stop ui_server
+
+
+
