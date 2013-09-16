@@ -226,11 +226,11 @@ class API():
         self.method = method
         self.url = url
         self.isAuth = isAuth
-        print 'API decorator:', 'method:', method, 'url:', url
+        #print 'API decorator:', 'method:', method, 'url:', url
 
     def __call__(self, func):
         global api_methods
-        print 'Register method'
+        #print 'Register method'
         method = self.method
         url = self.url
 
@@ -247,7 +247,7 @@ class API():
     @staticmethod
     def getMethod(requestType, path):
         global api_methods
-        print 'api_methods:', api_methods
+        #print 'api_methods:', api_methods
         if api_methods[requestType]:
             for val in api_methods[requestType].iterkeys():
                 m = re.search(val, path)
