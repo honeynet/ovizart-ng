@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 __author__ = 'ggercek'
 
+import os
 import sys
-sys.path.append('../')
+
+p = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
+sys.path.append(p)
 
 import argparse
 from core.daemon import Daemon
@@ -11,7 +14,7 @@ from core.daemon import Daemon
 class APIServer(Daemon):
 
     def __init__(self, pid, host='localhost', port=9009, isSSL=True):
-        Daemon.__init__(self, pid)
+        Daemon.__init__(self, pid, stdout='/tmp/oviz_api_out.log', stderr='/tmp/oviz_api_err.log')
 
         self.host = host
         self.port = port
