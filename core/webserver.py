@@ -20,6 +20,7 @@ import os
 from ovizconf import UPLOAD_FOLDER
 import datetime
 
+
 class CookieEntry():
     def __init__(self, ipAddress, value):
         self.isExpired = False
@@ -83,22 +84,18 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         val = ''.join(random.choice(string.ascii_letters+string.digits) for x in xrange(200))
         cookie['value'] = val
         self.send_header('Set-Cookie', cookie.output(header=''))
-        #self.end_headers()
         cookie = CookieEntry(clientIpAddress, val)
         self.server.cookies[val] = cookie
 
         return cookie
 
     def __do(self, httpMethod):
-        #print '%s method to URL: %s' % (httpMethod, self.path)
         api = API.getMethod(httpMethod, self.path)
-        #print 'api:', api
         if api:
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
 
             cookie = self.__process_cookie()
-            print 'Cookie:', cookie
 
             self.end_headers()
             if cookie is None:
@@ -111,7 +108,6 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
                 self.send_response(403, "You don't have permission to do this!!!")
                 return
 
-            #print '##', httpMethod, ',', data, '##'
             if httpMethod != 'GET':
                 _data = self.__parseData()
                 if _data:
@@ -119,7 +115,6 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 
             data['cookie'] = cookie
 
-            #print '>>', httpMethod, ',', data, '##'
             result = f(data)
             self.wfile.write(result)
         else:
@@ -132,7 +127,6 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         import cgi
         postvars = {}
         ctype, pdict = cgi.parse_header(self.headers['content-type'])
-        remainbytes = int(self.headers['content-length'])
 
         if ctype == 'application/json':
             length = int(self.headers['content-length'])
@@ -149,22 +143,28 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 
     def __processUpload(self, ctype):
         boundary = None
-
+        clength = int(self.headers['content-length'])
         if ctype == 'application/octet-stream':
             # STREAM upload handling
-            remainbytes = int(self.headers['content-length'])
             timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f')
             fn = os.path.join(UPLOAD_FOLDER, 'uploadedFile_%s'%timestamp)
             print '[stream] fn:', fn
             out = open(fn, 'wb')
-            rlen = 4096
-            while remainbytes > 0:
-                if rlen > remainbytes:
-                    rlen = remainbytes
+            rlen = 9192
+            readingContent = True
+            counter = 0
+            while clength > 0:
+                counter += 1
                 chunk = self.rfile.read(rlen)
-                remainbytes -= len(chunk)
-                out.write(chunk)
-                out.flush()
+                ll = len(chunk)
+                print counter, ') ll:', ll
+                clength -= ll
+                if clength < rlen:
+                    rlen = clength
+                else:
+                    out.write(chunk)
+                    out.flush()
+
             out.close()
             print "[stream] Done!!!"
             return True, fn
@@ -211,33 +211,11 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         return False, None  #"Unexpected end of data."
 
 
-    # def translate_path(self, path):
-    #     """Translate a /-separated PATH to the local filename syntax.
-    #
-    #     Components that mean special things to the local file system
-    #     (e.g. drive or directory names) are ignored.  (XXX They should
-    #     probably be diagnosed.)
-    #
-    #     """
-    #     # abandon query parameters
-    #     path = path.split('?',1)[0]
-    #     path = path.split('#',1)[0]
-    #     path = posixpath.normpath(urllib.unquote(path))
-    #     words = path.split('/')
-    #     words = filter(None, words)
-    #     path = os.getcwd()
-    #     for word in words:
-    #         drive, word = os.path.splitdrive(word)
-    #         head, word = os.path.split(word)
-    #         if word in (os.curdir, os.pardir): continue
-    #         path = os.path.join(path, word)
-    #     return path
-
 api_methods = {
     'GET':  {},
     'POST': {},
     'PUT':  {},
-    'DELETE':{}
+    'DELETE': {}
 }
 
 
