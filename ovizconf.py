@@ -5,7 +5,7 @@ import os
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__)) + "/"
 UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, 'upload') + "/"
-OUTPUT_FOLDER = os.path.abspath("output") + "/"
+OUTPUT_FOLDER = os.path.join(PROJECT_ROOT, 'output') + "/"  # os.path.abspath("output") + "/"
 
 class Config():
 
