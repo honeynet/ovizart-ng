@@ -16,5 +16,6 @@ urlpatterns = patterns('',
     # url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'ui.views.index'),
     url(r'^login/$', 'ui.views.login'),
-    url(r'^logout/$', 'ui.views.logout')
+    url(r'^logout/$', 'ui.views.logout'),
+    url(r'^upload/$', 'ui.views.upload_file'),
 )
