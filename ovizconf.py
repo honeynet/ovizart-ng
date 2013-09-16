@@ -6,6 +6,8 @@ import os
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__)) + "/"
 UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, 'upload') + "/"
 OUTPUT_FOLDER = os.path.join(PROJECT_ROOT, 'output') + "/"  # os.path.abspath("output") + "/"
+DYNAMIC_ANALYZER_FOLDER = os.path.join(PROJECT_ROOT, 'analyzer/dynamic') + "/"
+
 
 class Config():
 
