@@ -60,25 +60,17 @@ def logout(request):
 class UploadFileForm(forms.Form):
     #title = forms.CharField(max_length=50)
     file = forms.FileField()
+    analyzer = forms.FileField(required=False)
 
 
 def handle_uploaded_file(f, op):
     uploaded_file = '/tmp/%s' % f.name
-    with open(uploaded_file, 'wb+') as destination:
+    with open(uploaded_file, 'wb') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
 
-    #with open(uploaded_file, 'r') as destination:
-    import sys
-    sys.path.append('../')
-    sys.path.append('../../')
-    from core.ovizart_proxy import OvizartProxy
-    #op = OvizartProxy(protocol='https')
-    #op.login('ggercek', '123456')
     response = op.uploadFile(uploaded_file)
     response = op.start()
-    # TODO: Do something with the result
-
 
 @login_required
 def upload_file(request):
@@ -86,8 +78,14 @@ def upload_file(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             op = request.user.ovizart
+
+            if 'analyzer' in request.FILES:
+                tempPath = '/tmp/%s' % request.FILES['analyzer'].name
+                with open(tempPath, 'wb') as destination:
+                    for chunk in request.FILES['analyzer'].chunks():
+                        destination.write(chunk)
+                op.addAnalyzer(tempPath)
             handle_uploaded_file(request.FILES['file'], op)
-            # return HttpResponse("OK")
             return redirect('/')
     else:
         form = UploadFileForm()

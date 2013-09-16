@@ -2,6 +2,7 @@ __author__ = 'ggercek'
 
 import json
 import requests
+import os
 
 
 class OvizartProxy():
@@ -10,6 +11,7 @@ class OvizartProxy():
     UPLOAD_URL = 'upload'
     START_URL = 'start'
     LIST_ANALYSIS = 'analysis'
+    ANALYZER_URL = 'analyzer'
 
     def __init__(self, protocol='https', host='localhost', port=9009):
         self.protocol = protocol
@@ -42,7 +44,6 @@ class OvizartProxy():
         return result
 
     def uploadFile(self, filename, fileobj=None):
-        import os
         result = "NA"
         filepath = os.path.abspath(filename)
         filename = os.path.basename(filepath)
@@ -62,7 +63,6 @@ class OvizartProxy():
                 response = requests.post(url, verify=False, data=f, headers={'content-type': 'application/octet-stream'},
                                          cookies=self.cookies)
                 result = json.loads(response.content)
-
 
         return result
 
@@ -98,3 +98,14 @@ class OvizartProxy():
         else:
             result = {}
         return result
+
+    def addAnalyzer(self, filename):
+        filepath = os.path.abspath(filename)
+        filename = os.path.basename(filepath)
+
+        if filename:
+            url = url = self.__generateLink(OvizartProxy.ANALYZER_URL) + '/' + filename
+            with open(filepath, 'r') as f:
+                response = requests.put(url, verify=False, data=f, headers={'content-type': 'application/octet-stream'},
+                                         cookies=self.cookies)
+                result = json.loads(response.content)

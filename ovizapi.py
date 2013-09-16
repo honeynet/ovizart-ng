@@ -1,6 +1,7 @@
 __author__ = "ggercek"
 
 from ovizconf import UPLOAD_FOLDER
+from ovizconf import DYNAMIC_ANALYZER_FOLDER
 from ovizart import Ovizart
 from core.webserver import API
 import json
@@ -103,7 +104,7 @@ def removeAnalysis(data):
     analysisId = data['analysisId']
     analysisDetails = db.getAnalysisById(userid, analysisId)
     # Remove the folders as well
-    analysisDetails
+    #analysisDetails
     print 'Uploaded files'
     for f in analysisDetails['files']:
         os.remove(f['filename'])
@@ -113,3 +114,33 @@ def removeAnalysis(data):
     analysisDetails = {'Status': 'OK'}
     return json.dumps(analysisDetails)
 
+@API(method="PUT", url=r"^/analyzer/(?P<filename>.+)$")
+def add_analyzer(data):
+    userid = data['cookie'].data['userid']
+    wanted_filename = data['filename']
+    actual_filename = data['uploaded_filename']
+    filesize = os.path.getsize(actual_filename)
+    p = os.path.join(DYNAMIC_ANALYZER_FOLDER, wanted_filename)
+    # TODO: Check file type for more intense way
+    tmp = p
+    ext = p.rfind('.py')
+    if ext == -1:
+        # Can not process file !!!!
+        # Remove file and invalided cookie
+        data['cookie'].isExpired = True
+        os.remove(actual_filename)
+        return json.dumps({'Status': 'FAILED', 'Description': 'Invalid file type!!!!'})
+    counter = 1
+    while os.path.exists(tmp):
+        tmp = "%s_%d%s" % (p[:ext], counter, p[ext:])
+        counter += 1
+    p = tmp
+
+    wanted_filename = os.path.basename(p)
+    os.rename(actual_filename, p)
+    # dynamically register the analyzer
+    dotIndex = wanted_filename.rfind('.')
+    module_name = 'analyzer.dynamic.%s' % wanted_filename[:dotIndex]
+    __import__(module_name)
+
+    return json.dumps({'Status': 'OK', "filename": wanted_filename})
