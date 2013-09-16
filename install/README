@@ -52,9 +52,10 @@ pip install -r install/pip_requirements.txt
 # Stop daemon
 ~/src/ovizart-ng/bin/api_server.py stop
 
+# Before starting Web UI, syncdb must be called for the first time only
+python ~/src/ovizart-ng/web/manage.py syncdb
+
 # Start Web UI
 ~/src/ovizart-ng/bin/ui_server.py start
 # Press Ctrl + C to stop ui_server
-
-
 
