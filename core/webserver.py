@@ -66,6 +66,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
                 val = c['value'].value
                 print 'val:', val
                 if val in self.server.cookies:
+                    print 'cookie:', c
                     cookie = self.server.cookies[val]
                     if cookie.isValid(clientIpAddress, val):
                         cookie.visited()
@@ -74,7 +75,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
                         del c['value']
                         del cookie
                         cookie = None
-                        self.send_headers("Set-Cookie", "access_token=deleted; Expires=Thu, 01-Jan-1970 00:00:00 GMT")
+                        self.send_header("Set-Cookie", "access_token=deleted; Expires=Thu, 01-Jan-1970 00:00:00 GMT")
                         return None
                 else:
                     return None
@@ -161,9 +162,9 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
                 clength -= ll
                 if clength < rlen:
                     rlen = clength
-                else:
-                    out.write(chunk)
-                    out.flush()
+
+                out.write(chunk)
+                out.flush()
 
             out.close()
             print "[stream] Done!!!"
@@ -309,7 +310,7 @@ if __name__ == '__main__':
     import sys
     sys.path.append('../')
     #global api_methods
-    #import ovizapi
+    import ovizapi
 
     server = OvizartRestServer('localhost', 9009, False)
     print 'HTTP Server Running...........'

@@ -17,5 +17,7 @@ urlpatterns = patterns('',
     url(r'^$', 'ui.views.index'),
     url(r'^login/$', 'ui.views.login'),
     url(r'^logout/$', 'ui.views.logout'),
-    url(r'^upload/$', 'ui.views.upload_file'),
+    url(r'^new/$', 'ui.views.upload_file'),
+    url(r'^delete/$', 'ui.views.delete_analysis'),
+
 )

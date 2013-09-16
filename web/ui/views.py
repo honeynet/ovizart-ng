@@ -1,7 +1,7 @@
 # Create your views here.
 
 from django import forms
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
@@ -21,7 +21,7 @@ def index(request):
         for f in a['files']:
             f['filename'] = os.path.basename(f['filename'])
 
-    return render_to_response('index.html', {'analysisList': analysisList, 'username': request.user.username})
+    return render_to_response('index.html', RequestContext(request, {'analysisList': analysisList, 'username': request.user.username}))
 
 
 def login(request):
@@ -33,7 +33,7 @@ def login(request):
         if element in request.POST:
             from django.utils.html import escape
             data[element] = escape(request.POST[element])
-            print '#', element, data[element]
+            #print '#', element, data[element]
         else:
             isParametersValid = False
             break
@@ -46,7 +46,7 @@ def login(request):
             login(request, user)
             return redirect('/')
         else:
-            return render_to_response('login.html', {'error_msg': 'Invalid credentials'})
+            return render_to_response('login.html', RequestContext(request, {'error_msg': 'Invalid credentials'}))
     else:
         return render_to_response('login.html', RequestContext(request, {}))
 
@@ -62,8 +62,8 @@ class UploadFileForm(forms.Form):
     file = forms.FileField()
 
 
-def handle_uploaded_file(f):
-    uploaded_file = '/tmp/uploaded.bin'
+def handle_uploaded_file(f, op):
+    uploaded_file = '/tmp/%s' % f.name
     with open(uploaded_file, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
@@ -73,19 +73,34 @@ def handle_uploaded_file(f):
     sys.path.append('../')
     sys.path.append('../../')
     from core.ovizart_proxy import OvizartProxy
-    op = OvizartProxy(protocol='https')
-    op.login('ggercek', '123456')
+    #op = OvizartProxy(protocol='https')
+    #op.login('ggercek', '123456')
     response = op.uploadFile(uploaded_file)
+    response = op.start()
     # TODO: Do something with the result
 
 
-# @login_required
+@login_required
 def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-            return HttpResponse("OK")
+            op = request.user.ovizart
+            handle_uploaded_file(request.FILES['file'], op)
+            # return HttpResponse("OK")
+            return redirect('/')
     else:
         form = UploadFileForm()
     return render_to_response('upload.html',  RequestContext(request,  {'form': form}))
+
+
+@login_required
+def delete_analysis(request):
+    print 'delete_analysis'
+    if request.method == 'POST':
+        op = request.user.ovizart
+        listOfSelectedAnalysis = request.POST.getlist('selectedAnalysis')
+        for analysisId in listOfSelectedAnalysis:
+            op.removeAnalysisById(analysisId)
+
+    return redirect('/')
