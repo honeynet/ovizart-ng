@@ -134,3 +134,12 @@ def getAnalysisById(userid, analysisId):
         result = result.next()
         result['_id'] = str(result['_id'])
         return result
+
+
+def removeAnalysis(userid, analysisId):
+    print 'remove:', _analysisCollection.remove({'user': userid, '_id': ObjectId(analysisId)})
+
+
+def removeAllAnalysis():
+    print 'drop:', _analysisCollection.drop()
+
