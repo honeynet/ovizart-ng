@@ -10,6 +10,7 @@ _db = connection['ovizart']
 _analysisCollection = _db.analysis
 _users = _db.users
 
+# TODO: Improve this module! Check the best practices as well as the attacks
 
 def saveAnalysis(analysis):
     """Saves given analysis object.
@@ -96,6 +97,15 @@ def getUser(username, password):
     else:
         result = str(result.next()['_id'])
 
+    return result
+
+
+def getUserByName(username):
+    result = _users.find({'username': username}, {'_id': 1})
+    if result.count() == 0:
+        result = None
+    else:
+        result = str(result.next()['_id'])
     return result
 
 
