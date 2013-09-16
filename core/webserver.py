@@ -155,13 +155,14 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
             readingContent = True
             counter = 0
             while clength > 0:
+                if clength < rlen:
+                    rlen = clength
+
                 counter += 1
                 chunk = self.rfile.read(rlen)
                 ll = len(chunk)
                 print counter, ') ll:', ll
                 clength -= ll
-                if clength < rlen:
-                    rlen = clength
 
                 out.write(chunk)
                 out.flush()
