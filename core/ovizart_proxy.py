@@ -59,8 +59,7 @@ class OvizartProxy():
                 # Form based approach
                 #response = requests.post(url, verify=False, files={'file': (filename, f)}, cookies=self.cookies)
                 # Stream based approach
-                response = requests.post(url, verify=False, data=f, headers={'content-type': 'application/octet-stream',
-                                                                             'Connection':'close'},
+                response = requests.post(url, verify=False, data=f, headers={'content-type': 'application/octet-stream'},
                                          cookies=self.cookies)
                 result = json.loads(response.content)
 
@@ -80,5 +79,22 @@ class OvizartProxy():
             url = url + '/' + analysisId
 
         response = requests.get(url, verify=False, headers={'content-type': 'application/json'}, cookies=self.cookies)
-        result = json.loads(response.content)
+        if response.content:
+            #print 'response.content:', response.content
+            result = json.loads(response.content)
+        else:
+            result = {}
+        return result
+
+    def removeAnalysisById(self, analysisId):
+        url = self.__generateLink(OvizartProxy.LIST_ANALYSIS)
+        if analysisId:
+            url = url + '/' + analysisId
+
+        response = requests.delete(url, verify=False, headers={'content-type': 'application/json'}, cookies=self.cookies)
+        if response.content:
+            #print 'response.content:', response.content
+            result = json.loads(response.content)
+        else:
+            result = {}
         return result

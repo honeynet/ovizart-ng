@@ -6,6 +6,7 @@ from core.webserver import API
 import json
 import os
 from core import db
+import shutil
 
 @API(method="POST", url=r"^/login$", isAuth=False)
 def login(data):
@@ -72,6 +73,7 @@ def start(data):
     # Start the analyzer and return the analysis id
     userid = data['cookie'].data['userid']
     analysis = data['cookie'].data['ovizart'].startASync(userid)
+    data['cookie'].data['ovizart'] = Ovizart()
     return json.dumps({'AnalysisId': analysis._id, 'Status': analysis.status})
 
 
@@ -93,5 +95,21 @@ def get_analysisDetails(data):
     userid = data['cookie'].data['userid']
     analysisId = data['analysisId']
     analysisDetails = db.getAnalysisById(userid, analysisId)
+    return json.dumps(analysisDetails)
+
+@API(method="DELETE", url=r"^/analysis/(?P<analysisId>.+)$")
+def removeAnalysis(data):
+    userid = data['cookie'].data['userid']
+    analysisId = data['analysisId']
+    analysisDetails = db.getAnalysisById(userid, analysisId)
+    # Remove the folders as well
+    analysisDetails
+    print 'Uploaded files'
+    for f in analysisDetails['files']:
+        os.remove(f['filename'])
+    shutil.rmtree(analysisDetails['config']['output_folder'])
+
+    db.removeAnalysis(userid, analysisId)
+    analysisDetails = {'Status': 'OK'}
     return json.dumps(analysisDetails)
 

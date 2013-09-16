@@ -305,6 +305,8 @@ def evaluate(config, newAnalysis=None, userid=None):
         fileType = inputFiles[fileName]
         # TODO: What if multiple parser exists?
         parser = dataSources[fileType][0]
+        import copy
+        parser = copy.deepcopy(parser)
         import os
         # create output folder
         outputFolder = config.output_folder + fileName.split("/")[-1]
