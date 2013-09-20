@@ -1,4 +1,5 @@
 from numpy.testing.utils import assert_equal
+from tagger.protocol.https import HTTPSHandshake
 
 __author__ = 'ggercek'
 
@@ -40,6 +41,15 @@ class MyTestCase(unittest.TestCase):
         pkts = rdpcap("./pcap/test-ftp.pcap")
         for p in pkts:
             if p.haslayer(FTPResponse):
+                print p.summary()
+                count += 1
+        assert_equal(count, 2)
+
+    def test_https_handshake(self):
+        count = 0
+        pkts = rdpcap("./pcap/test-https-handshake.pcap")
+        for p in pkts:
+            if p.haslayer(HTTPSHandshake):
                 print p.summary()
                 count += 1
         assert_equal(count, 2)
