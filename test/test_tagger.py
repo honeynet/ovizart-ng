@@ -1,6 +1,5 @@
 from numpy.testing.utils import assert_equal
-from tagger.protocol.https import HTTPSHandshake
-
+from tagger.protocol.future_protocols import HTTPSHandshake, SSHHandshake
 __author__ = 'ggercek'
 
 import unittest
@@ -50,6 +49,15 @@ class MyTestCase(unittest.TestCase):
         pkts = rdpcap("./pcap/test-https-handshake.pcap")
         for p in pkts:
             if p.haslayer(HTTPSHandshake):
+                print p.summary()
+                count += 1
+        assert_equal(count, 2)
+
+    def test_ssh_handshake(self):
+        count = 0
+        pkts = rdpcap("./pcap/test-ssh-handshake.pcap")
+        for p in pkts:
+            if p.haslayer(SSHHandshake):
                 print p.summary()
                 count += 1
         assert_equal(count, 2)
