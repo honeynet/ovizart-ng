@@ -19,5 +19,6 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'ui.views.logout'),
     url(r'^new/$', 'ui.views.upload_file'),
     url(r'^delete/$', 'ui.views.delete_analysis'),
+    url(r'^show/(?P<analysisId>.+)$', 'ui.views.show_analysis')
 
 )

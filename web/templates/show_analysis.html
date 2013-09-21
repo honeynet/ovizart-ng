@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% csrf_token %}
+{% comment %}
+    {{ #analysis.config }} <br/> <br/>
+        /download/{{ analysis.id }}/{{ stream.key }}/{{ filename }}
+
+    data
+    user
+{% endcomment %}
+    <h4>Summary</h4>
+    <table class="table table-striped table-bordered table-hover" style="outline: 2px solid;">
+        <tbody>
+            <tr class="accordion-toggle">
+                <td>Id</td>
+                <td>{{ analysis.id }}</td>
+            </tr>
+            <tr class="accordion-toggle">
+                <td>Status</td>
+                <td>{{ analysis.status }}</td>
+            </tr>
+            <tr class="accordion-toggle">
+                <td>Start Time:</td>
+                <td>{{ analysis.startTime }}</td>
+            </tr>
+            <tr class="accordion-toggle">
+                <td>Files:</td>
+                <td>
+                    {% for f in analysis.files %}
+                        {{ f.filename }}<br/>
+                        # of Packets: {{ f.numberOfPacket }}<br/>
+                        # of Streams: {{ f.numberOfStreams }}<br/>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr class="accordion-toggle">
+                <td>User:</td>
+                <td>{{ analysis.user }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+    <h4>Streams</h4>
+    <table class="table table-striped table-bordered table-hover" style="outline: 2px solid;">
+        <thead>
+            <th>Protocol<br/>(App/Trans)</th>
+            <th>SrcIP</th>
+            <th>SrcPort</th>
+            <th>DstIP</th>
+            <th>DstPort</th>
+            <th>#ofPkts</th>
+            <th> </th>
+        </thead>
+        <tbody>
+            {% for data in analysis.data %}
+            {% with s=data.data.stream %}
+            {% with t=data.tags %}
+            <tr data-toggle="collapse" data-target="#streamDetail{{forloop.counter0}}" class="accordion-toggle">
+                <td>{{ t.app_layer_protocol }} / {{s.protocol}}</td>
+                <td>{{ s.srcIP }}</td>
+                <td>{{ s.srcPort }}</td>
+                <td>{{ s.dstIP }}</td>
+                <td>{{ s.dstPort }}</td>
+                <td>#ofPkts:{{s.pktCount}}</td>
+                <td style="text-align: center"> {% if t.attachments %}<i class="icon-file"></i>{% endif %}</td>
+            </tr>
+            <tr>
+                <td colspan="7" style="padding: 0 !important;"><div class="accordian-body collapse" id="streamDetail{{forloop.counter0}}" style="text-align:center;">
+                <table style="margin-left: 10%; width: 90%">
+                    <tr class="" >
+                        <td style="background-color: #ffffff"> Pcap File:</td><td style="background-color: #ffffff"><a href="#{{s.key}}">{{s.key}}.pcap</a></td>
+                    </tr>
+                    <tr class="">
+                        <td style="background-color: #ffffff"> Reassembled Traffic:</td><td style="background-color: #ffffff">
+                            <tt>Request&nbsp; ( A --> B )&nbsp;&nbsp;</tt><a href="/reassembled/{{ analysis.id }}/{{ s.key }}/0"><tt>{{s.srcIP}}:{{s.srcPort}} &nbsp;-> {{s.dstIP}}:{{s.dstPort}}</tt></a><br/>
+                            <tt>Response ( A <-- B )&nbsp;&nbsp;</tt><a href="/reassembled/{{ analysis.id }}/{{ s.key }}/1"><tt>{{s.srcIP}}:{{s.srcPort}} <-&nbsp;  {{s.dstIP}}:{{s.dstPort}}</tt></a><br/>
+                            <tt>Total&nbsp;&nbsp;&nbsp; ( A <-> B )&nbsp;&nbsp;</tt><a href="/reassembled/{{ analysis.id }}/{{ s.key }}/0"><tt>{{s.srcIP}}:{{s.srcPort}} <-> {{s.dstIP}}:{{s.dstPort}}</tt></a><br/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #ffffff"> Attachments:</td><td style="background-color: #ffffff">
+                            {% if not t.attachments %}
+                                No attachments detected.
+                            {% else %}
+                                <table style="width:100%;">
+                                    <tbody>
+                                        {% for attachment in t.attachments %}
+                                        <tr>
+                                            <td style="background-color: #ffffff"><a href="/attachment/{{analysis.id}}/{{s.key}}/{{ attachment.0 }}">{{ attachment.0 }}</a></td>
+                                            <td style="background-color: #ffffff">{{ attachment.1 }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+                </div></td>
+            </tr>
+            {% endwith %}
+            {% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+{% block endPageScript %}
+<script src="/s/js/ovizart.js"></script>
+{% endblock %}

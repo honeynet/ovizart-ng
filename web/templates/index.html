@@ -33,7 +33,7 @@
               {% for analysis in analysisList %}
                 <tr class="info">
                     <td><input name="selectedAnalysis" type="checkbox" value="{{ analysis.id }}" id="inlineCheckbox1"></td>
-                    <td>{{ analysis.id }}</td>
+                    <td><a href="/show/{{ analysis.id }}">{{ analysis.id }}</a></td>
                     <td>{{ analysis.status }}</td>
                     <td>{{ analysis.startTime }}</td>
                     <td>

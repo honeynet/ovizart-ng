@@ -12,17 +12,30 @@ import time
 def index(request):
     analysisList = request.user.ovizart.getAnalysis()
     for a in analysisList:
-        a['id'] = a['_id']
-        del a['_id']
+        prepareAnalysisForView(a)
 
-        ts = a['startTime']
-        a['startTime'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(ts))
+    return render_to_response('index.html', RequestContext(request, {'analysisList': analysisList}))
 
-        for f in a['files']:
-            f['filename'] = os.path.basename(f['filename'])
 
-    return render_to_response('index.html', RequestContext(request, {'analysisList': analysisList, 'username': request.user.username}))
+def prepareAnalysisForView(analysis):
+    analysis['id'] = analysis['_id']
+    del analysis['_id']
 
+    ts = analysis['startTime']
+    analysis['startTime'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(ts))
+
+    for f in analysis['files']:
+        f['filename'] = os.path.basename(f['filename'])
+
+    if 'data' in analysis:
+        for data in analysis['data']:
+            if '_Data__tags' in data:
+                data['tags'] = data['_Data__tags']
+                del data['_Data__tags']
+
+            if '_Data__data' in data:
+                data['data'] = data['_Data__data']
+                del data['_Data__data']
 
 def login(request):
     # Check for credentials
@@ -102,3 +115,16 @@ def delete_analysis(request):
             op.removeAnalysisById(analysisId)
 
     return redirect('/')
+
+@login_required
+def show_analysis(request, analysisId):
+    print 'show_analysis'
+    if request.method == 'GET':
+        op = request.user.ovizart
+        #analysis = request.GET['analysisId']
+        analysis = op.getAnalysis(analysisId)
+        prepareAnalysisForView(analysis)
+
+        return render_to_response('show_analysis.html', RequestContext(request, {'analysis': analysis}))
+
+    redirect('/')
