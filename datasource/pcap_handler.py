@@ -171,7 +171,7 @@ class PcapDataSourceHandler:
         print proto, sip, sport, dip, dport, ts
 
     def getStream(self, streamHeader, pkt):
-        #protocol, srcIp, srcPort, dstIp, dstPort, ts = None
+        #protocol, srcIP, srcPort, dstIP, dstPort, ts = None
 
         keys = Stream.generateKeys(streamHeader)
         stream = None
@@ -185,15 +185,15 @@ class PcapDataSourceHandler:
 
 
 class Stream:
-    def __init__(self, protocol, srcIp, srcPort, dstIp, dstPort, startTime, pkt, outputFolder):
+    def __init__(self, protocol, srcIP, srcPort, dstIP, dstPort, startTime, pkt, outputFolder):
         self.protocol = _decode_byte(protocol)
-        self.srcIP = address_to_string(srcIp)
+        self.srcIP = address_to_string(srcIP)
         self.srcPort = str(srcPort)
-        self.dstIp = address_to_string(dstIp)
+        self.dstIP = address_to_string(dstIP)
         self.dstPort = str(dstPort)
         self.startTime = str(startTime)
 
-        self.key = Stream.generateKeys((protocol, srcIp, srcPort, dstIp, dstPort, startTime))[0]
+        self.key = Stream.generateKeys((protocol, srcIP, srcPort, dstIP, dstPort, startTime))[0]
 
         # File based variables
         self.outputFolder = os.path.join(outputFolder, self.key)
@@ -210,10 +210,10 @@ class Stream:
 
     def __repr__(self):
         s = 'Stream Object {key: %s, protocol: %d, srcIP: %s, srcPort: %s, dstIP: %s, dstPort: %s, startTime: %s, numberOfPacket: %d, pcapFile: %s}' \
-            % (self.key, self.protocol, self.srcIP, self.srcPort, self.dstIp, self.dstPort, self.startTime,
+            % (self.key, self.protocol, self.srcIP, self.srcPort, self.dstIP, self.dstPort, self.startTime,
                self.pktCount, self.pcapFileName)
         #% (self.key, _decode_byte(self.protocol), address_to_string(self.srcIP), str(self.srcPort),
-            #address_to_string(self.dstIp), str(self.dstPort), str(self.startTime), self.pktCount, self.pcapFileName)
+            #address_to_string(self.dstIP), str(self.dstPort), str(self.startTime), self.pktCount, self.pcapFileName)
 
         return s
 
