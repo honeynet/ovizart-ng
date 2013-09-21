@@ -3,6 +3,7 @@ __author__ = 'ggercek'
 from pymongo import Connection
 from bson.objectid import ObjectId
 import time
+import os
 
 connection = Connection('localhost', 27017)
 
@@ -11,6 +12,7 @@ _analysisCollection = _db.analysis
 _users = _db.users
 
 # TODO: Improve this module! Check the best practices as well as the attacks
+
 
 def saveAnalysis(analysis):
     """Saves given analysis object.
@@ -55,6 +57,7 @@ def getStream(analysisId, searchCriteria=None):
     #     result.extend()
 
     return result
+
 
 def todict(obj, classkey=None):
     # Taken from stackoverflow: http://stackoverflow.com/questions/1036409/recursively-convert-python-object-graph-to-dictionary
@@ -126,6 +129,7 @@ def getAnalysisByUserId(userid):
 
     return result
 
+
 def getAnalysisById(userid, analysisId):
     result = _analysisCollection.find({'user': userid, '_id': ObjectId(analysisId)})
     if result.count() == 0:
@@ -143,3 +147,24 @@ def removeAnalysis(userid, analysisId):
 def removeAllAnalysis():
     print 'drop:', _analysisCollection.drop()
 
+
+def getAttachment(userid, analysisId, streamKey, filename):
+    analysis = _analysisCollection.find({'user': userid, '_id': ObjectId(analysisId)},
+                                    {'data._Data__tags.attachments': 1, 'data._Data__data.stream.key': 1,
+                                     'data._Data__data.stream.outputFolder': 1})
+
+    # TODO: this must be changed!!!
+    if analysis:
+        while True:
+            a = analysis.next()
+            if a is None:
+                break
+
+            data = a['data']
+            for a in data:
+                if a['_Data__data']['stream']['key'] == streamKey:
+                    for f in a['_Data__tags']['attachments']:
+                        if f[0] == filename:
+                            return os.path.join(a['_Data__data']['stream']['outputFolder'], 'attachments', filename)
+
+    return None
