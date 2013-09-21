@@ -1,5 +1,6 @@
 from numpy.testing.utils import assert_equal
-from tagger.protocol.future_protocols import HTTPSHandshake, SSHHandshake
+from tagger.protocol.future_protocols import HTTPSHandshake, SSHHandshake, SOCKS4Connect
+
 __author__ = 'ggercek'
 
 import unittest
@@ -62,6 +63,14 @@ class MyTestCase(unittest.TestCase):
                 count += 1
         assert_equal(count, 2)
 
+    def test_socksv4_connect(self):
+        count = 0
+        pkts = rdpcap("./pcap/test-socks4-connect.pcap")
+        for p in pkts:
+            if p.haslayer(SOCKS4Connect):
+                print p.summary()
+                count += 1
+        assert_equal(count, 1)
 
 if __name__ == '__main__':
     unittest.main()

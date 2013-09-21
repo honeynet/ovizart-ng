@@ -24,7 +24,8 @@ tcp_signatures = [
     (r'^(HTTP\/[0-9]).*', HTTPResponse),
     (r'^(230|331).*', FTPResponse),
     (b'^(?P<contentType>[\x14\x15\x16\x17])(?P<majVersion>[\x03])(?P<minVersion>[\x00\x01\x02\x03])', HTTPSHandshake),
-    (r'^SSH', SSHHandshake)
+    (r'^SSH', SSHHandshake),
+    (b'^\x04\x01.{2}.{4}.*\x00$', SOCKS4Connect),
             ]
 
 udp_signatures = [
