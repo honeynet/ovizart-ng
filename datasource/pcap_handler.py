@@ -14,6 +14,15 @@ PCAP = Tags.DataSource.PCAP
 _numberOfPacket = 0
 
 
+class IDCacheNode():
+    def __init__(self, ip_type, ip1, port1, ip2, port2, id):
+        self.ip_type = ip_type
+        self.ip1 = ip1
+        self.ip2 = ip2
+        self.port1 = port1
+        self.port2 = port2
+        self.id = id
+
 def _decode_byte(data):
     """Decodes one byte of network data into an unsigned char."""
     return struct.unpack('!B', data)[0]
@@ -23,6 +32,8 @@ def _decode_short(data):
     """Decodes two bytes of network data into an unsigned short."""
     return struct.unpack('!H', data)[0]
 
+def _decode_int(data):
+    return struct.unpack('!L', data)[0]
 
 def address_to_string(b):
     """Converts an IP address to its string representation.
@@ -59,6 +70,8 @@ class PcapDataSourceHandler:
     def __init__(self):
         self.streams = {}
         self.outputFolder = None
+        self.ipIdentificationCacheIndexByIP = {}
+        self.ipIdentificationCacheIndexByIPandPort = {}
 
     def __repr__(self):
         return "Pcap Data Source Handler"
@@ -126,33 +139,104 @@ class PcapDataSourceHandler:
         sport = dport = None
 
         # Check for fragmentation
+        ip_identification = data[4:6]
+        ip_identification = _decode_short(ip_identification)
+        #print 'ip_identification:', ip_identification
         fragOffset = data[6:8]
         fragOffset = _decode_short(fragOffset)
         fragOffset = (fragOffset & 0x1fff) << 3
         # TODO: find session based on IP.identification and flag
         #print fragOffset
 
-        if fragOffset == 0 and ip_type == _ip_protocol['TCP'] or ip_type == _ip_protocol['UDP']:
+        if fragOffset == 0 and (ip_type == _ip_protocol['TCP'] or ip_type == _ip_protocol['UDP']):
             header_len = 4 * (_decode_byte(data[0]) & 0x0f)
             tot_len = _decode_short(data[2:4])
             pld = data[header_len:tot_len]
             #sport, dport = _process_tcp(ts, src, dst, pld)
             sport = _decode_short(pld[0:2])
             dport = _decode_short(pld[2:4])
+
+            self.updateIpIdentification(ip_type, src, sport, dst, dport, ip_identification)
         else :
             # if fragoffset is non zero then we can not read port values
             # TODO: use fragmented packets on reassembler.
             # TODO: store the streams in a hierarchical structure so that we can find the fragmented streams easier.
             # TODO: apply RFC815 http://tools.ietf.org/html/rfc815
-            pass
+            src, sport, dst, dport = self.updateIpIdentification(ip_type, src, None, dst, None, ip_identification)
 
         ipv4Header = None
         if sport and dport:
             ipv4Header = (ip_type, src, sport, dst, dport, ts)
         else:
+            # Something must be wrong ?! Check this issue...
             ipv4Header = (ip_type, src, dst, ts)
-
+        print '#### returning ths value ########'
+        self.dumpStreamHeader(ipv4Header)
+        print '#################################'
         return ipv4Header
+
+    def updateIpIdentification(self, ip_type, ip1, port1, ip2, port2, ip_identification):
+        def _keys(ip_type, ip1, port1, ip2, port2):
+            if port1 and port2:
+                key1 = "%d%d%d%d%d" % (_decode_byte(ip_type), _decode_int(ip1), port1, _decode_int(ip2), port2)
+                key2 = "%d%d%d%d%d" % (_decode_byte(ip_type), _decode_int(ip2), port2, _decode_int(ip1), port1)
+            else:
+                key1 = "%d%d%d" % (_decode_byte(ip_type), _decode_int(ip1), _decode_int(ip2))
+                key2 = "%d%d%d" % (_decode_byte(ip_type), _decode_int(ip2), _decode_int(ip1))
+            return key1, key2
+
+        def _findClosestNodeById(idCacheNodeArray, idToSearch):
+            # Improve this part !!!
+            minDistance = 99999999
+            minNode = None
+
+            for node in idCacheNodeArray:
+                distance = abs(node.id - idToSearch)
+                if distance < minDistance:
+                    minDistance = distance
+                    minNode = node
+
+            return minNode
+
+        #print 'ip_type', type(ip_type), _decode_byte(ip_type), 'ip1', type(ip1), _decode_int(ip1), 'port1', type(port1), port1, 'ip2', type(ip2), _decode_int(ip2), 'port2', type(port2), port2
+
+        key1, key2 = _keys(ip_type, ip1, port1, ip2, port2)
+        # TODO: What if fragmentation occurs on handshake
+        if port1 and port2:
+            if key1 in self.ipIdentificationCacheIndexByIPandPort:
+                self.ipIdentificationCacheIndexByIPandPort[key1].id = ip_identification
+            if key2 in self.ipIdentificationCacheIndexByIPandPort:
+                self.ipIdentificationCacheIndexByIPandPort[key2].id = ip_identification
+            else:
+                # new session create a IDCacheNode
+                node = IDCacheNode(ip_type, ip1, port1, ip2, port2, ip_identification)
+                self.ipIdentificationCacheIndexByIPandPort[key1] = node
+                key1, key2 = _keys(ip_type, ip1, None, ip2, None)
+                if not key1 in self.ipIdentificationCacheIndexByIP:
+                    self.ipIdentificationCacheIndexByIP[key1] = []
+
+                self.ipIdentificationCacheIndexByIP[key1].append(node)
+        else:
+            if key1 in self.ipIdentificationCacheIndexByIP:
+                nodeArray = self.ipIdentificationCacheIndexByIP[key1]
+            if key2 in self.ipIdentificationCacheIndexByIP:
+                nodeArray = self.ipIdentificationCacheIndexByIP[key2]
+            else:
+                # TODO: Something is not right!!!!
+                return ip1, port1, ip2, port2
+
+            node = _findClosestNodeById(nodeArray, ip_identification)
+            if node:
+                # Update the last id
+                node.id = ip_identification
+                print 'for fragmented ip_id:', ip_identification, 'found values: ****************************************'
+                self.dumpStreamHeader((node.ip_type, node.ip1, node.port1, node.ip2, node.port2))
+                return node.ip1, node.port1, node.ip2, node.port2
+            else:
+                print 'Can not find any session for this id:', ip_identification
+                self.dumpStreamHeader((ip_type, ip1, port1, ip2, port2))
+
+            return ip1, port1, ip2, port2
 
     def dumpStreamHeader(self, streamHeader):
         proto = 0; sip = 1; dip = 3; sport = 2; dport = 4; ts = -1;
