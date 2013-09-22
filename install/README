@@ -1,6 +1,9 @@
 # Prepare environment
 # For UBUNTU
 
+# Retrieve git
+apt-get install git libpcap-dev libnids-dev libglib2.0-dev libnet1-dev
+
 # install python development files for pynids
 sudo apt-get install python-dev
 
@@ -8,9 +11,15 @@ sudo apt-get install python-dev
 mkdir -p ~/src
 # Clone the repository
 git clone https://github.com/MITRECND/pynids
-cd pynids
-# build it, install any missing library according to output
+
 sudo python setup.py build
+# This will give an error about
+cd pynids/libnids-1.25
+./configure
+make
+cd ..
+# build it, install any missing library according to output
+python setup.py build
 # install it
 sudo python setup.py install
 
@@ -41,19 +50,24 @@ git clone https://github.com/honeynet/ovizart-ng.git
 
 # install pip requirements
 cd ~/src/ovizart-ng/
-pip install -r install/pip_requirements.txt
+git checkout ovizart-ng-devel
+
+sudo apt-get install python-pip python-scapy ipython
+sudo pip install -r install/pip_requirements.txt
+
+
+cd ~/src/ovizart-ng/bin/
 
 # Now create a user to use ovizart.
-~/src/ovizart-ng/bin/create_user.py <username> <password> <name> <surname> <emailAddress>
+./create_user.py <username> <password> <name> <surname> <emailAddress>
 
 # Start daemon: This script will start REST API server
-~/src/ovizart-ng/bin/api_server.py start [--host localhost] [--port 9009] [--isSSL]
-
-# Stop daemon
-~/src/ovizart-ng/bin/api_server.py stop
+./api_server.py start [--host localhost] [--port 9009] [--isSSL]
 
 # Before starting Web UI, syncdb must be called for the first time only
-python ~/src/ovizart-ng/web/manage.py syncdb
+cd ~/src/ovizart-ng/web/
+python ./manage.py syncdb
+# You don't need any super user, you can skip creating it.
 
 # Start Web UI
 ~/src/ovizart-ng/bin/ui_server.py start
