@@ -352,7 +352,7 @@ def evaluate(config, newAnalysis=None, userid=None):
                         analyzer.analyze(flow)
 
         for flow in flows:
-            for tag, reporter in selectedReporters:
+            for reporter in selectedReporters:
                 reporter.report(flow)
 
     newAnalysis.status = Analysis.FINISHED
@@ -525,7 +525,7 @@ class Reporter(GenericDecorator):
     """Decorator for reporter classes"""
 
     methodName = 'report'
-    argNames = ['data']
+    argNames = ['data', 'output_path']
     registerMethod = register_reporter
 
 

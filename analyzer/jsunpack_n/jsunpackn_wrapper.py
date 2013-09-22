@@ -96,17 +96,21 @@ class JsunpacknWrapper(BaseAnalyzer):
         @param userdata : a js file or a URL that to be analyzed
         @return         : the report
         """
+        print userdata
+
         if self.conf is None:
             self.conf = Config()
 
         __jsunpackn__ = self.conf.jsunpackn_path
         print '!!!', __jsunpackn__ 
         sys.path.append(__jsunpackn__)
-
+        '''
         try:
             import jsunpackn
-        except ImportError:
-            print "Import Error. Please check your jsunpackn!"
+        except ImportError as err:
+            print "Import Error. Please check your jsunpackn! : %s" % (err)
+        '''
+        import jsunpackn
 
         HASH = sha1(str(datetime.datetime.now()) + userdata).hexdigest()
 
@@ -122,20 +126,31 @@ class JsunpacknWrapper(BaseAnalyzer):
         results = ''
         for url in [js.start]: #recursive
             print 'The key %s has the following output in recursive mode' % (url)
-            results = js.rooturl[url].tostring('', True)[0] + '\n'
-            print results
+            results += '\n' + 'The key %s has the following output in recursive mode' % (url)
+            print js.rooturl[url].tostring('', True)[0]
+            results += '\n' + js.rooturl[url].tostring('', True)[0]
+
         print 'Note that none of the files are actually created since self.outdir is empty.'
 
         print 'Instead, you could go through each url and look at the decodings that it creates' 
         for url in js.rooturl:
             print 'Looking at key %s, has %d files and %d messages, that follow:' % (url, len(js.rooturl[url].files), len(js.rooturl[url].msg))
+            results += '\n' + 'Looking at key %s, has %d files and %d messages, that follow:' % (url, len(js.rooturl[url].files), len(js.rooturl[url].msg))
+
             for type, hash, data in js.rooturl[url].files:
                 print 'file              type=%s, hash=%s, data=%d bytes' % (type, hash, len(data))
+                results += '\n' +  'file              type=%s, hash=%s, data=%d bytes' % (type, hash, len(data))
             for printable, impact, msg in js.rooturl[url].msg:
                 print 'output message    printable=%d, impact=%d, msg=%s' % (printable, impact, msg)
+                results += '\n' + 'output message    printable=%d, impact=%d, msg=%s' % (printable, impact, msg)
 
-        return "The reports has been saved in %s." % (options.logdir)
-        
+
+        #print results
+        print "The reports has been saved in %s." % (options.logdir)
+        results += '\n' + "The reports has been saved in %s." % (options.logdir)
+
+        return results
+
 if __name__ == "__main__":
      wrapper = JsunpacknWrapper()
      wrapper.analyzeJs('http://fudan.edu.cn')
