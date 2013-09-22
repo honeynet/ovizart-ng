@@ -52,7 +52,7 @@ git clone https://github.com/honeynet/ovizart-ng.git
 cd ~/src/ovizart-ng/
 git checkout ovizart-ng-devel
 
-sudo apt-get install python-pip python-scapy ipython
+sudo apt-get install python-pip python-scapy ipython python-jinja2
 sudo pip install -r install/pip_requirements.txt
 
 
