@@ -148,6 +148,24 @@ def removeAllAnalysis():
     print 'drop:', _analysisCollection.drop()
 
 
+def getPcap(userid, analysisId, streamKey):
+    analysis = _analysisCollection.find({'user': userid, '_id': ObjectId(analysisId)},
+                                    {'data._Data__tags.attachments': 1, 'data._Data__data.stream.key': 1,
+                                     'data._Data__data.stream.pcapFileName': 1})
+
+    # TODO: this must be changed!!!
+    if analysis:
+        while True:
+            a = analysis.next()
+            if a is None:
+                break
+
+            data = a['data']
+            for a in data:
+                if a['_Data__data']['stream']['key'] == streamKey:
+                    return a['_Data__data']['stream']['pcapFileName']
+
+
 def getAttachment(userid, analysisId, streamKey, filename):
     analysis = _analysisCollection.find({'user': userid, '_id': ObjectId(analysisId)},
                                     {'data._Data__tags.attachments': 1, 'data._Data__data.stream.key': 1,
@@ -168,3 +186,9 @@ def getAttachment(userid, analysisId, streamKey, filename):
                             return os.path.join(a['_Data__data']['stream']['outputFolder'], 'attachments', filename)
 
     return None
+
+
+#if __name__ == '__main__':
+#
+#    print getPcap('5236a6141e75ed7ce17b4011', '523e1f711e75ed15d40ab6e5', '6_10.1.1.101_3188_10.1.1.1_80')
+#

@@ -2,13 +2,6 @@
 
 {% block content %}
     {% csrf_token %}
-{% comment %}
-    {{ #analysis.config }} <br/> <br/>
-        /download/{{ analysis.id }}/{{ stream.key }}/{{ filename }}
-
-    data
-    user
-{% endcomment %}
     <h4>Summary</h4>
     <table class="table table-striped table-bordered table-hover" style="outline: 2px solid;">
         <tbody>
@@ -71,7 +64,7 @@
                 <td colspan="7" style="padding: 0 !important;"><div class="accordian-body collapse" id="streamDetail{{forloop.counter0}}" style="text-align:center;">
                 <table style="margin-left: 10%; width: 90%">
                     <tr class="" >
-                        <td style="background-color: #ffffff"> Pcap File:</td><td style="background-color: #ffffff"><a href="#{{s.key}}">{{s.key}}.pcap</a></td>
+                        <td style="background-color: #ffffff"> Pcap File:</td><td style="background-color: #ffffff"><a href="/pcap/{{analysis.id}}/{{s.key}}">{{s.key}}.pcap</a></td>
                     </tr>
                     <tr class="">
                         <td style="background-color: #ffffff"> Reassembled Traffic:</td><td style="background-color: #ffffff">

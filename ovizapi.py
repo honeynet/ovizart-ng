@@ -4,10 +4,12 @@ from ovizconf import UPLOAD_FOLDER
 from ovizconf import DYNAMIC_ANALYZER_FOLDER
 from ovizart import Ovizart
 from core.webserver import API
+from core.webserver import ACTION_SERVE_FILE
 import json
 import os
 from core import db
 import shutil
+
 
 @API(method="POST", url=r"^/login$", isAuth=False)
 def login(data):
@@ -28,7 +30,7 @@ def login(data):
 
     return json.dumps(response)
 
-#@API(method="POST", url=r"^/upload$")
+
 @API(method="POST", url=r"^/upload/(?P<filename>.+)$")
 def upload(data):
     wanted_filename = data['filename']
@@ -63,6 +65,40 @@ def upload(data):
     print '[upload] response: ', json.dumps(response)
     return json.dumps(response)
 
+
+@API(method="GET", url=r"^/pcap/(?P<analysisId>.+)/(?P<streamKey>.+)$")
+def download_pcap(data):
+    userid = data['cookie'].data['userid']
+    analysisId = data['analysisId']
+    streamKey = data['streamKey']
+    originalFilePath = db.getPcap(userid, analysisId, streamKey)
+    return ACTION_SERVE_FILE, originalFilePath
+
+
+@API(method="GET", url=r"^/attachment/(?P<analysisId>.+)/(?P<streamKey>.+)/(?P<filePath>.+)$")
+def download_attachment(data):
+    userid = data['cookie'].data['userid']
+    analysisId = data['analysisId']
+    filepath = data['filePath']
+    streamKey = data['streamKey']
+    originalFilePath = db.getAttachment(userid, analysisId, streamKey, filepath)
+    return ACTION_SERVE_FILE, originalFilePath
+
+
+@API(method="GET", url=r"^/reassembled/(?P<analysisId>.+)/(?P<streamKey>.+)/(?P<trafficType>[012])$")
+def download_reassembled(data):
+
+    userid = data['cookie'].data['userid']
+    analysisId = data['analysisId']
+    trafficType = data['trafficType']
+    streamKey = data['streamKey']
+
+    # Check the user has right to download the file.
+    originalFilePath = db.getReassembledTraffic(userid, analysisId, streamKey, trafficType)
+
+    return ACTION_SERVE_FILE, originalFilePath
+
+
 @API(method="POST", url=r"^/set/config$")
 def set_config(data):
     # Set config parameters
@@ -90,6 +126,7 @@ def get_analysisList(data):
     analysisList = db.getAnalysisByUserId(userid)
     return json.dumps(analysisList)
 
+
 # TODO: Merge this 2 in one !!!
 @API(method="GET", url=r"^/analysis/(?P<analysisId>.+)$")
 def get_analysisDetails(data):
@@ -97,6 +134,7 @@ def get_analysisDetails(data):
     analysisId = data['analysisId']
     analysisDetails = db.getAnalysisById(userid, analysisId)
     return json.dumps(analysisDetails)
+
 
 @API(method="DELETE", url=r"^/analysis/(?P<analysisId>.+)$")
 def removeAnalysis(data):
@@ -113,6 +151,7 @@ def removeAnalysis(data):
     db.removeAnalysis(userid, analysisId)
     analysisDetails = {'Status': 'OK'}
     return json.dumps(analysisDetails)
+
 
 @API(method="PUT", url=r"^/analyzer/(?P<filename>.+)$")
 def add_analyzer(data):

@@ -19,6 +19,8 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'ui.views.logout'),
     url(r'^new/$', 'ui.views.upload_file'),
     url(r'^delete/$', 'ui.views.delete_analysis'),
-    url(r'^show/(?P<analysisId>.+)$', 'ui.views.show_analysis')
+    url(r'^show/(?P<analysisId>.+)$', 'ui.views.show_analysis'),
+    url(r'^pcap/(?P<analysisId>.+)/(?P<streamKey>.+)', 'ui.views.download_pcap'),
+    url(r'^attachment/(?P<analysisId>.+)/(?P<streamKey>.+)/(?P<filePath>.+)$', 'ui.views.download_attachment')
 
 )

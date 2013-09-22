@@ -20,6 +20,7 @@ import os
 from ovizconf import UPLOAD_FOLDER
 import datetime
 
+ACTION_SERVE_FILE = "ACTION_SERVE_FILE"
 
 class CookieEntry():
     def __init__(self, ipAddress, value):
@@ -98,14 +99,15 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 
             cookie = self.__process_cookie()
 
-            self.end_headers()
             if cookie is None:
+                self.end_headers()
                 return
 
             f, data = api
             f, isAuth = f
 
             if isAuth and not cookie.isAuth:
+                self.end_headers()
                 self.send_response(403, "You don't have permission to do this!!!")
                 return
 
@@ -117,7 +119,21 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
             data['cookie'] = cookie
 
             result = f(data)
-            self.wfile.write(result)
+            if type(result) == tuple:
+                if result[0] == ACTION_SERVE_FILE:
+                    # Serve file
+                    filepath = result[1]
+                    filename = os.path.basename(filepath)
+
+                    f = open(filepath, 'rb')
+                    self.send_header("content-disposition", "attachment; filename=" + filename)
+                    #self.send_header("content-length", f.tell())
+                    self.end_headers()
+                    self.wfile.write(f.read())
+                    f.close()
+            else:
+                self.end_headers()
+                self.wfile.write(result)
         else:
             self.send_response(404)
             self.send_header('Content-Type', 'application/json')
@@ -222,7 +238,6 @@ api_methods = {
 
 
 class API():
-
 
     def __init__(self, method='GET', url='/test/00/', isAuth=True):
         self.method = method

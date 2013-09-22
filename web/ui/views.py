@@ -116,6 +116,7 @@ def delete_analysis(request):
 
     return redirect('/')
 
+
 @login_required
 def show_analysis(request, analysisId):
     print 'show_analysis'
@@ -128,3 +129,38 @@ def show_analysis(request, analysisId):
         return render_to_response('show_analysis.html', RequestContext(request, {'analysis': analysis}))
 
     redirect('/')
+
+
+@login_required
+def download_pcap(request, analysisId, streamKey):
+    print 'download_pcap'
+    if request.method == 'GET':
+        op = request.user.ovizart
+        pcapFileName = op.getPcap(analysisId, streamKey)
+
+        #return render_to_response('show_analysis.html', RequestContext(request, {'analysis': pcapFileName}))
+        return __sendFile2Browser(pcapFileName, 'application/octet-stream')
+
+    redirect('/')
+
+
+def download_attachment(request, analysisId, streamKey, filePath):
+    print 'download_attachment'
+    if request.method == 'GET':
+        op = request.user.ovizart
+        attachmentFileName = op.getAttachment(analysisId, streamKey, filePath)
+        contentType = ""
+        #return render_to_response('show_analysis.html', RequestContext(request, {'analysis': pcapFileName}))
+        return __sendFile2Browser(attachmentFileName, 'application/octet-stream')
+
+    redirect('/')
+
+
+def __sendFile2Browser(filepath, contentType):
+    from django.http import HttpResponse
+    from django.core.servers.basehttp import FileWrapper
+    basename = os.path.basename(filepath)
+    # generate the file
+    response = HttpResponse(FileWrapper(open(filepath)), content_type=contentType)
+    response['Content-Disposition'] = 'attachment; filename=' + basename
+    return response
