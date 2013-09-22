@@ -14,6 +14,8 @@ class OvizartProxy():
     LIST_ANALYSIS = 'analysis'
     ANALYZER_URL = 'analyzer'
     GET_PCAP_URL = 'pcap'
+    GET_REASSEMBLED_URL = 'reassembled'
+    GET_ATTACHMENT_URL = 'attachment'
 
     def __init__(self, protocol='https', host='localhost', port=9009):
         self.protocol = protocol
@@ -117,12 +119,23 @@ class OvizartProxy():
 
     def getPcap(self, analysisId, streamKey):
         url = self.__generateLink(OvizartProxy.GET_PCAP_URL) + '/' + analysisId + '/' + streamKey
-        ts = ovizutil.getTimestampStr()
-        outputFile = '/tmp/%s_%s.pcap'%(ts, streamKey)
-        return self.__downloadFile(url, outputFile)
+        return self.__downloadFile(url)
 
-    def __downloadFile(self, url, local_filename):
+    def getReassembled(self, analysisId, streamKey, trafficType):
+        url = self.__generateLink(OvizartProxy.GET_REASSEMBLED_URL) + '/' + analysisId + '/' + streamKey + '/' + trafficType
+        return self.__downloadFile(url)
+
+    def getAttachment(self, analysisId, streamKey, filePath):
+        url = self.__generateLink(OvizartProxy.GET_ATTACHMENT_URL) + '/' + analysisId + '/' + streamKey + '/' + filePath
+        return self.__downloadFile(url)
+
+    def __downloadFile(self, url):
         r = requests.get(url, verify=False, headers={'content-type': 'application/json'}, cookies=self.cookies, stream=True)  # here we need to set stream = True parameter
+        tempFolder = '/tmp/%s'%ovizutil.getTimestampStr()
+        os.mkdir(tempFolder)
+        basename = r.headers['content-disposition'].split('filename=')[-1]
+        # TODO: Add error handling !!!
+        local_filename = '%s/%s' % (tempFolder, basename)
         with open(local_filename, 'wb') as f:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:  # filter out keep-alive new chunks

@@ -72,7 +72,11 @@ def download_pcap(data):
     analysisId = data['analysisId']
     streamKey = data['streamKey']
     originalFilePath = db.getPcap(userid, analysisId, streamKey)
-    return ACTION_SERVE_FILE, originalFilePath
+
+    if originalFilePath and os.path.exists(originalFilePath):
+        return ACTION_SERVE_FILE, originalFilePath
+    else:
+        return json.dumps({'Status': 'FAILED', 'Description': 'No such file exists!!!'})
 
 
 @API(method="GET", url=r"^/attachment/(?P<analysisId>.+)/(?P<streamKey>.+)/(?P<filePath>.+)$")
@@ -82,21 +86,29 @@ def download_attachment(data):
     filepath = data['filePath']
     streamKey = data['streamKey']
     originalFilePath = db.getAttachment(userid, analysisId, streamKey, filepath)
-    return ACTION_SERVE_FILE, originalFilePath
+    if originalFilePath and os.path.exists(originalFilePath):
+        return ACTION_SERVE_FILE, originalFilePath
+    else:
+        return json.dumps({'Status': 'FAILED', 'Description': 'No such file exists!!!'})
 
 
 @API(method="GET", url=r"^/reassembled/(?P<analysisId>.+)/(?P<streamKey>.+)/(?P<trafficType>[012])$")
 def download_reassembled(data):
-
+    print 'download_reassembled'
     userid = data['cookie'].data['userid']
     analysisId = data['analysisId']
-    trafficType = data['trafficType']
+    trafficType = int(data['trafficType'])
     streamKey = data['streamKey']
 
     # Check the user has right to download the file.
     originalFilePath = db.getReassembledTraffic(userid, analysisId, streamKey, trafficType)
-
-    return ACTION_SERVE_FILE, originalFilePath
+    print "originalFilePath", originalFilePath
+    if originalFilePath and os.path.exists(originalFilePath):
+        print 'serving file: ', originalFilePath
+        return ACTION_SERVE_FILE, originalFilePath
+    else:
+        print 'can not serve file: ', originalFilePath
+        return json.dumps({'Status': 'FAILED', 'Description': 'No such file exists!!!'})
 
 
 @API(method="POST", url=r"^/set/config$")

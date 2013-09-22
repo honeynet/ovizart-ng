@@ -137,20 +137,28 @@ def download_pcap(request, analysisId, streamKey):
     if request.method == 'GET':
         op = request.user.ovizart
         pcapFileName = op.getPcap(analysisId, streamKey)
-
-        #return render_to_response('show_analysis.html', RequestContext(request, {'analysis': pcapFileName}))
         return __sendFile2Browser(pcapFileName, 'application/octet-stream')
 
     redirect('/')
 
 
+@login_required
+def download_reassembled(request, analysisId, streamKey, trafficType):
+    print 'download_reassembled'
+    if request.method == 'GET':
+        op = request.user.ovizart
+        reassembledFileName = op.getReassembled(analysisId, streamKey, trafficType)
+        return __sendFile2Browser(reassembledFileName, 'application/octet-stream')
+
+    redirect('/')
+
+
+@login_required
 def download_attachment(request, analysisId, streamKey, filePath):
     print 'download_attachment'
     if request.method == 'GET':
         op = request.user.ovizart
         attachmentFileName = op.getAttachment(analysisId, streamKey, filePath)
-        contentType = ""
-        #return render_to_response('show_analysis.html', RequestContext(request, {'analysis': pcapFileName}))
         return __sendFile2Browser(attachmentFileName, 'application/octet-stream')
 
     redirect('/')
@@ -163,4 +171,5 @@ def __sendFile2Browser(filepath, contentType):
     # generate the file
     response = HttpResponse(FileWrapper(open(filepath)), content_type=contentType)
     response['Content-Disposition'] = 'attachment; filename=' + basename
+    os.unlink(filepath)
     return response
