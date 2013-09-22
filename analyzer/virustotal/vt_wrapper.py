@@ -53,6 +53,9 @@ class VTWrapper(BaseAnalyzer):
         response = self.analyzeBinary(path)
         #if response['response_code'] == 1:
         # Come back later for result
+        response = json.loads(response)
+        response['scanid'] = response['scan_id']
+        del response['scan_id']
         data.addAnalyzerResponse(VT_RESPONSE, response)
 
     def analyzeBinary(self, path):

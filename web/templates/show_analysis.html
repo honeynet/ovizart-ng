@@ -49,8 +49,10 @@
         </thead>
         <tbody>
             {% for data in analysis.data %}
+            {% with d=data.data %}
             {% with s=data.data.stream %}
             {% with t=data.tags %}
+
             <tr data-toggle="collapse" data-target="#streamDetail{{forloop.counter0}}" class="accordion-toggle">
                 <td>{{ t.app_layer_protocol }} / {{s.protocol}}</td>
                 <td>{{ s.srcIP }}</td>
@@ -58,7 +60,10 @@
                 <td>{{ s.dstIP }}</td>
                 <td>{{ s.dstPort }}</td>
                 <td>#ofPkts:{{s.pktCount}}</td>
-                <td style="text-align: center"> {% if t.attachments %}<i class="icon-file"></i>{% endif %}</td>
+                <td style="text-align: center">
+                    {% if t.attachments %}<i class="icon-file"></i>{% endif %}
+                    {% if t.ANALYZER_RESPONSES %}<i class="icon-zoom-in"></i>{% endif %}
+                </td>
             </tr>
             <tr>
                 <td colspan="7" style="padding: 0 !important;"><div class="accordian-body collapse" id="streamDetail{{forloop.counter0}}" style="text-align:center;">
@@ -91,9 +96,24 @@
                             {% endif %}
                         </td>
                     </tr>
+                    <tr>
+                        <td style="background-color: #ffffff">Analyzer Reports:</td><td style="background-color: #ffffff">
+                        {% if not t.ANALYZER_RESPONSES %}
+                            No analyzer results exists
+                        {% else %}
+                            {% regroup t.ANALYZER_RESPONSES by country.description as country_list %}
+                            {% for analyzerResponse in t.ANALYZER_RESPONSES %}
+                                {% if analyzerResponse.0 == 'CK_RESPONSE' %} Cuckoo Task Id:<a href="{{analyzerResponse.1.url}}" target="_blank">{{ analyzerResponse.1.task_id }}</a>
+                                {% elif analyzerResponse.0 == 'VT_RESPONSE' %}VT Scan Id:<a href="{{analyzerResponse.1.permalink}}" target="_blank">{{analyzerResponse.1.scanid}}</a>{% endif %}<br/>
+                            {% endfor %}
+                        {% endif %}
+                        </td>
+
+                    </tr>
                 </table>
                 </div></td>
             </tr>
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endfor %}
