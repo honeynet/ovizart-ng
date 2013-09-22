@@ -12,17 +12,30 @@ import time
 def index(request):
     analysisList = request.user.ovizart.getAnalysis()
     for a in analysisList:
-        a['id'] = a['_id']
-        del a['_id']
+        prepareAnalysisForView(a)
 
-        ts = a['startTime']
-        a['startTime'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(ts))
+    return render_to_response('index.html', RequestContext(request, {'analysisList': analysisList}))
 
-        for f in a['files']:
-            f['filename'] = os.path.basename(f['filename'])
 
-    return render_to_response('index.html', RequestContext(request, {'analysisList': analysisList, 'username': request.user.username}))
+def prepareAnalysisForView(analysis):
+    analysis['id'] = analysis['_id']
+    del analysis['_id']
 
+    ts = analysis['startTime']
+    analysis['startTime'] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(ts))
+
+    for f in analysis['files']:
+        f['filename'] = os.path.basename(f['filename'])
+
+    if 'data' in analysis:
+        for data in analysis['data']:
+            if '_Data__tags' in data:
+                data['tags'] = data['_Data__tags']
+                del data['_Data__tags']
+
+            if '_Data__data' in data:
+                data['data'] = data['_Data__data']
+                del data['_Data__data']
 
 def login(request):
     # Check for credentials
@@ -102,3 +115,61 @@ def delete_analysis(request):
             op.removeAnalysisById(analysisId)
 
     return redirect('/')
+
+
+@login_required
+def show_analysis(request, analysisId):
+    print 'show_analysis'
+    if request.method == 'GET':
+        op = request.user.ovizart
+        #analysis = request.GET['analysisId']
+        analysis = op.getAnalysis(analysisId)
+        prepareAnalysisForView(analysis)
+
+        return render_to_response('show_analysis.html', RequestContext(request, {'analysis': analysis}))
+
+    redirect('/')
+
+
+@login_required
+def download_pcap(request, analysisId, streamKey):
+    print 'download_pcap'
+    if request.method == 'GET':
+        op = request.user.ovizart
+        pcapFileName = op.getPcap(analysisId, streamKey)
+        return __sendFile2Browser(pcapFileName, 'application/octet-stream')
+
+    redirect('/')
+
+
+@login_required
+def download_reassembled(request, analysisId, streamKey, trafficType):
+    print 'download_reassembled'
+    if request.method == 'GET':
+        op = request.user.ovizart
+        reassembledFileName = op.getReassembled(analysisId, streamKey, trafficType)
+        return __sendFile2Browser(reassembledFileName, 'application/octet-stream')
+
+    redirect('/')
+
+
+@login_required
+def download_attachment(request, analysisId, streamKey, filePath):
+    print 'download_attachment'
+    if request.method == 'GET':
+        op = request.user.ovizart
+        attachmentFileName = op.getAttachment(analysisId, streamKey, filePath)
+        return __sendFile2Browser(attachmentFileName, 'application/octet-stream')
+
+    redirect('/')
+
+
+def __sendFile2Browser(filepath, contentType):
+    from django.http import HttpResponse
+    from django.core.servers.basehttp import FileWrapper
+    basename = os.path.basename(filepath)
+    # generate the file
+    response = HttpResponse(FileWrapper(open(filepath)), content_type=contentType)
+    response['Content-Disposition'] = 'attachment; filename=' + basename
+    os.unlink(filepath)
+    return response

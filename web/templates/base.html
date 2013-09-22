@@ -13,6 +13,8 @@
       body { padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */ }
       .table-status { width: 300px; }
 	  .table-date { width: 200px; }
+
+        {% block styles %}{% endblock %}
     </style>
     <link href="/s/css/bootstrap-responsive.min.css" rel="stylesheet">
   </head>
@@ -25,18 +27,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">Ovizart-NG</a>
+          <a class="brand" href="/">Ovizart-NG</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Reports</a></li>
-              <li><a href="#">Scans</a></li>
-              <li><a href="#">Policies</a></li>
+              <li class="active"><a href="/">Reports</a></li>
               <li><a href="#">Users</a></li>
             </ul>
             <ul class="nav pull-right">
 			  <li><a href="#">Help</a></li>
               <li><a href="#">About</a></li>
-              <li><a href="/logout">{{ username }} - Logout</a></li>
+              <li><a href="/logout">{{ request.user.username }} - Logout</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
