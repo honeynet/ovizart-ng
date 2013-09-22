@@ -1,0 +1,84 @@
+.. _installation:
+
+
+***************
+Installation
+***************
+
+.. _installing-docdir:
+
+Installing your doc directory
+=============================
+
+# Prepare environment
+# For UBUNTU
+
+# Retrieve git
+apt-get install git libpcap-dev libnids-dev libglib2.0-dev libnet1-dev
+
+# install python development files for pynids
+sudo apt-get install python-dev
+
+# install pynids before justniffer
+mkdir -p ~/src
+# Clone the repository
+git clone https://github.com/MITRECND/pynids
+
+sudo python setup.py build
+# This will give an error about
+cd pynids/libnids-1.25
+./configure
+make
+cd ..
+# build it, install any missing library according to output
+python setup.py build
+# install it
+sudo python setup.py install
+
+# Justniffer requirements
+# regular expression library for C++ (default version)
+sudo apt-get install build-essential libboost-regex-dev libboost-program-options-dev libboost-iostreams-dev
+
+# install justniffer from http://justniffer.sourceforge.net/
+mkdir -p ~/src/justniffer
+cd ~/src/justniffer
+wget http://sourceforge.net/projects/justniffer/files/latest/download?source=files -O justniffer_0.5.11.tar.gz
+tar xvf justniffer_0.5.11.tar.gz
+cd justniffer_0.5.11
+./configure
+make
+sudo make install
+
+# install mongodb
+sudo apt-get install mongodb
+
+#install M2Crypto
+sudo apt-get install python-m2crypto
+
+# checkout git repo
+cd ~/src/
+git clone https://github.com/honeynet/ovizart-ng.git
+
+# install pip requirements
+cd ~/src/ovizart-ng/
+git checkout ovizart-ng-devel
+
+sudo apt-get install python-pip python-scapy ipython python-jinja2
+sudo pip install -r install/pip_requirements.txt
+
+cd ~/src/ovizart-ng/bin/
+
+# Now create a user to use ovizart.
+./create_user.py <username> <password> <name> <surname> <emailAddress>
+
+# Start daemon: This script will start REST API server
+./api_server.py start [--host localhost] [--port 9009] [--isSSL]
+
+# Before starting Web UI, syncdb must be called for the first time only
+cd ~/src/ovizart-ng/web/
+python ./manage.py syncdb
+# You don't need any super user, you can skip creating it.
+
+# Start Web UI
+~/src/ovizart-ng/bin/ui_server.py start
+# Press Ctrl + C to stop ui_server
