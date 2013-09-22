@@ -53,10 +53,11 @@ class VTWrapper(BaseAnalyzer):
         response = self.analyzeBinary(path)
         #if response['response_code'] == 1:
         # Come back later for result
-        response = json.loads(response)
-        response['scanid'] = response['scan_id']
-        del response['scan_id']
-        data.addAnalyzerResponse(VT_RESPONSE, response)
+        if response:
+            response = json.loads(response)
+            response['scanid'] = response['scan_id']
+            del response['scan_id']
+            data.addAnalyzerResponse(VT_RESPONSE, response)
 
     def analyzeBinary(self, path):
         """
@@ -67,6 +68,9 @@ class VTWrapper(BaseAnalyzer):
 
         if self.conf is None:
             self.conf = Config()
+
+        if not self.conf.vt_apikey:
+            return None
 
         vt = 'www.virustotal.com'
 
