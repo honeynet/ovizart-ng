@@ -1,0 +1,5 @@
+pymongo==2.6
+requests==1.2.3
+django==1.5.1
+http://downloads.sourceforge.net/project/pylibpcap/pylibpcap/0.6.2/pylibpcap-0.6.2.tar.gz
+http://dpkt.googlecode.com/files/dpkt-1.7.tar.gz

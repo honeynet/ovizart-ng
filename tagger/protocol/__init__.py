@@ -1,8 +1,9 @@
-__author__ = 'hforge'
+__author__ = 'ggercek'
 
 from smtp import *
 from http import *
 from ftp import *
+from future_protocols import *
 
 from core.engine import Tagger
 from core.tags import Tags
@@ -21,8 +22,11 @@ tcp_signatures = [
     (r'^(EHLO|DATA|AUTH|MAIL|RCPT|QUIT).*', SMTPRequest),
     (r'^(GET|HEAD|POST|OPTIONS|PUT|DELETE|TRACE|CONNECT).*', HTTPRequest),
     (r'^(HTTP\/[0-9]).*', HTTPResponse),
-    (r'^(230|331).*', FTPResponse)
-             ]
+    (r'^(230|331).*', FTPResponse),
+    (b'^(?P<contentType>[\x14\x15\x16\x17])(?P<majVersion>[\x03])(?P<minVersion>[\x00\x01\x02\x03])', HTTPSHandshake),
+    (r'^SSH', SSHHandshake),
+    (b'^\x04\x01.{2}.{4}.*\x00$', SOCKS4Connect),
+            ]
 
 udp_signatures = [
     (),
@@ -68,7 +72,8 @@ class ProtocolTagger:
         # tag the found protocols to stream
         stream = data.getStream()
         # TODO: Change this part
-        protocol = struct.unpack('!B', stream.protocol)[0]
+        #protocol = struct.unpack('!B', stream.protocol)[0]
+        protocol = stream.protocol
 
         recognized_layers = []
         if protocol == 6:

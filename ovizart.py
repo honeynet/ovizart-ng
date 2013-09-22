@@ -77,7 +77,12 @@ class Ovizart():
         # May be we should return some kind of handler/id for the analyze process
         # Currently sync!!!
         analysis = engine.evaluate(self.config)
-        self.analysis[analysis.id] = analysis
+        self.analysis[analysis._id] = analysis
+        return analysis
+
+    def startASync(self, userid=None):
+        analysis = engine.evaluateASync(self.config, userid)
+        self.analysis[analysis._id] = analysis
         return analysis
 
     def stop(self, analysisId):

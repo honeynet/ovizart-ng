@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+        <!--
+        <div class="alert alert-success">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<h4>Success!</h4>
+			Well done, please try another option too!!
+		</div>
+        -->
+		<div class="btn-group">
+		  <button class="btn" id="btn-browse">Browse</button>
+		  <!-- <button class="btn">Compare</button> -->
+		  <button class="btn" id="btn-new">New</button>
+		  <button class="btn" id="btn-download">Download</button>
+		  <button class="btn" id="btn-delete">Delete</button>
+		</div>
+
+		<br /><br />
+        <form id="analysisTable" name="analysisTable" method="POST" action="">
+            {% csrf_token %}
+            <table class="table table-striped table-bordered table-hover">
+              <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>ID</th>
+                    <th class="table-status">Status</th>
+                    <th class="table-date">Start Time</th>
+                    <th class="table-date">Info</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for analysis in analysisList %}
+                <tr class="info">
+                    <td><input name="selectedAnalysis" type="checkbox" value="{{ analysis.id }}" id="inlineCheckbox1"></td>
+                    <td>{{ analysis.id }}</td>
+                    <td>{{ analysis.status }}</td>
+                    <td>{{ analysis.startTime }}</td>
+                    <td>
+                        {% for f in analysis.files %}
+                            {{ f.filename }}<br/>
+                            # of Packets: {{ f.numberOfPacket }}<br/>
+                            # of Streams: {{ f.numberOfStreams }}<br/>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+          </table>
+        </form>
+
+<!--
+	  <div class="pagination pagination-right">
+		  <ul>
+			<li class="disabled"><a href="#">&laquo;</a></li>
+			<li class="active"><a href="#">1</a></li>
+			<li><a href="#">2</a></li>
+			<li><a href="#">3</a></li>
+			<li><a href="#">4</a></li>
+			<li><a href="#">5</a></li>
+			<li><a href="#">6</a></li>
+			<li><a href="#">7</a></li>
+			<li><a href="#">&raquo;</a></li>
+		  </ul>
+		</div>
+-->
+
+{% endblock %}
+{% block endPageScript %}
+<script src="/s/js/ovizart.js"></script>
+{% endblock %}

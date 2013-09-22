@@ -1,6 +1,7 @@
 from data import Analysis
 import datetime
 import ovizutil
+import db
 
 __author__ = "ggercek"
 
@@ -170,8 +171,9 @@ def _read(config):
 
     newAnalysis = Analysis()
     newAnalysis.config = config
+    db.saveAnalysis(newAnalysis)
 
-    _analysis[newAnalysis.id] = newAnalysis
+    _analysis[newAnalysis._id] = newAnalysis
 
     # Read input file(s)
     inputFiles = config.input_files
@@ -223,6 +225,7 @@ def _read(config):
         for flow in flows:
             reassembler.process(flow)
 
+    db.saveAnalysis(newAnalysis)
     return newAnalysis
 
 
@@ -256,14 +259,29 @@ def _view(newAnalysis):
         for tag, reporter in selectedReporters:
             reporter.report(flow)
 
+def evaluateASync(config, userid=None):
+    newAnalysis = Analysis()
+    newAnalysis.user = userid
+    newAnalysis.config = config
+    db.saveAnalysis(newAnalysis)
+    _analysis[newAnalysis._id] = newAnalysis
 
-def evaluate(config):
+    # start a thread here
+    # TODO: Improve this solution
+    import thread
+    thread.start_new_thread(evaluate, (config, newAnalysis))
+    return newAnalysis
+
+def evaluate(config, newAnalysis=None, userid=None):
     global availableModules, dataSources, taggers, analyzers, reporters
 
-    newAnalysis = Analysis()
-    newAnalysis.config = config
+    if newAnalysis is None:
+        newAnalysis = Analysis()
+        newAnalysis.user = userid
+        newAnalysis.config = config
+        db.saveAnalysis(newAnalysis)
 
-    _analysis[newAnalysis.id] = newAnalysis
+        _analysis[newAnalysis._id] = newAnalysis
 
     # Read input file(s)
     inputFiles = config.input_files
@@ -287,6 +305,8 @@ def evaluate(config):
         fileType = inputFiles[fileName]
         # TODO: What if multiple parser exists?
         parser = dataSources[fileType][0]
+        import copy
+        parser = copy.deepcopy(parser)
         import os
         # create output folder
         outputFolder = config.output_folder + fileName.split("/")[-1]
@@ -336,6 +356,7 @@ def evaluate(config):
                 reporter.report(flow)
 
     newAnalysis.status = Analysis.FINISHED
+    db.saveAnalysis(newAnalysis)
     return newAnalysis
 ################################
 ################################

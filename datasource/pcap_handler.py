@@ -186,12 +186,12 @@ class PcapDataSourceHandler:
 
 class Stream:
     def __init__(self, protocol, srcIp, srcPort, dstIp, dstPort, startTime, pkt, outputFolder):
-        self.protocol = protocol
-        self.srcIP = srcIp
-        self.srcPort = srcPort
-        self.dstIp = dstIp
-        self.dstPort = dstPort
-        self.startTime = startTime
+        self.protocol = _decode_byte(protocol)
+        self.srcIP = address_to_string(srcIp)
+        self.srcPort = str(srcPort)
+        self.dstIp = address_to_string(dstIp)
+        self.dstPort = str(dstPort)
+        self.startTime = str(startTime)
 
         self.key = Stream.generateKeys((protocol, srcIp, srcPort, dstIp, dstPort, startTime))[0]
 
@@ -210,8 +210,11 @@ class Stream:
 
     def __repr__(self):
         s = 'Stream Object {key: %s, protocol: %d, srcIP: %s, srcPort: %s, dstIP: %s, dstPort: %s, startTime: %s, numberOfPacket: %d, pcapFile: %s}' \
-            % (self.key, _decode_byte(self.protocol), address_to_string(self.srcIP), str(self.srcPort),
-            address_to_string(self.dstIp), str(self.dstPort), str(self.startTime), self.pktCount, self.pcapFileName)
+            % (self.key, self.protocol, self.srcIP, self.srcPort, self.dstIp, self.dstPort, self.startTime,
+               self.pktCount, self.pcapFileName)
+        #% (self.key, _decode_byte(self.protocol), address_to_string(self.srcIP), str(self.srcPort),
+            #address_to_string(self.dstIp), str(self.dstPort), str(self.startTime), self.pktCount, self.pcapFileName)
+
         return s
 
     def addPacket(self, ts, pkt):
