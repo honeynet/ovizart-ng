@@ -179,7 +179,7 @@ def cli_main(args):
         if (result[0] == '{'):
             rptr.report(result)
         else:
-            rptr.report('{"results": "%s"}' % (result))
+            rptr.report({"results": result})
 
         webbrowser.open_new_tab('file://' + PROJECT_ROOT + 'reporter/report.html')
     
