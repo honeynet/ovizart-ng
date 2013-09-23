@@ -1,8 +1,8 @@
 .. _extending:
 
-****************
+*****************
 Extending Ovizart
-****************
+*****************
 
 If you have questions about how to do some stuff you want to add feel free to contact me (gurcangercek@gmail.com)
 

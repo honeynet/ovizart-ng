@@ -36,7 +36,7 @@ ovizart with OvizartProxy. It's functions can be listed as below
     2: A <-> B contains total traffic
 
 
-* getAttachment(self, analysisId, streamKey, filePath): downloads extracted file by given filePath streamKey and analysisId parameters.
+* **getAttachment(self, analysisId, streamKey, filePath)**: downloads extracted file by given filePath streamKey and analysisId parameters.
 
 Here is a sample ipython session
 

@@ -45,6 +45,8 @@ Analyzer
 --------
 
 .. _reporter:
-f
+
+Reporter
+--------
 
 
