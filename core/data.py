@@ -130,12 +130,13 @@ class Data():
 
     def addReassembled(self, trafficCode):
         reassembled = self.tag(Data.REASSEMBLED)
-        if reassembled is None:
-            reassembled = []
+        if reassembled:
+            reassembled.append(trafficCode)
+        else:
+            reassembled = list()
+            reassembled.append(trafficCode)
             self.tag(Data.REASSEMBLED, reassembled)
-            
-        reassembled.append(trafficCode)
-        
+
     def getReassembled(self):
         return self.tag(Data.REASSEMBLED)
 

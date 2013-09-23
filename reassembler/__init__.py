@@ -83,7 +83,11 @@ class Reassembler():
 
             data.setAttachments(attachments)
 
-        for trafficFileName, trafficCode in [('request.traffic', 0), ('response.traffic', 1), ('total.traffic', 1)]:
-
-            if os.path.exists(os.path.join(output_folder, trafficFileName)):
+        for trafficFileName, trafficCode in [('request.traffic', 0), ('response.traffic', 1), ('total.traffic', 2)]:
+            tPath = os.path.join(output_folder, trafficFileName)
+            print 'tPath:', tPath
+            if os.path.exists(tPath):
+                print 'exists', tPath
                 data.addReassembled(trafficCode)
+            else:
+                print 'not exists', tPath
