@@ -14,6 +14,7 @@ Contents:
    installation.rst
    usage.rst
    structure.rst
+   rest_api.rst
    extending.rst
    future_work.rst
 
