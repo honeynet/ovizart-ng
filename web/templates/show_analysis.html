@@ -73,9 +73,29 @@
                     </tr>
                     <tr class="">
                         <td style="background-color: #ffffff"> Reassembled Traffic:</td><td style="background-color: #ffffff">
-                            <tt>Request&nbsp; ( A --> B )&nbsp;&nbsp;</tt><a href="/reassembled/{{ analysis.id }}/{{ s.key }}/0"><tt>{{s.srcIP}}:{{s.srcPort}} &nbsp;-> {{s.dstIP}}:{{s.dstPort}}</tt></a><br/>
-                            <tt>Response ( A <-- B )&nbsp;&nbsp;</tt><a href="/reassembled/{{ analysis.id }}/{{ s.key }}/1"><tt>{{s.srcIP}}:{{s.srcPort}} <-&nbsp;  {{s.dstIP}}:{{s.dstPort}}</tt></a><br/>
-                            <tt>Total&nbsp;&nbsp;&nbsp; ( A <-> B )&nbsp;&nbsp;</tt><a href="/reassembled/{{ analysis.id }}/{{ s.key }}/2"><tt>{{s.srcIP}}:{{s.srcPort}} <-> {{s.dstIP}}:{{s.dstPort}}</tt></a><br/>
+
+                            {% if t.reassembled %}
+                            <tt>Request&nbsp; ( A --> B )&nbsp;&nbsp;</tt>
+                                {% if 0 in t.reassembled %}
+                                    <a href="/reassembled/{{ analysis.id }}/{{ s.key }}/0"><tt>{{s.srcIP}}:{{s.srcPort}} &nbsp;-> {{s.dstIP}}:{{s.dstPort}}</tt></a>
+                                {% else %}
+                                    <tt>Reassembly module is unable to reassembly the traffic</tt>
+                                {% endif %}<br/>
+                            <tt>Response ( A <-- B )&nbsp;&nbsp;</tt>
+                                {% if 1 in t.reassembled %}
+                                    <a href="/reassembled/{{ analysis.id }}/{{ s.key }}/1"><tt>{{s.srcIP}}:{{s.srcPort}} <-&nbsp;  {{s.dstIP}}:{{s.dstPort}}</tt></a>
+                                {% else %}
+                                    <tt>Reassembly module is unable to reassembly the traffic</tt>
+                                {% endif %}<br/>
+                            <tt>Total&nbsp;&nbsp;&nbsp; ( A <-> B )&nbsp;&nbsp;</tt>
+                                {% if 2 in t.reassembled %}
+                                    <a href="/reassembled/{{ analysis.id }}/{{ s.key }}/2"><tt>{{s.srcIP}}:{{s.srcPort}} <-> {{s.dstIP}}:{{s.dstPort}}</tt></a>
+                                {% else %}
+                                    <tt>Reassembly module is unable to reassembly the traffic</tt>
+                                {% endif %}<br/>
+                            {% else %}
+                                <tt>Reassembly module is unable to reassembly the traffic</tt>
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>
