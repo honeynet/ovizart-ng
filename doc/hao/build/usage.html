@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Usage and Test Reports &mdash; Ovizart-NG-Hao 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ovizart-NG-Hao 1.0 documentation" href="index.html" />
+    <link rel="next" title="Summary" href="summary.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="summary.html" title="Summary"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Ovizart-NG-Hao 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="usage-and-test-reports">
+<h1>Usage and Test Reports<a class="headerlink" href="#usage-and-test-reports" title="Permalink to this headline">¶</a></h1>
+<p><strong>The Ovizart-ng is able to handle basically 4 types of input:</strong></p>
+<ol class="arabic simple">
+<li>PCAP: use the core analyzer</li>
+<li>URL: may call the extended analyzer like VirusTotal, and Jsunpack-n</li>
+<li>binary file: VirusTotal and Cuckoo analyzer may handle</li>
+<li>text file: (like html and javascript file): Jsunpack-n analyzer may handle.</li>
+</ol>
+<div class="section" id="howto">
+<h2>HOWTO:<a class="headerlink" href="#howto" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">If you’d like to analyze a pcap, there’re 2 ways :</p>
+<blockquote>
+<div><p>1). use cli tool of ovizart-ng:</p>
+<div class="highlight-python"><pre>Example:
+
+$ sudo python ovizcli.py -i /Users/zqzas/Projects/ovizart-ng/test/pcap/test-http.pcap -o /tmp
+I’m awesome
+name: /Users/zqzas/Projects/ovizart-ng/test/pcap/test-http.pcap type: PCAP
+Analysis Object{
+id: 1
+startTime: 2013-09-10 15:41:14.105801
+user: &lt;NoUserDefined&gt;
+config: &lt;ovizconf.Config instance at 0x101b9a0e0&gt;
+status: FINISHED
+data: [Data Object{
+tags: {'data_source': 'PCAP', 'app_layer_protocol': 'HTTP', 'attachments': [('_Websidan_index.html', 'regular file', None)], None: ['_Websidan_index.html']}
+data: {‘stream’: Stream Object {key: 6_10.1.1.101_3188_10.1.1.1_80, protocol: 6, srcIP: 10.1.1.101, srcPort: 3188, dstIP: 10.1.1.1, dstPort: 80, startTime: 1100903355.43, numberOfPacket: 14, pcapFile: /tmpanalysis_20130910_154114_105820/test-http.pcap/6_10.1.1.101_3188_10.1.1.1_80/6_10.1.1.101_3188_10.1.1.1_80.pcap}}
+}, ...omitted</pre>
+</div>
+<p>2). use interactive tool of ovizart-ng:</p>
+<div class="highlight-python"><pre>$cd shell/
+
+$python ovizshell.py
+
+(Cmd) set input = /Users/zqzas/Projects/ovizart-ng/test/pcap/test-http.pcap
+(Cmd) set output = /tmp
+(Cmd) show
+{‘output’: ‘/tmp’, ‘external_tool’: ”, ‘verbose’: ”, ‘input’: ‘/Users/zqzas/Projects/ovizart-ng/test/pcap/test-http.pcap’}
+(Cmd) start
+name: /Users/zqzas/Projects/ovizart-ng/test/pcap/test-http.pcap type: PCAP
+Analysis Object{
+id: 1
+startTime: 2013-09-10 15:20:15.713222
+user: &lt;NoUserDefined&gt;
+config: &lt;ovizconf.Config instance at 0x101c99908&gt;
+status: FINISHED
+data: ….omitted</pre>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">To analyze a url:</p>
+<div class="highlight-python"><pre>(Cmd) set input = http://honeynet.org
+(Cmd) set output = /tmp
+(Cmd) set external_tool = -vt
+(Cmd) start
+name: http://honeynet.org type: URL
+Virus-total analyzing …………………………
+['http://honeynet.org']
+——————-
+{“permalink”: “https://www.virustotal.com/url/7547b57712941e07a6f9f786a6f311b534c94c0e2ba59126d7f1ef4ff24866e4/analysis/1377971788/”, “url”: “http://honeynet.org/”, “response_code”: 1, “scan_date”: “2013-08-31 17:56:28″, “scan_id”: “7547b57712941e07a6f9f786a6f311b534c94c0e2ba59126d7f1ef4ff24866e4-1377971788″,….omitted
+set to another external analyzer, “jsunpack-n” :
+
+(Cmd) set external_tool = -js
+(Cmd) show
+{‘output’: ‘/tmp’, ‘external_tool’: ‘-js’, ‘verbose’: ”, ‘input’: ‘http://honeynet.org’}
+(Cmd) start
+name: http://honeynet.org type: URL
+Jsunpack-n analyzing …………………………
+
+http://honeynet.org
+
+!!! /Users/zqzas/Projects/ovizart-ng/analyzer/jsunpack_n/jsunpack-n-read-only
+The key / has the following output in recursive mode
+[nothing detected] /
+info: [0] no JavaScript
+file: stream_bf9b49684b9623595fbb8e12648d3d19ecb5c77c: 19 bytes
+Note that none of the files are actually created since self.outdir is empty.
+Instead, you could go through each url and look at the decodings that it creates
+Looking at key /, has 1 files and 1 messages, that follow:
+file type=stream, hash=bf9b49684b9623595fbb8e12648d3d19ecb5c77c, data=19 bytes
+output message printable=1, impact=0, msg=[0] no JavaScript
+
+Response:
+[['The reports has been saved in /Users/zqzas/Projects/ovizart-ng/analyzer/jsunpack_n/jsunpack-n-read-only/log.'], []]</pre>
+</div>
+</li>
+<li><p class="first">To analyze a binary:</p>
+<blockquote>
+<div><p>1). VirusTotal:</p>
+<div class="highlight-python"><pre>(Cmd) set input = /Users/zqzas/Downloads/anyexe.exe
+(Cmd) set output = /tmp
+(Cmd) set external_tool = -vt
+(Cmd) start
+name: /Users/zqzas/Downloads/anyexe.exe type: BINARY
+Virus-total analyzing …………………………
+
+{“scan_id”: “209342a2755315c7cef091f4f56de0875ee9cafee73814c05faf5db1a3955ee4-1378802153″, “sha1″: “5d92013fe866395a1c5370192d9ad83e88328a64″, “resource”: “209342a2755315c7cef091f4f56de0875ee9cafee73814c05faf5db1a3955ee4″, “response_code”: 1, “sha256″: “209342a2755315c7cef091f4f56de0875ee9cafee73814c05faf5db1a3955ee4″, “permalink”: “https://www.virustotal.com/file/209342a2755315c7cef091f4f56de0875ee9cafee73814c05faf5db1a3955ee4/analysis/1378802153/”, “md5″: “fb086841437211545b5260209fa9ecf7″, “verbose_msg”: “Scan request successfully queued, come back later for the report“}</pre>
+</div>
+<p>2). Cuckoo:</p>
+<div class="highlight-python"><pre>(Cmd) set input = /Users/zqzas/Downloads/anyexe.exe
+(Cmd) set output = /tmp
+(Cmd) set external_tool = -ck
+(Cmd) start
+name: /Users/zqzas/Downloads/anyexe.exe type: BINARY
+Cuckoo analyzing …………………………
+You may check the reports at: ( http://81.167.148.242:8090/tasks/view/202 ) after it’s available.</pre>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">text file, a html file with js:</p>
+<div class="highlight-python"><pre>(Cmd) set input = /Users/zqzas/Projects/ovizart-ng/shell/report.html
+(Cmd) set output = /tmp
+(Cmd) set external_tool = -js
+(Cmd) start
+name: /Users/zqzas/Projects/ovizart-ng/shell/report.html type: PLAINTEXT
+Jsunpack-n analyzing …………………………
+/Users/zqzas/Projects/ovizart-ng/shell/report.html
+!!! /Users/zqzas/Projects/ovizart-ng/analyzer/jsunpack_n/jsunpack-n-read-only
+The key / has the following output in recursive mode
+[nothing detected] /
+info: [0] no JavaScript
+file: stream_e4a62c83ace44261a545060c454a6c6fd3c677f1: 50 bytes
+Note that none of the files are actually created since self.outdir is empty.
+Instead, you could go through each url and look at the decodings that it creates
+Looking at key /, has 1 files and 1 messages, that follow:
+file type=stream, hash=e4a62c83ace44261a545060c454a6c6fd3c677f1, data=50 bytes
+output message printable=1, impact=0, msg=[0] no JavaScript
+Response:
+[[], ['The reports has been saved in /Users/zqzas/Projects/ovizart-ng/analyzer/jsunpack_n/jsunpack-n-read-only/log.']]
+Above are the cases of using interactive shell, which can be achieved by ovizcli.py equivalently as well.</pre>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="more-examples">
+<h2>More Examples:<a class="headerlink" href="#more-examples" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><a class="reference external" href="http://gsoc2013.honeynet.org/2013/09/22/network-analyzer-project-updates-hao-ma-week-13-more-examples/">http://gsoc2013.honeynet.org/2013/09/22/network-analyzer-project-updates-hao-ma-week-13-more-examples/</a></div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Usage and Test Reports</a><ul>
+<li><a class="reference internal" href="#howto">HOWTO:</a></li>
+<li><a class="reference internal" href="#more-examples">More Examples:</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="summary.html"
+                        title="next chapter">Summary</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/usage.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="summary.html" title="Summary"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >previous</a> |</li>
+        <li><a href="index.html">Ovizart-NG-Hao 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hao (zqzas).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>
