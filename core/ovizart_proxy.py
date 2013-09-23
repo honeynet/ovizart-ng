@@ -130,15 +130,20 @@ class OvizartProxy():
         return self.__downloadFile(url)
 
     def __downloadFile(self, url):
-        r = requests.get(url, verify=False, headers={'content-type': 'application/json'}, cookies=self.cookies, stream=True)  # here we need to set stream = True parameter
-        tempFolder = '/tmp/%s'%ovizutil.getTimestampStr()
-        os.mkdir(tempFolder)
-        basename = r.headers['content-disposition'].split('filename=')[-1]
-        # TODO: Add error handling !!!
-        local_filename = '%s/%s' % (tempFolder, basename)
-        with open(local_filename, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=1024):
-                if chunk:  # filter out keep-alive new chunks
-                    f.write(chunk)
-                    f.flush()
-        return local_filename
+        response = requests.get(url, verify=False, headers={'content-type': 'application/json'}, cookies=self.cookies, stream=True)  # here we need to set stream = True parameter
+
+        if 'content-disposition' in response.headers:
+
+            tempFolder = '/tmp/%s'%ovizutil.getTimestampStr()
+            os.mkdir(tempFolder)
+            basename = response.headers['content-disposition'].split('filename=')[-1]
+            # TODO: Add error handling !!!
+            local_filename = '%s/%s' % (tempFolder, basename)
+            with open(local_filename, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=1024):
+                    if chunk:  # filter out keep-alive new chunks
+                        f.write(chunk)
+                        f.flush()
+            return local_filename
+        else:
+            return json.loads(response.content)

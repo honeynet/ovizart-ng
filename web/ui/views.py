@@ -148,7 +148,10 @@ def download_reassembled(request, analysisId, streamKey, trafficType):
     if request.method == 'GET':
         op = request.user.ovizart
         reassembledFileName = op.getReassembled(analysisId, streamKey, trafficType)
-        return __sendFile2Browser(reassembledFileName, 'application/octet-stream')
+        if type(reassembledFileName) == str:
+            return __sendFile2Browser(reassembledFileName, 'application/octet-stream')
+        else:
+            return reassembledFileName
 
     redirect('/')
 

@@ -43,6 +43,7 @@ class Data():
     DATA_SOURCE = 'data_source'
     APP_LAYER_PROTOCOL = 'app_layer_protocol'
     ATTACHMENTS = 'attachments'
+    REASSEMBLED = 'reassembled'
 
     def __init__(self):
         self.__data = {}
@@ -126,6 +127,17 @@ class Data():
 
     def getAttachments(self):
         return self.tag(Data.ATTACHMENTS)
+
+    def addReassembled(self, trafficCode):
+        reassembled = self.tag(Data.REASSEMBLED)
+        if reassembled is None:
+            reassembled = []
+            self.tag(Data.REASSEMBLED, reassembled)
+            
+        reassembled.append(trafficCode)
+        
+    def getReassembled(self):
+        return self.tag(Data.REASSEMBLED)
 
     def getAttachmentsFolder(self):
         return os.path.join(self.getStream().outputFolder, 'attachments')

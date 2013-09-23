@@ -82,3 +82,8 @@ class Reassembler():
                 attachments.append((f, ftype, ftypeTag))
 
             data.setAttachments(attachments)
+
+        for trafficFileName, trafficCode in [('request.traffic', 0), ('response.traffic', 1), ('total.traffic', 1)]:
+
+            if os.path.exists(os.path.join(output_folder, trafficFileName)):
+                data.addReassembled(trafficCode)
