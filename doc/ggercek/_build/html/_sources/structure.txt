@@ -133,6 +133,8 @@ Each decorator makes this control for the following methods signatures;::
 DataSource
 ----------
 
+<< TODO>>
+
 
 .. _tagger:
 
@@ -170,9 +172,15 @@ where the tcp_signatures is a simple array of (signature, class) tuples;::
 
 Reassembler
 -----------
-After extracting streams from pcap files we need to examine the traffic. Although this could be done by inspecting each packets which is what we are doing it on Tagger module for protocol detection reasons. But this approach is easy to bypass using fragmentation. Another reason is to inspect the whole traffic in a higher level. This module is composed of two layers; BaseReassembler and ProtocolReassembler.
+After extracting streams from pcap files we need to examine the traffic. Although this could be done by inspecting each
+packets which is what we are doing it on Tagger module for protocol detection reasons. But this approach is easy to
+bypass using fragmentation. Another reason is to inspect the whole traffic in a higher level. This module is composed
+of two layers; BaseReassembler and ProtocolReassembler.
 
-First layer, BaseReassembler is responsible for running and interacting with justniffer. It will save the traffic into 3 files for further analysis. The files contains the reconstructed traffic between two hosts(A, B), with names of ‘request.traffic’(A->B), ‘response.traffic’(A<-B) and ‘total.traffic’(AB). Here is the sample content of files from a http connection.
+First layer, BaseReassembler is responsible for running and interacting with justniffer. It will save the traffic into
+3 files for further analysis. The files contains the reconstructed traffic between two hosts(A, B), with names of
+‘request.traffic’(A->B), ‘response.traffic’(A<-B) and ‘total.traffic’(AB). Here is the sample content of files from a
+http connection.
 
 **A -> B, request.traffic**::
 
@@ -259,9 +267,12 @@ http://web.archive.org/liveweb/http://seclists.org/snort/2012/q4/396 ::
 Analyzer
 --------
 
+Please check the documentation of Hao MA
+
 .. _reporter:
 
 Reporter
 --------
 
+Please check the documentation of Hao MA
 

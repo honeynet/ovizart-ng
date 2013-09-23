@@ -217,6 +217,7 @@ Reporter =&gt; report(self, data, outputPath)</pre>
 </div>
 <div class="section" id="datasource">
 <span id="id4"></span><h3>DataSource<a class="headerlink" href="#datasource" title="Permalink to this headline">¶</a></h3>
+<p>&lt;&lt; TODO&gt;&gt;</p>
 </div>
 <div class="section" id="tagger">
 <span id="id5"></span><h3>Tagger<a class="headerlink" href="#tagger" title="Permalink to this headline">¶</a></h3>
@@ -245,8 +246,14 @@ classes. Here is the content of new TCP class’s guess_payload_class function;:
 </div>
 <div class="section" id="reassembler">
 <span id="id6"></span><h3>Reassembler<a class="headerlink" href="#reassembler" title="Permalink to this headline">¶</a></h3>
-<p>After extracting streams from pcap files we need to examine the traffic. Although this could be done by inspecting each packets which is what we are doing it on Tagger module for protocol detection reasons. But this approach is easy to bypass using fragmentation. Another reason is to inspect the whole traffic in a higher level. This module is composed of two layers; BaseReassembler and ProtocolReassembler.</p>
-<p>First layer, BaseReassembler is responsible for running and interacting with justniffer. It will save the traffic into 3 files for further analysis. The files contains the reconstructed traffic between two hosts(A, B), with names of ‘request.traffic’(A-&gt;B), ‘response.traffic’(A&lt;-B) and ‘total.traffic’(AB). Here is the sample content of files from a http connection.</p>
+<p>After extracting streams from pcap files we need to examine the traffic. Although this could be done by inspecting each
+packets which is what we are doing it on Tagger module for protocol detection reasons. But this approach is easy to
+bypass using fragmentation. Another reason is to inspect the whole traffic in a higher level. This module is composed
+of two layers; BaseReassembler and ProtocolReassembler.</p>
+<p>First layer, BaseReassembler is responsible for running and interacting with justniffer. It will save the traffic into
+3 files for further analysis. The files contains the reconstructed traffic between two hosts(A, B), with names of
+‘request.traffic’(A-&gt;B), ‘response.traffic’(A&lt;-B) and ‘total.traffic’(AB). Here is the sample content of files from a
+http connection.</p>
 <p><strong>A -&gt; B, request.traffic</strong>:</p>
 <div class="highlight-python"><pre>GET / HTTP/1.1
 User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0) Opera 7.11  [en]
@@ -323,9 +330,11 @@ Currently it stops processing the flow.</pre>
 </div>
 <div class="section" id="analyzer">
 <span id="id7"></span><h3>Analyzer<a class="headerlink" href="#analyzer" title="Permalink to this headline">¶</a></h3>
+<p>Please check the documentation of Hao MA</p>
 </div>
 <div class="section" id="reporter">
 <span id="id8"></span><h3>Reporter<a class="headerlink" href="#reporter" title="Permalink to this headline">¶</a></h3>
+<p>Please check the documentation of Hao MA</p>
 </div>
 </div>
 </div>

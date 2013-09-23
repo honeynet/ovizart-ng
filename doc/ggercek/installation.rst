@@ -7,9 +7,12 @@ Installation
 
 This chapter contains the necessary information to install both required libraries/programs and ovizart-ng itself. These instructions have tested on Xubuntu 13.04 System [ 64 bit, Linux 3.8.0-30.generic ]
 
-Retrieve git::
+Installation for Ubuntu 13.04
+=============================
 
-  sudo apt-get install git
+Retrieve git and subversion::
+
+  sudo apt-get install git subversion
 
 install python development files for pynids::
 
@@ -73,7 +76,14 @@ Now we can continue by installing other requirements from repository and over pi
   sudo apt-get install python-pip python-scapy ipython python-jinja2
   sudo pip install -r install/pip_requirements.txt
 
-We are almost done. We need to check if everything is working fine or not::
+Install jsunpack and set its path::
+
+  cd ~/src/
+  svn checkout http://jsunpack-n.googlecode.com/svn/trunk/ jsunpack
+  cd ~/src/ovizart-ng/
+  nano ovizconf.py
+
+Update self.jsunpackn_path with absolute path of jsunpack and we can move on. We are almost done. We need to check if everything is working fine or not::
 
   cd ~/src/ovizart-ng/bin/
 
@@ -99,3 +109,37 @@ Start Web UI::
 
 Press Ctrl + C to stop ui_server
 
+Pre-installed Virtual Machine
+============================
+
+If you don't want to deal with installation you can download and virtual machine from here: http://81.166.122.252/ovizart-ng/
+If you are not sure how to import .ova file, you can check the virtualbox documentation here: http://www.virtualbox.org/manual/ch01.html#ovf
+
+  OS Credentials::
+
+    username: ovizart
+    password: ovizart
+
+  Ovizart Credentials::
+
+    username: ovizart
+    password: ovizart
+
+After booting system up, open a terminal then type following commands::
+
+  cd ~/src/ovizart-ng/bin
+  ./api_server.py start
+  ./ui_server.py
+
+Now open a browser. Browser's homepage is set as http://localhost:8000/.
+To stop the ovizart::
+
+  Hit Ctrl + C to stop ui_server.py
+  ./api_server stop
+
+In order to get latest version of ovizart-ng write the following commands::
+
+  cd ~/src/ovizart-ng/
+  git pull
+
+That's all...
