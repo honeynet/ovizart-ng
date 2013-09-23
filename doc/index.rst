@@ -17,6 +17,7 @@ Contents:
    rest_api.rst
    extending.rst
    future_work.rst
+   summary.rst
 
 
 Indices and tables
