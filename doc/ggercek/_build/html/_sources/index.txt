@@ -16,7 +16,6 @@ Contents:
    structure.rst
    rest_api.rst
    extending.rst
-   future_work.rst
    summary.rst
 
 

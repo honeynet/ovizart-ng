@@ -57,6 +57,15 @@
 
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#installation-for-ubuntu-13-04">Installation for Ubuntu 13.04</a></li>
+<li><a class="reference internal" href="#pre-installed-virtual-machine">Pre-installed Virtual Machine</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
                         title="previous chapter">Welcome to Ovizart-NG&#8217;s documentation!</a></p>
@@ -92,6 +101,8 @@
   <div class="section" id="installation">
 <span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <p>This chapter contains the necessary information to install both required libraries/programs and ovizart-ng itself. These instructions have tested on Xubuntu 13.04 System [ 64 bit, Linux 3.8.0-30.generic ]</p>
+<div class="section" id="installation-for-ubuntu-13-04">
+<h2>Installation for Ubuntu 13.04<a class="headerlink" href="#installation-for-ubuntu-13-04" title="Permalink to this headline">¶</a></h2>
 <p>Retrieve git and subversion:</p>
 <div class="highlight-python"><pre>sudo apt-get install git subversion</pre>
 </div>
@@ -172,7 +183,37 @@ Start Web UI:</p>
 <div class="highlight-python"><pre>~/src/ovizart-ng/bin/ui_server.py start</pre>
 </div>
 <p>Press Ctrl + C to stop ui_server</p>
-<p>How to use VM</p>
+</div>
+<div class="section" id="pre-installed-virtual-machine">
+<h2>Pre-installed Virtual Machine<a class="headerlink" href="#pre-installed-virtual-machine" title="Permalink to this headline">¶</a></h2>
+<p>If you don&#8217;t want to deal with installation you can download and virtual machine from here: <a class="reference external" href="http://81.166.122.252/ovizart-ng/">http://81.166.122.252/ovizart-ng/</a>
+If you are not sure how to import .ova file, you can check the virtualbox documentation here: <a class="reference external" href="http://www.virtualbox.org/manual/ch01.html#ovf">http://www.virtualbox.org/manual/ch01.html#ovf</a></p>
+<blockquote>
+<div><p>OS Credentials:</p>
+<div class="highlight-python"><pre>username: ovizart
+password: ovizart</pre>
+</div>
+<p>Ovizart Credentials:</p>
+<div class="highlight-python"><pre>username: ovizart
+password: ovizart</pre>
+</div>
+</div></blockquote>
+<p>After booting system up, open a terminal then type following commands:</p>
+<div class="highlight-python"><pre>cd ~/src/ovizart-ng/bin
+./api_server.py start
+./ui_server.py</pre>
+</div>
+<p>Now open a browser. Browser&#8217;s homepage is set as <a class="reference external" href="http://localhost:8000/">http://localhost:8000/</a>.
+To stop the ovizart:</p>
+<div class="highlight-python"><pre>Hit Ctrl + C to stop ui_server.py
+./api_server stop</pre>
+</div>
+<p>In order to get latest version of ovizart-ng write the following commands:</p>
+<div class="highlight-python"><pre>cd ~/src/ovizart-ng/
+git pull</pre>
+</div>
+<p>That&#8217;s all...</p>
+</div>
 </div>
 
 

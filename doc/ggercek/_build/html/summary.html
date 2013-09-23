@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Ovizart-NG 0.1a documentation" href="index.html" />
-    <link rel="prev" title="Future Work" href="future_work.html" /> 
+    <link rel="prev" title="Extending Ovizart" href="extending.html" /> 
   </head>
   <body>
 <h1>Ovizart-NG Google Summer of Code 2013 / Honeynet Project</h1>
@@ -43,7 +43,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="future_work.html" title="Future Work"
+          <a href="extending.html" title="Extending Ovizart"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">home</a>|&nbsp;</li>
         <li><a href="search.html">search</a>|&nbsp;</li>
@@ -53,9 +53,18 @@
 
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Summary of GSOC 2013 (Gurcan GERCEK)</a><ul>
+<li><a class="reference internal" href="#summary-and-future-work">Summary and Future Work</a></li>
+<li><a class="reference internal" href="#feature-requests">Feature Requests</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="future_work.html"
-                        title="previous chapter">Future Work</a></p>
+  <p class="topless"><a href="extending.html"
+                        title="previous chapter">Extending Ovizart</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/summary.txt"
@@ -84,7 +93,8 @@
             
   <div class="section" id="summary-of-gsoc-2013-gurcan-gercek">
 <span id="summary-gsoc2013"></span><h1>Summary of GSOC 2013 (Gurcan GERCEK)<a class="headerlink" href="#summary-of-gsoc-2013-gurcan-gercek" title="Permalink to this headline">¶</a></h1>
-<p>TODO: REFACTOR !!!!</p>
+<div class="section" id="summary-and-future-work">
+<span id="summary"></span><h2>Summary and Future Work<a class="headerlink" href="#summary-and-future-work" title="Permalink to this headline">¶</a></h2>
 <p>Here is the summary of my work;</p>
 <ul>
 <li><dl class="first docutils">
@@ -108,9 +118,9 @@ Analyzer, Reporter and Reassembler,</p>
 </li>
 <li><dl class="first docutils">
 <dt>DataSource: Pcap parser</dt>
-<dd><p class="first last">This module is responsible fro handling of pcap files and
-extracting the stream. A Stream can be defined as whole traffic
-between 2 host. Streams are identified by proto, IP1, [port1], IP2,
+<dd><p class="first last">This module is responsible for handling of pcap files and
+extracting streams. A Stream can be defined as whole traffic
+between 2 hosts. Streams are identified by proto, IP1, [port1], IP2,
 [port2]. port info will be used where applicable. Also this module
 generates summary information about a pcap file. Splits the given pcap
 file based on extracted streams.</p>
@@ -120,7 +130,7 @@ file based on extracted streams.</p>
 <li><dl class="first docutils">
 <dt>Tagger: Packet based protocol detection</dt>
 <dd><p class="first last">By using Scapy and regular expression based signatures our tool
-support detection of HTTP, FTP and SMTP.</p>
+support detection of HTTP, HTTPS, SSH, SOCKSv4, FTP and SMTP.</p>
 </dd>
 </dl>
 </li>
@@ -181,7 +191,9 @@ also used by Web UI currently under construction.</p>
 </li>
 <li><dl class="first docutils">
 <dt>WEB UI</dt>
-<dd><p class="first last">It has now basic capabilities of login/logout list the analysis
+<dd><p class="first last">It has now basic capabilities of login/logout, list the analysis,
+retrieve stream based pcap file, download extracted files from stream,
+download unidirectional and birdirectional reassembled traffic
 belongs to current user. Forgot to mention that each analysis is
 belong to a user and can only be shown/used by that user. I&#8217;m planning
 to add features like sharing analysis with other users or as json
@@ -202,6 +214,18 @@ code examples.</p>
 </ul>
 <p>I think this is all.</p>
 </div>
+<div class="section" id="feature-requests">
+<span id="futurework"></span><h2>Feature Requests<a class="headerlink" href="#feature-requests" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>For feature request;</dt>
+<dd><ul class="first last simple">
+<li>feel free to open an issue on github</li>
+<li>or send an email: <a class="reference external" href="mailto:gurcangercek&#37;&#52;&#48;gmail&#46;com">gurcangercek<span>&#64;</span>gmail<span>&#46;</span>com</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
 
 
           </div>
@@ -216,7 +240,7 @@ code examples.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="future_work.html" title="Future Work"
+          <a href="extending.html" title="Extending Ovizart"
              >previous</a> |</li>
         <li><a href="index.html">home</a>|&nbsp;</li>
         <li><a href="search.html">search</a>|&nbsp;</li>

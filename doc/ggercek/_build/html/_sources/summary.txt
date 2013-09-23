@@ -4,7 +4,10 @@
 Summary of GSOC 2013 (Gurcan GERCEK)
 ************************************
 
-TODO: REFACTOR !!!!
+.. _summary:
+
+Summary and Future Work
+=======================
 
 Here is the summary of my work;
 
@@ -23,16 +26,16 @@ Here is the summary of my work;
     This is a public interface to use the functionality of the tool.
 
 * DataSource: Pcap parser
-    This module is responsible fro handling of pcap files and
-    extracting the stream. A Stream can be defined as whole traffic
-    between 2 host. Streams are identified by proto, IP1, [port1], IP2,
+    This module is responsible for handling of pcap files and
+    extracting streams. A Stream can be defined as whole traffic
+    between 2 hosts. Streams are identified by proto, IP1, [port1], IP2,
     [port2]. port info will be used where applicable. Also this module
     generates summary information about a pcap file. Splits the given pcap
     file based on extracted streams.
 
 * Tagger: Packet based protocol detection
     By using Scapy and regular expression based signatures our tool
-    support detection of HTTP, FTP and SMTP.
+    support detection of HTTP, HTTPS, SSH, SOCKSv4, FTP and SMTP.
 
 * Reassembler: Base Reassembler
     By using justniffer as based part we are able to reassemble the
@@ -79,7 +82,9 @@ Here is the summary of my work;
     also used by Web UI currently under construction.
 
 * WEB UI
-    It has now basic capabilities of login/logout list the analysis
+    It has now basic capabilities of login/logout, list the analysis,
+    retrieve stream based pcap file, download extracted files from stream,
+    download unidirectional and birdirectional reassembled traffic
     belongs to current user. Forgot to mention that each analysis is
     belong to a user and can only be shown/used by that user. I'm planning
     to add features like sharing analysis with other users or as json
@@ -93,3 +98,12 @@ Here is the summary of my work;
     code examples.
 
 I think this is all.
+
+.. _futurework:
+
+Feature Requests
+================
+
+For feature request;
+ - feel free to open an issue on github
+ - or send an email: gurcangercek@gmail.com

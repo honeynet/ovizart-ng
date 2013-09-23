@@ -17,9 +17,6 @@ Before starting to explain the classes here is the UML of the design summary:
            :width: 1075px
            :height: 512px
 
-.. _modules:
-
-
 Classes
 -------
 * **Data**: Data class will contain 2 only dictionary, with names: data and tags. While the data dictionary holds the
@@ -60,6 +57,7 @@ The workflow of core system can be summarized like this;
 
 #. For the last step reporter modules process and format the calculated or measured stream values.
 
+.. _modules:
 
 Modules
 =======
@@ -133,7 +131,10 @@ Each decorator makes this control for the following methods signatures;::
 DataSource
 ----------
 
-<< TODO>>
+This module is responsible for handling of pcap files and extracting streams. A Stream can be defined as whole
+traffic between 2 hosts. Streams are identified by proto, IP1, [port1], IP2, [port2]. port info will be used where
+applicable. Also this module generates summary information about a pcap file. Splits the given pcap file based on
+extracted streams.
 
 
 .. _tagger:
@@ -141,9 +142,13 @@ DataSource
 Tagger
 ------
 
+This module is responsible for packet based attribute measurement and/or calculations. Currently we are supporting only
+application layer protocol detection based on payload of captured packets. But it is also possible to add new taggers to
+check file header signatures, shell code signatures and even detect whether the traffic is encrypted or not.
 
-<< General info >>
 
+Application Layer Protocol Tagger
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 How I implemented protocol detection mechanism is quite simple. First of all I had to override of guess_payload_class
 functions of both TCP and UDP layers, which was easy(from now on TCP and UDP classes in Scapy will be mentioned as

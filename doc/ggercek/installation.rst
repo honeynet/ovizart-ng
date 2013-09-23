@@ -110,7 +110,7 @@ Start Web UI::
 Press Ctrl + C to stop ui_server
 
 Pre-installed Virtual Machine
-============================
+=============================
 
 If you don't want to deal with installation you can download and virtual machine from here: http://81.166.122.252/ovizart-ng/
 If you are not sure how to import .ova file, you can check the virtualbox documentation here: http://www.virtualbox.org/manual/ch01.html#ovf
