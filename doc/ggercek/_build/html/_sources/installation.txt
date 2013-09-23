@@ -1,0 +1,101 @@
+.. _installation:
+
+
+***************
+Installation
+***************
+
+This chapter contains the necessary information to install both required libraries/programs and ovizart-ng itself. These instructions have tested on Xubuntu 13.04 System [ 64 bit, Linux 3.8.0-30.generic ]
+
+Retrieve git::
+
+  sudo apt-get install git
+
+install python development files for pynids::
+
+  sudo apt-get install python-dev libpcap-dev libnids-dev
+                       libglib2.0-dev libnet1-dev
+
+Install pynids before justniffer, first clone the repository. We will install everything under ~/src/ folder.::
+
+  mkdir -p ~/src
+  git clone https://github.com/MITRECND/pynids
+  sudo python setup.py build
+
+if this step gives an error about, not being able to locate libnids-1.25.so manually build libnids under pynids/libnids-1.25 folder otherwise jump to next step::
+
+  cd pynids/libnids-1.25
+  ./configure
+  make
+  cd ..
+  python setup.py build
+
+If everything is fine install it by using setup.py::
+
+  sudo python setup.py install
+
+Before we continue we need to installed other required libraries for Justniffer project. ::
+
+  sudo apt-get install build-essential libboost-regex-dev libboost-program-options-dev libboost-iostreams-dev
+
+Now we are ready to proceed to install justniffer from http://justniffer.sourceforge.net/ ::
+
+  mkdir -p ~/src/justniffer
+  cd ~/src/justniffer
+  wget http://sourceforge.net/projects/justniffer/files/latest/download?source=files -O justniffer_0.5.11.tar.gz
+  tar xvf justniffer_0.5.11.tar.gz
+  cd justniffer_0.5.11
+  ./configure
+  make
+  sudo make install
+
+Next step is Mongodb, we will install it from repository::
+
+  sudo apt-get install mongodb
+
+We also need M2Crypto for our built-in http servers HTTPS capabilities. we will install it from repository::
+
+  sudo apt-get install python-m2crypto
+
+Now we are ready to clone ovizart-ng. Get back to ~/src/ folder and clone the git repository::
+
+  cd ~/src/
+  git clone https://github.com/honeynet/ovizart-ng.git
+
+If the current folder is empty, that means we don't have a release at the moment, you can change to ovizart-ng-devel branch with this command::
+
+  cd ~/src/ovizart-ng/
+  git checkout ovizart-ng-devel
+
+Now we can continue by installing other requirements from repository and over pip::
+
+  cd ~/src/ovizart-ng/
+  sudo apt-get install python-pip python-scapy ipython python-jinja2
+  sudo pip install -r install/pip_requirements.txt
+
+We are almost done. We need to check if everything is working fine or not::
+
+  cd ~/src/ovizart-ng/bin/
+
+In order to use ovizart-ng with an UI (this could be web/shell/cli) you must have an user account.
+You can create users with create_user.py script which is located under ~/src/ovizart-ng/bin/ directory.
+This script is quite straightforward you must supply all field values to script.::
+
+  ./create_user.py <username> <password> <name> <surname> <emailAddress>
+
+Start daemon: This script will start REST API server::
+
+  ./api_server.py start [--host localhost] [--port 9009] [--isSSL]
+
+Before starting Web UI, syncdb must be called for the first time only::
+
+  cd ~/src/ovizart-ng/web/
+  python ./manage.py syncdb
+
+You don't need any super user, you can skip creating it.
+Start Web UI::
+
+  ~/src/ovizart-ng/bin/ui_server.py start
+
+Press Ctrl + C to stop ui_server
+

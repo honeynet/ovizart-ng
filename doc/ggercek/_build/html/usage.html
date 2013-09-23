@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Usage Examples &mdash; Ovizart-NG 0.1a documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ovizart-NG 0.1a documentation" href="index.html" />
+    <link rel="next" title="System Structure" href="structure.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+  </head>
+  <body>
+<h1>Ovizart-NG Google Summer of Code 2013 / Honeynet Project</h1>
+<!--
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="index.html"><img src="_static/logo.png" border="0" alt="py4sci"/></a>
+</div>
+-->
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="structure.html" title="System Structure"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Usage Examples</a><ul>
+<li><a class="reference internal" href="#using-ovizartproxy-api">Using OvizartProxy API</a></li>
+<li><a class="reference internal" href="#using-commandline-shell-interface">Using Commandline/Shell Interface</a></li>
+<li><a class="reference internal" href="#using-web-ui">Using Web UI</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="structure.html"
+                        title="next chapter">System Structure</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/usage.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="usage-examples">
+<span id="usage"></span><h1>Usage Examples<a class="headerlink" href="#usage-examples" title="Permalink to this headline">¶</a></h1>
+<p>Currently there are different possibilities to use ovizart-ng. You can access ovizart over its web ui or through
+commandline interface. If you are looking for some interactivity you can use ovizart shell. In worst case scenario with
+ipython you can instantiate an OvizartProxy object and can reach all features over an API. There is also Ovizart interface
+you can use but that interface is used mainly internal issues. You have to be careful if you are going to use that interface.</p>
+<p>In this document you will find usage examples of different interfaces. This document contains some of the features not all,
+I strongly suggests you should play with OvizartProxy over ipython...</p>
+<div class="section" id="using-ovizartproxy-api">
+<span id="ovizart-api"></span><h2>Using OvizartProxy API<a class="headerlink" href="#using-ovizartproxy-api" title="Permalink to this headline">¶</a></h2>
+<p>OvizartProxy provides an abstraction layer to all Ovizart REST API features. You can develop your own frontend for
+ovizart with OvizartProxy. It&#8217;s functions can be listed as below</p>
+<ul>
+<li><p class="first"><strong>login(self, username, password)</strong>: Logins the core system with given username and password</p>
+</li>
+<li><p class="first"><strong>uploadFile(self, filename, fileobj=None)</strong>: upload the given file tocore system</p>
+</li>
+<li><p class="first"><strong>start(self)</strong>: starts the analysis of uploaded files</p>
+</li>
+<li><p class="first"><strong>getAnalysis(self, analysisId=None)</strong>: requests analysis details of analysis if analysisId is given, otherwise requests all analysis summary information, which belongs to user</p>
+</li>
+<li><p class="first"><strong>removeAnalysisById(self, analysisId)</strong>: deletes analysis based on given analysisId</p>
+</li>
+<li><p class="first"><strong>addAnalyzer(self, filename)</strong>: uploads and registers the given analyzer code to core system</p>
+</li>
+<li><p class="first"><strong>getPcap(self, analysisId, streamKey)</strong>: downloads split pcap file belongs to given streamKey of given analysisId</p>
+</li>
+<li><p class="first"><strong>getReassembled(self, analysisId, streamKey, trafficType)</strong>: downloads reassembled application layer traffic file based on trafficType</p>
+<p>trafficType values:</p>
+<div class="highlight-python"><pre>0: A  -&gt; B contains request-only traffic
+1: A &lt;-  B contains response-only traffic
+2: A &lt;-&gt; B contains total traffic</pre>
+</div>
+</li>
+<li><p class="first"><strong>getAttachment(self, analysisId, streamKey, filePath)</strong>: downloads extracted file by given filePath streamKey and analysisId parameters.</p>
+</li>
+</ul>
+<p>Here is a sample ipython session</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">core.ovizart_proxy</span> <span class="kn">import</span> <span class="n">OvizartProxy</span>
+
+<span class="gp">In [2]: </span><span class="n">op</span> <span class="o">=</span> <span class="n">OvizartProxy</span><span class="p">(</span><span class="s">&#39;http&#39;</span><span class="p">,</span> <span class="s">&#39;localhost&#39;</span><span class="p">,</span> <span class="s">&#39;9009&#39;</span><span class="p">)</span>
+
+<span class="gp">In [3]: </span><span class="n">op</span> <span class="o">=</span> <span class="n">OvizartProxy</span><span class="p">(</span><span class="s">&#39;https&#39;</span><span class="p">,</span> <span class="s">&#39;localhost&#39;</span><span class="p">,</span> <span class="s">&#39;9009&#39;</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="n">op</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="s">&#39;ovizart&#39;</span><span class="p">,</span> <span class="s">&#39;123456&#39;</span><span class="p">)</span>
+<span class="go">Out[4]:</span>
+<span class="go">{u&#39;Status&#39;: u&#39;OK&#39;,</span>
+<span class="go"> u&#39;userid&#39;: u&#39;5227e32268caca1a3c047374&#39;,</span>
+<span class="go"> u&#39;username&#39;: u&#39;ovizart&#39;}</span>
+
+<span class="gp">In [5]: </span><span class="n">op</span><span class="o">.</span><span class="n">uploadFile</span><span class="p">(</span><span class="s">&#39;./test/pcap/test-http.pcap&#39;</span><span class="p">)</span>
+<span class="gr">Out[5]: </span><span class="p">{</span><span class="s">u&#39;Filesize&#39;</span><span class="p">:</span> <span class="mi">326754</span><span class="p">,</span> <span class="s">u&#39;Status&#39;</span><span class="p">:</span> <span class="s">u&#39;OK&#39;</span><span class="p">,</span> <span class="s">u&#39;filename&#39;</span><span class="p">:</span> <span class="s">u&#39;test-http.pcap&#39;</span><span class="p">}</span>
+
+<span class="gp">In [6]: </span><span class="n">op</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="gr">Out[6]: </span><span class="p">{</span><span class="s">u&#39;AnalysisId&#39;</span><span class="p">:</span> <span class="s">u&#39;522a734968caca1103775079&#39;</span><span class="p">,</span> <span class="s">u&#39;Status&#39;</span><span class="p">:</span> <span class="s">u&#39;INIT&#39;</span><span class="p">}</span>
+
+<span class="gp">In [7]: </span><span class="n">op</span><span class="o">.</span><span class="n">getAnalysis</span><span class="p">()</span>
+<span class="go">Out[7]:</span>
+<span class="go">[{u&#39;_id&#39;: u&#39;5227f5b968caca205d6fba93&#39;,</span>
+<span class="go">  u&#39;files&#39;: [{u&#39;filename&#39;: u&#39;/home/ovizart/src/ovizart-ng/upload/smtp_2.pcap&#39;,</span>
+<span class="go">    u&#39;numberOfPacket&#39;: 60,</span>
+<span class="go">    u&#39;numberOfStreams&#39;: 4}],</span>
+<span class="go">  u&#39;startTime&#39;: 1378350521.216652,</span>
+<span class="go">  u&#39;status&#39;: u&#39;FINISHED&#39;},</span>
+<span class="go"> {u&#39;_id&#39;: u&#39;5227f5d468caca205d6fba94&#39;,</span>
+<span class="go">  u&#39;files&#39;: [],</span>
+<span class="go">  u&#39;startTime&#39;: 1378350548.074157,</span>
+<span class="go">  u&#39;status&#39;: u&#39;INIT&#39;},</span>
+<span class="go"> {u&#39;_id&#39;: u&#39;522a734968caca1103775079&#39;,</span>
+<span class="go">  u&#39;files&#39;: [{u&#39;filename&#39;: u&#39;/home/ovizart/src/ovizart-ng/upload/test-http.pcap&#39;,</span>
+<span class="go">    u&#39;numberOfPacket&#39;: 483,</span>
+<span class="go">    u&#39;numberOfStreams&#39;: 21}],</span>
+<span class="go">  u&#39;startTime&#39;: 1378513737.705265,</span>
+<span class="go">  u&#39;status&#39;: u&#39;FINISHED&#39;}]</span>
+
+<span class="gp">In [8]: </span><span class="n">op</span><span class="o">.</span><span class="n">getAnalysis</span><span class="p">(</span><span class="s">&#39;522a734968caca1103775079&#39;</span><span class="p">)</span>
+<span class="go">Out[8]:</span>
+<span class="go">{u&#39;_id&#39;: u&#39;522a734968caca1103775079&#39;,</span>
+<span class="go"> u&#39;config&#39;: {u&#39;cuckoo_html_enabled&#39;: True,</span>
+<span class="go">  u&#39;cuckoo_ip&#39;: u&#39;81.167.148.242&#39;,</span>
+<span class="go">  u&#39;cuckoo_port&#39;: 8090,</span>
+<span class="go">  u&#39;cuckoo_tcpdump_enabled&#39;: True,</span>
+<span class="go">  u&#39;cuckoo_timeout&#39;: 60,</span>
+<span class="go">  u&#39;exclude_analyzer&#39;: [],</span>
+<span class="go">  u&#39;input_files&#39;: [u&#39;/home/ovizart/src/ovizart-ng/upload/test-http.pcap&#39;],</span>
+<span class="go">  u&#39;is_cuckoo_available&#39;: True,</span>
+<span class="go">  u&#39;jsunpackn_path&#39;: u&#39;&#39;,</span>
+<span class="go">  u&#39;output_folder&#39;: u&#39;/home/ovizart/src/ovizart-ng/test/output/analysis_20130907_032857_706265/&#39;,</span>
+<span class="go">  u&#39;vt_apikey&#39;: u&#39;545b985a35ca91e6bd5232c9cfb3549dd5e74a506ea960336472f86be156ec8d&#39;},</span>
+<span class="go"> u&#39;data&#39;: [{u&#39;_Data__data&#39;: {u&#39;stream&#39;: {u&#39;dstIp&#39;: u&#39;10.1.1.1&#39;,</span>
+<span class="go">     u&#39;dstPort&#39;: u&#39;80&#39;,</span>
+<span class="go">     u&#39;fileHandler&#39;: None,</span>
+<span class="go">     u&#39;key&#39;: u&#39;6_10.1.1.101_3188_10.1.1.1_80&#39;,</span>
+<span class="go">     u&#39;last_ts&#39;: 1100903355.562335,</span>
+<span class="go">     u&#39;outputFolder&#39;: u&#39;/home/ovizart/src/ovizart-ng/test/output/analysis_20130907_032857_706265/test-http.pcap/6_10.1.1.101_3188_10.1.1.1_80&#39;,</span>
+<span class="go">     u&#39;pcapFile&#39;: None,</span>
+<span class="go">     u&#39;pcapFileName&#39;: u&#39;/home/ovizart/src/ovizart-ng/test/output/analysis_20130907_032857_706265/test-http.pcap/6_10.1.1.101_3188_10.1.1.1_80/6_10.1.1.101_3188_10.1.1.1_80.pcap&#39;,</span>
+<span class="go">     u&#39;pktCount&#39;: 14,</span>
+<span class="go">     u&#39;protocol&#39;: 6,</span>
+<span class="go">     u&#39;srcIP&#39;: u&#39;10.1.1.101&#39;,</span>
+<span class="go">     u&#39;srcPort&#39;: u&#39;3188&#39;,</span>
+<span class="go">     u&#39;startTime&#39;: u&#39;1100903355.43&#39;}},</span>
+<span class="go">   u&#39;_Data__tags&#39;: {u&#39;PLAIN_TEXT&#39;: [u&#39;_Websidan_index.html&#39;],</span>
+<span class="go">    u&#39;app_layer_protocol&#39;: u&#39;HTTP&#39;,</span>
+<span class="go">    u&#39;attachments&#39;: [[u&#39;_Websidan_index.html&#39;,</span>
+<span class="go">      u&#39;text/html; charset=iso-8859-1&#39;,</span>
+<span class="go">      u&#39;PLAIN_TEXT&#39;]],</span>
+<span class="go">    u&#39;data_source&#39;: u&#39;PCAP&#39;}},</span>
+
+<span class="go"> [[ ... output truncated ... ]]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-commandline-shell-interface">
+<span id="command-line-interface"></span><h2>Using Commandline/Shell Interface<a class="headerlink" href="#using-commandline-shell-interface" title="Permalink to this headline">¶</a></h2>
+<p>This feature is implemented by Hao MA. You can check following blog posts as example usages:</p>
+<p>Interactive Shell Demonstration: <a class="reference external" href="http://gsoc2013.honeynet.org/2013/09/03/network-analyzer-project-updates-hao-ma-week-11-interactive-shell-demonstration/">http://gsoc2013.honeynet.org/2013/09/03/network-analyzer-project-updates-hao-ma-week-11-interactive-shell-demonstration/</a></p>
+<p>Usage Examples for Shell/CLI: <a class="reference external" href="http://gsoc2013.honeynet.org/2013/09/10/network-analyzer-project-updates-hao-ma-week-12-testing-report/">http://gsoc2013.honeynet.org/2013/09/10/network-analyzer-project-updates-hao-ma-week-12-testing-report/</a></p>
+<p>CLI Demonstration: <a class="reference external" href="http://gsoc2013.honeynet.org/2013/08/27/network-analyzer-project-updates-hao-ma-week-10-cli-demonstration/">http://gsoc2013.honeynet.org/2013/08/27/network-analyzer-project-updates-hao-ma-week-10-cli-demonstration/</a></p>
+<p>CLI Description: <a class="reference external" href="http://gsoc2013.honeynet.org/2013/07/23/474/">http://gsoc2013.honeynet.org/2013/07/23/474/</a></p>
+</div>
+<div class="section" id="using-web-ui">
+<span id="web-ui"></span><h2>Using Web UI<a class="headerlink" href="#using-web-ui" title="Permalink to this headline">¶</a></h2>
+<p>In this post I&#8217;ll introduce our simple Web UI prototype.</p>
+<p>Before we open the browser we need to start 2 different scripts under ovizart-ng/bin/ directory. First one is the daemon service, which is a basically a small REST API providing HTTP  Server. To start;:</p>
+<div class="highlight-python"><pre>./api_server.py start&lt;/pre&gt;</pre>
+</div>
+<p>This command will start a https server on localhost:9009 in order to change this values you can use this syntax:</p>
+<div class="highlight-python"><pre>api_server.py [-h] [--host HOST] [--port PORT] [--ssl] {start,stop,restart}</pre>
+</div>
+<p>Second command is responsible for  starting Web UI, which is based on Django 1.5. To start;:</p>
+<div class="highlight-python"><pre>./ui_server.py</pre>
+</div>
+<p>this command will start Web UI on localhost:8000. Now we are ready; open a browser and on address bar write http://localhost:8000/</p>
+<p>This screen will show up for login and daemon settings. Before we move on, Daemon Options will be moved to a configuration file,
+for the ease of development and debugging I put those fields on the login form. These options should match with daemon parameters,
+for default parameters user do not need to change anything.</p>
+<p>In order to login, a user must be created with create_user.py script under directory ./ovizart-ng/bin/. In our example the user and
+password is admin. This is not a default user account. Actually, system has no default users, one must be created right after installation.</p>
+<div class="figure">
+<img alt="Login Page" src="_images/WebUI-1.png" style="width: 625px; height: 441px;" />
+</div>
+<p>After login, (because of the first login) system does not contain any analysis. In order to start one click on the &#8216;New&#8217; button on the left corner.</p>
+<div class="figure">
+<img alt="Empty Analysis Listing" src="_images/WebUI-2.png" style="width: 625px; height: 441px;" />
+</div>
+<p>This screen needs some makeup, but it has some nice feature. For example besides uploading your pcap file you can upload your analyzers as well.
+so that you don&#8217;t need to have an account on the core machine to use your own analyzer. I&#8217;m well aware that this feature could be very dangerous.
+I&#8217;m planing to take 2 measures in order to improve security. First, improving user management by adding roles and rights, so that only certain users
+will have right to upload analyzers. Second one is sand-boxing. Running analyzer module in a sandbox will make this feature a little bit safer.</p>
+<div class="figure">
+<img alt="Upload Screen" src="_images/WebUI-3.png" style="width: 625px; height: 441px;" />
+</div>
+<p>Select your pcap file to upload and click on &#8216;Upload &amp; Start&#8217; button. Your next screen will be this one</p>
+<div class="figure">
+<img alt="Analysis Listing - Init" src="_images/WebUI-4.png" style="width: 625px; height: 441px;" />
+</div>
+<p>After some time (system does not have a progressbar to show the current status of the evaluation), click on the &#8216;Browse&#8217; button or refresh the page
+to see changed status of the analysis. If you want to delete an analysis click on the checkbox on the left side of the analysis and click on the
+&#8216;Delete&#8217; button. This action can not be done, will delete each information, files, reports, etc. generated during that analysis.</p>
+<div class="figure">
+<img alt="Analysis Listing - Finished" src="_images/WebUI-5.png" style="width: 625px; height: 441px;" />
+</div>
+<p>Finished analyses have a summary on the rightmost column, number of packet, name of the pcap file and number of streams extracted from given pcap file. Clicking on ID will open the details screen.</p>
+<div class="figure">
+<img alt="Show Details - No attachments" src="_images/WebUI-8.png" style="width: 625px; height: 441px;" />
+</div>
+<p>At the top part we have the summary section which contains basic information about the given pcap file. The next section
+contains the information about the streams extracted from given pcap file. Stream list is a collapsible table. Each row
+of this table starts Application/Transport Layer protocol information. Then we have standard stream identifiers Source IP,
+Source Port, Destination IP, Destination Port. Number of Packets follows the identifiers.</p>
+<p>On rightmost column we can observe an icon of file and magnifier. File means that system extracted some file(s) from
+that specific stream. Magnifier means that system has analyzer reports for that specific stream&#8217;s extracted files.</p>
+<div class="figure">
+<img alt="Show Details - Attachments" src="_images/WebUI-6.png" style="width: 625px; height: 441px;" />
+</div>
+<p>Clicking on a row will expand that row and show additional info about that stream.</p>
+<ul>
+<li><p class="first"><strong>Pcap File</strong>: clicking on the filename will start download of that stream specific pcap file.</p>
+</li>
+<li><p class="first"><strong>Reassembled Traffic</strong>: Those links provide reconstructed application layer traffic in a file for further analysis/study/examination. You can see 3 different links, clicking on links will start the download of files, that are</p>
+<p>A  -&gt; B, this file contains all requests made by A</p>
+<p>A &lt;-  B, this file contains all responses given by B</p>
+<p>A &lt;-&gt; B, this file contains whole request response pair between A and B.</p>
+</li>
+<li><p class="first"><strong>Attachments</strong>: This section contains information about extracted files from that stream. On the right column you can see the mime-type of the extracted file as well. Clicking on the link will start the download of extracted file.</p>
+</li>
+<li><p class="first"><strong>Analyzer Reports</strong>: Current system does have Virus Total and Cuckoo wrappers as analyzers. Clicking on those links will open a new tab for the results to see. Because of the limitations analyze results may take some time to be ready. Here is a sample screen-shot from virustotal.</p>
+</li>
+</ul>
+<div class="figure">
+<img alt="Show Details - Attachments" src="_images/WebUI-7.png" style="width: 625px; height: 441px;" />
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="structure.html" title="System Structure"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Gurcan GERCEK.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
