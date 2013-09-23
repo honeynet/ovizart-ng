@@ -1,0 +1,223 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Extending Ovizart &mdash; Ovizart-NG 0.1a documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ovizart-NG 0.1a documentation" href="index.html" />
+    <link rel="next" title="Summary of GSOC 2013 (Gurcan GERCEK)" href="summary.html" />
+    <link rel="prev" title="REST API" href="rest_api.html" /> 
+  </head>
+  <body>
+<h1>Ovizart-NG Google Summer of Code 2013 / Honeynet Project</h1>
+<!--
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="index.html"><img src="_static/logo.png" border="0" alt="py4sci"/></a>
+</div>
+-->
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="summary.html" title="Summary of GSOC 2013 (Gurcan GERCEK)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rest_api.html" title="REST API"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Extending Ovizart</a><ul>
+<li><a class="reference internal" href="#how-to-add-new-protocol-reassembler">How to add new protocol reassembler?</a></li>
+<li><a class="reference internal" href="#how-to-add-new-protocol-tagger">How to add new protocol tagger?</a></li>
+<li><a class="reference internal" href="#how-to-extend-rest-api">How to extend REST API?</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="rest_api.html"
+                        title="previous chapter">REST API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="summary.html"
+                        title="next chapter">Summary of GSOC 2013 (Gurcan GERCEK)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/extending.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="extending-ovizart">
+<span id="extending"></span><h1>Extending Ovizart<a class="headerlink" href="#extending-ovizart" title="Permalink to this headline">¶</a></h1>
+<p>If you have questions about how to do some stuff you want to add feel free to contact me (<a class="reference external" href="mailto:gurcangercek&#37;&#52;&#48;gmail&#46;com">gurcangercek<span>&#64;</span>gmail<span>&#46;</span>com</a>)</p>
+<div class="section" id="how-to-add-new-protocol-reassembler">
+<span id="extending-reassembler"></span><h2>How to add new protocol reassembler?<a class="headerlink" href="#how-to-add-new-protocol-reassembler" title="Permalink to this headline">¶</a></h2>
+<p>Adding new ProtocolReassembler is quite simple. Here is an skeleton of ProtocolReassembler;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MySuperProtocolReassembler</span><span class="p">(</span><span class="n">BaseReassembler</span><span class="p">):</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="s">&#39;MySuperProtocol&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputFolder</span><span class="p">):</span>
+        <span class="n">BaseReassembler</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputFolder</span><span class="p">)</span>
+        <span class="c"># Init some variable here, if you need</span>
+
+    <span class="k">def</span> <span class="nf">processRequest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="c"># Make sure to call this line</span>
+        <span class="n">BaseReassembler</span><span class="o">.</span><span class="n">processRequest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+        <span class="c"># process request here !!!</span>
+
+    <span class="k">def</span> <span class="nf">processResponse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="c"># Make sure to call this line</span>
+        <span class="n">BaseReassembler</span><span class="o">.</span><span class="n">processResponse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+        <span class="c"># process response here !!!</span>
+</pre></div>
+</div>
+<p>It is important to extend BaseReassembler and define ‘target’ class attribute. Any stream object contains the
+‘MySuperProtocol‘ tag will be processed by this class’ instance. You can find full code for http reassembler
+here: <a class="reference external" href="https://github.com/honeynet/ovizart-ng/blob/ovizart-ng-devel/reassembler/http_reassembler.py">https://github.com/honeynet/ovizart-ng/blob/ovizart-ng-devel/reassembler/http_reassembler.py</a></p>
+<p>Last step for adding, we need to register our ProtocolReassembler to reassembler/__init__.py by updating ‘parsers’
+dictionary. I’ll add decorators for this structure later for simplicity. Here is the sample;:</p>
+<div class="highlight-python"><pre>parsers = {
+    BaseReassembler.target: 'BaseReassembler',
+    SMTPReassembler.target: 'SMTPReassembler',
+    HTTPReassembler.target: 'HTTPReassembler',
+    # Register MySuperProtocolReassembler
+    MySuperProtocolReassembler.target, 'MySuperProtocolReassembler'
+}</pre>
+</div>
+<p>That would do the job...</p>
+</div>
+<div class="section" id="how-to-add-new-protocol-tagger">
+<span id="extending-tagger"></span><h2>How to add new protocol tagger?<a class="headerlink" href="#how-to-add-new-protocol-tagger" title="Permalink to this headline">¶</a></h2>
+<p>Let us add a tagger for SOCKSv4 protocol. The easiest signature to detect this protocol is signature of connection
+request packet. <a class="reference external" href="http://en.wikipedia.org/wiki/SOCKS#SOCKS4">http://en.wikipedia.org/wiki/SOCKS#SOCKS4</a> the packet is in the form of:</p>
+<div class="highlight-python"><pre>version(1 byte) | commandCode(1 byte) | portNum (2 byte) | ipaddress (4 byte) | user ID String (x byte)\x00</pre>
+</div>
+<p>According to this info lets create a subclass of scapy.packet.Packet class:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SOCKS4Connect</span><span class="p">(</span><span class="n">Packet</span><span class="p">):</span>
+    <span class="n">protocol</span> <span class="o">=</span> <span class="s">&quot;SOCKSv4&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;SOCKS v4 Connect&quot;</span>
+    <span class="n">fields_desc</span> <span class="o">=</span> <span class="p">[</span><span class="n">ByteField</span><span class="p">(</span><span class="s">&quot;version&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">),</span>
+                   <span class="n">ByteField</span><span class="p">(</span><span class="s">&quot;cmd&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">),</span>
+                   <span class="n">ShortField</span><span class="p">(</span><span class="s">&quot;remote-port&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">),</span>
+                   <span class="n">IntField</span><span class="p">(</span><span class="s">&quot;remote-ip&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">),</span>
+                   <span class="n">StrField</span><span class="p">(</span><span class="s">&quot;username&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">mysummary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&quot;SOCKSv4 Connect(version:%SOCKS4Connect.version%, cmd:%SOCKS4Connect.cmd%, &quot;</span>
+                            <span class="s">&quot;remote-port:%SOCKS4Connect.remote-port%, remote-ip:%SOCKS4Connect.remote-ip%, &quot;</span>
+                            <span class="s">&quot;username: %SOCKS4Connect.username%)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with fields_dec variable we are defining the fields of new class with order. For further detail you can check this entry:
+<a class="reference external" href="http://gsoc2013.honeynet.org/2013/08/01/network-analyzer-project-updates-week-5/">http://gsoc2013.honeynet.org/2013/08/01/network-analyzer-project-updates-week-5/</a></p>
+<p>Lets prepare regular expression which will be our signature.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">b</span><span class="s">&#39;^</span><span class="se">\x04\x01</span><span class="s">.{2}.{4}.*</span><span class="se">\x00</span><span class="s">$&#39;</span>
+</pre></div>
+</div>
+<p>Last step is to register the signature to our system. just add our new signature to tagger/protocol/__init__.py with its class and that&#8217;s it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">tcp_signatures</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c"># ...</span>
+    <span class="c"># other signatures</span>
+    <span class="p">(</span><span class="n">b</span><span class="s">&#39;^</span><span class="se">\x04\x01</span><span class="s">.{2}.{4}.*</span><span class="se">\x00</span><span class="s">$&#39;</span><span class="p">,</span> <span class="n">SOCKS4Connect</span><span class="p">),</span>
+            <span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="how-to-extend-rest-api">
+<span id="extending-rest-api"></span><h2>How to extend REST API?<a class="headerlink" href="#how-to-extend-rest-api" title="Permalink to this headline">¶</a></h2>
+<p>Just write your function. Your function should have one parameter &#8216;data&#8217; and decorate it with API class. You don&#8217;t need
+to specify isAuth=True because True is its default value. My suggestion is that put all rest api functions in ovizapi.py
+would be easier to follow.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@API</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s">r&quot;^/coolFunction/(?P&lt;analysisId&gt;.+)/(?P&lt;streamId&gt;.+)/?$&quot;</span><span class="p">,</span> <span class="n">isAuth</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">myCoolFunction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c"># ...</span>
+    <span class="n">analysisId</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">&#39;analysisId&#39;</span><span class="p">]</span>
+    <span class="n">streamId</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">&#39;streamId&#39;</span><span class="p">]</span>
+
+    <span class="c"># ...</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="summary.html" title="Summary of GSOC 2013 (Gurcan GERCEK)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="rest_api.html" title="REST API"
+             >previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Gurcan GERCEK.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

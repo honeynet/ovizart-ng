@@ -5,14 +5,73 @@ OVIZART - NG = Open VİZual Analsis foR network Traffic
 
 This project aims aimed to analyze the traffic data in a more human readable way. 
 It will analyze the information at the application level and displays the assembled information. 
-It will help you analyze malwares inside the traffic as weel as anomalies. This project is an improvement to https://github.com/oguzy/ovizart project
-in the scope of Google Summer of Code 2013.
 
+
+My (Hao Ma) tasks this summer is to implement the external analyzers, the reporter, and the CLI + interactive shell.
 
 ---
 
-Analyzer Wrappers
-------------
+
+
+
+
+#Installation Guide for Analyzer Wrappers
+
+##Prerequisites:
+1. Jinja2
+2. python-requests
+
+
+
+###Wrapper for Cuckoo Sandbox
+--
+Users may have two options for Cuckoo:
+
+####1. Remote Cuckoo (Central)
+
+Initially the remote cuckoo is set to ours. If you wanna change the remote Cuckoo from ours to yours, you may set the "self.cuckoo_ip and port" to yours in the ovizconf.py.
+
+
+######HOW IT WORKS: 
+Thanks to HoneyCloud, our team has a VPS that's able to deploy Cuckoo on the cloud. I've installed everything user needed to perform Cuckoo Sandbox. The service is provided in terms of REST API. 
+
+
+
+
+####2.	Local Cuckoo
+	
+In this case, the user has to install and configure Cuckoo in his own machine which might involve with virtual machine (VirtualBox, VMWare, etc.) 
+
+Please refer to http://docs.cuckoosandbox.org/en/latest/installation/
+
+And start the local REST API server, set self.cuckoo_ip to localhost.
+
+###Wrapper for Jsunpack-n
+
+The packages of jsunpackn is at https://code.google.com/p/jsunpack-n/.
+
+
+After downloaded, please install it and you need to put the absolute path of the package in ovizconf.py
+
+For example:
+ self.jsunpackn_path = "/Users/zqzas/Projects/ovizart-ng/analyzer/jsunpack_n/jsunpack-n-read-only"
+ 
+The folder "jsunpack-n-read-only" contains the source of jsunpackn.
+
+
+###Wrapper for VirusTotal
+Only thing you need to do is to get your API key form VirusTotal guys and copy it to self.vt_apikey in the ovizconf.py.
+
+As self.vt_apikey = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+
+------
+#Usage and Test
+
+http://gsoc2013.honeynet.org/2013/09/10/network-analyzer-project-updates-hao-ma-week-12-testing-report/
+
+-----
+###History before midterm
 
 My mission before mid-term is to implement the wrappers for Cuckoo Sandbox, Jsunpack-n, and VirusTotal. In addition, I also wrote a CLI for these wrappers which make them easier to use.
 

@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &mdash; Ovizart-NG-Hao 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ovizart-NG-Hao 1.0 documentation" href="index.html" />
+    <link rel="next" title="Usage and Test Reports" href="usage.html" />
+    <link rel="prev" title="Introduciton to My Work" href="introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="usage.html" title="Usage and Test Reports"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduciton to My Work"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Ovizart-NG-Hao 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation-guide-for-analyzer-wrappers">
+<h2>Installation Guide for Analyzer Wrappers<a class="headerlink" href="#installation-guide-for-analyzer-wrappers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="prerequisites">
+<h3>Prerequisites:<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>python-requests</li>
+</ul>
+</div>
+<div class="section" id="wrapper-for-cuckoo-sandbox">
+<h3>Wrapper for Cuckoo Sandbox<a class="headerlink" href="#wrapper-for-cuckoo-sandbox" title="Permalink to this headline">¶</a></h3>
+<p>Users may have two options for Cuckoo:</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt>Remote Cuckoo (Central)</dt>
+<dd><p class="first">Initially the remote cuckoo is set to ours. If you wanna change the remote Cuckoo from ours to yours, you may set the &#8220;self.cuckoo_ip and port&#8221; to yours in the ovizconf.py.</p>
+<p class="last"><em>HOW IT WORKS:</em>
+Thanks to HoneyCloud, our team has a VPS that&#8217;s able to deploy Cuckoo on the cloud. I&#8217;ve installed everything user needed to perform Cuckoo Sandbox. The service is provided in terms of REST API.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Local Cuckoo</dt>
+<dd><p class="first">In this case, the user has to install and configure Cuckoo in his own machine which might involve with virtual machine (VirtualBox, VMWare, etc.)</p>
+<p>Please refer to <a class="reference external" href="http://docs.cuckoosandbox.org/en/latest/installation/">http://docs.cuckoosandbox.org/en/latest/installation/</a></p>
+<p class="last">And start the local REST API server, set self.cuckoo_ip to localhost.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+<div class="section" id="wrapper-for-jsunpack-n">
+<h3>Wrapper for Jsunpack-n<a class="headerlink" href="#wrapper-for-jsunpack-n" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The packages of jsunpackn is at <a class="reference external" href="https://code.google.com/p/jsunpack-n/">https://code.google.com/p/jsunpack-n/</a>.</p>
+<p>After downloaded, please install it and you need to put the absolute path of the package in ovizconf.py</p>
+<dl class="docutils">
+<dt>For example: ::</dt>
+<dd>self.jsunpackn_path = &#8220;/Users/zqzas/Projects/ovizart-ng/analyzer/jsunpack_n/jsunpack-n-read-only&#8221;</dd>
+</dl>
+<p>The folder &#8220;jsunpack-n-read-only&#8221; contains the source of jsunpackn.</p>
+</div></blockquote>
+</div>
+<div class="section" id="wrapper-for-virustotal">
+<h3>Wrapper for VirusTotal<a class="headerlink" href="#wrapper-for-virustotal" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div>Only thing you need to do is to get your API key form VirusTotal guys and copy it
+to self.vt_apikey in the ovizconf.py. ::
+self.vt_apikey = &#8220;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&#8221;</div></blockquote>
+</div>
+</div>
+<div class="section" id="installation-guide-for-the-reporters">
+<h2>Installation Guide for the Reporters<a class="headerlink" href="#installation-guide-for-the-reporters" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Prerequisites:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Jinja2 (when you&#8217;d like to output html)</li>
+<li>xhtml2pdf (may convert html to pdf file, not suggested)</li>
+</ol>
+</div>
+</div>
+<div class="section" id="installation-guide-for-the-shell">
+<h2>Installation Guide for the Shell<a class="headerlink" href="#installation-guide-for-the-shell" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h3>Prerequisites:<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>readline (or pyreadline for Windows)</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#installation-guide-for-analyzer-wrappers">Installation Guide for Analyzer Wrappers</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites:</a></li>
+<li><a class="reference internal" href="#wrapper-for-cuckoo-sandbox">Wrapper for Cuckoo Sandbox</a></li>
+<li><a class="reference internal" href="#wrapper-for-jsunpack-n">Wrapper for Jsunpack-n</a></li>
+<li><a class="reference internal" href="#wrapper-for-virustotal">Wrapper for VirusTotal</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation-guide-for-the-reporters">Installation Guide for the Reporters</a><ul>
+<li><a class="reference internal" href="#id1">Prerequisites:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation-guide-for-the-shell">Installation Guide for the Shell</a><ul>
+<li><a class="reference internal" href="#id2">Prerequisites:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="previous chapter">Introduciton to My Work</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="usage.html"
+                        title="next chapter">Usage and Test Reports</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/installation.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="usage.html" title="Usage and Test Reports"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduciton to My Work"
+             >previous</a> |</li>
+        <li><a href="index.html">Ovizart-NG-Hao 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hao (zqzas).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>
